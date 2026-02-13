@@ -60,6 +60,11 @@ class Curso extends Model
                     ->withTimestamps();
     }
 
+    public function solicitudes(): BelongsToMany
+    {
+        return $this->belongsToMany(Solicitud::class, 'solicitud_curso');
+    }
+
     // Scopes
     public function scopeActivos($query)
     {

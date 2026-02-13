@@ -13,28 +13,23 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Crear roles
+        // Limpiar roles y permisos anteriores
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        \DB::table('role_has_permissions')->delete();
+        \DB::table('roles')->delete();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        // Crear roles nuevos
         $roles = [
             'Root' => 'Usuario maestro del sistema',
-            'Admin' => 'Administrador de Recursos Humanos',
-            'Jefe' => 'Jefe Inmediato',
-            'Operador' => 'Operador de Área',
+            'Jefe RRHH' => 'Jefe de Recursos Humanos - Gestiona todos los procesos',
+            'Jefe Tecnología' => 'Jefe de Tecnología - Gestiona solicitudes de Tecnología',
+            'Jefe Dotación' => 'Jefe de Dotación - Gestiona solicitudes de Dotación',
+            'Jefe Servicios Generales' => 'Jefe de Servicios Generales - Gestiona solicitudes de Servicios Generales',
+            'Jefe Bienes y Servicios' => 'Jefe de Bienes y Servicios - Gestiona solicitudes de Bienes',
         ];
 
         foreach ($roles as $roleName => $description) {
-            Role::firstOrCreate(['name' => $roleName]);
-        }
-
-        // Crear roles por área (operadores específicos)
-        $areas = [
-            'Operador Dotación',
-            'Operador Tecnología',
-            'Operador Servicios Generales',
-            'Operador Formación',
-            'Operador Bienes y Servicios'
-        ];
-
-        foreach ($areas as $roleName) {
             Role::firstOrCreate(['name' => $roleName]);
         }
 
@@ -67,8 +62,6 @@ class RoleSeeder extends Seeder
             'gestionar-usuarios',
             'asignar-roles',
             'ver-usuarios',
-
-            // área
         ];
 
         foreach ($permissions as $permission) {
@@ -79,31 +72,63 @@ class RoleSeeder extends Seeder
         $rootRole = Role::findByName('Root');
         $rootRole->givePermissionTo(Permission::all());
 
-        $adminRole = Role::findByName('Admin');
-        $adminRole->givePermissionTo([
+        // Jefe RRHH - Acceso a todo
+        $jefeRRHHRole = Role::findByName('Jefe RRHH');
+        $jefeRRHHRole->givePermissionTo([
             'ver-procesos',
             'crear-procesos',
             'editar-procesos',
             'cancelar-procesos',
             'ver-historico-procesos',
             'ver-solicitudes',
-            'ver-usuarios'
-        ]);
-
-        $jefeRole = Role::findByName('Jefe');
-        $jefeRole->givePermissionTo([
-            'ver-procesos',
+            'editar-solicitudes',
+            'completar-solicitudes',
+            'ver-solicitudes-area',
             'especificar-requerimientos-ti',
             'especificar-tallas',
             'validar-solicitudes',
-            'ver-solicitudes'
+            'ver-checkin',
+            'generar-pdf-checkin',
         ]);
 
-        $operadorRole = Role::findByName('Operador');
-        $operadorRole->givePermissionTo([
+        // Jefe Tecnología - Solo su área
+        $jefeTecnologiaRole = Role::findByName('Jefe Tecnología');
+        $jefeTecnologiaRole->givePermissionTo([
+            'ver-solicitudes',
             'ver-solicitudes-area',
             'editar-solicitudes',
-            'completar-solicitudes'
+            'completar-solicitudes',
+            'ver-checkin',
+        ]);
+
+        // Jefe Dotación - Solo su área
+        $jefeDotacionRole = Role::findByName('Jefe Dotación');
+        $jefeDotacionRole->givePermissionTo([
+            'ver-solicitudes',
+            'ver-solicitudes-area',
+            'editar-solicitudes',
+            'completar-solicitudes',
+            'ver-checkin',
+        ]);
+
+        // Jefe Servicios Generales - Solo su área
+        $jefeServiciosRole = Role::findByName('Jefe Servicios Generales');
+        $jefeServiciosRole->givePermissionTo([
+            'ver-solicitudes',
+            'ver-solicitudes-area',
+            'editar-solicitudes',
+            'completar-solicitudes',
+            'ver-checkin',
+        ]);
+
+        // Jefe Bienes y Servicios - Solo su área
+        $jefeBienesRole = Role::findByName('Jefe Bienes y Servicios');
+        $jefeBienesRole->givePermissionTo([
+            'ver-solicitudes',
+            'ver-solicitudes-area',
+            'editar-solicitudes',
+            'completar-solicitudes',
+            'ver-checkin',
         ]);
     }
 }

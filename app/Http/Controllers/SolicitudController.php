@@ -12,59 +12,228 @@ use Illuminate\Support\Facades\Log;
 class SolicitudController extends Controller
 {
     /**
-     * Listar solicitudes del usuario
+     * Listar solicitudes según el rol del usuario
      */
     public function index()
     {
         $user = auth()->user();
         
-        // Si es operador de área (Operador Dotación, Operador TI, etc.), ver solo solicitudes de su área
-        if ($user->getRoleNames()->contains(fn($role) => str_contains($role, 'Operador'))) {
-            $area = $user->area;
-            if (!$area) {
-                return back()->withErrors(['error' => 'Tu usuario no tiene un área asignada']);
-            }
-            $solicitudes = Solicitud::where('area_id', $area->id)
-                ->with(['proceso', 'area'])
+        // Root ve todas las solicitudes
+        if ($user->hasRole('Root')) {
+            $solicitudes = Solicitud::with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
                 ->latest()
                 ->paginate(15);
         }
-        // Si es jefe, ver solicitudes de sus empleados
-        elseif ($user->hasRole('Jefe')) {
-            $solicitudes = Solicitud::where(function($q) use ($user) {
-                $q->whereHas('proceso', function ($query) use ($user) {
-                    $query->where('jefe_id', $user->id);
-                })
-                ->orWhere('area_id', $user->area_id);
-            })->with(['proceso', 'area'])
-              ->latest()
-              ->paginate(15);
+        // Jefe RRHH ve todas las solicitudes (gestiona todo el onboarding)
+        elseif ($user->hasRole('Jefe RRHH')) {
+            $solicitudes = Solicitud::with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
+                ->latest()
+                ->paginate(15);
         }
-        // Admin ve todas
-        elseif ($user->hasRole('Admin')) {
-            $solicitudes = Solicitud::whereNotNull('proceso_ingreso_id')
+        // Jefe Tecnología ve SOLO solicitudes de Tecnología
+        elseif ($user->hasRole('Jefe Tecnología')) {
+            $solicitudes = Solicitud::where('tipo', 'Tecnología')
+                ->with(['proceso', 'area', 'detalleTecnologia'])
+                ->latest()
+                ->paginate(15);
+        }
+        // Jefe Dotación ve SOLO solicitudes de Dotación
+        elseif ($user->hasRole('Jefe Dotación')) {
+            $solicitudes = Solicitud::where('tipo', 'Dotación')
+                ->with(['proceso', 'area', 'detalleUniforme'])
+                ->latest()
+                ->paginate(15);
+        }
+        // Jefe Servicios Generales ve SOLO solicitudes de Servicios Generales
+        elseif ($user->hasRole('Jefe Servicios Generales')) {
+            $solicitudes = Solicitud::where('tipo', 'Servicios Generales')
+                ->with(['proceso', 'area', 'puestoTrabajo'])
+                ->latest()
+                ->paginate(15);
+        }
+        // Jefe Bienes y Servicios ve SOLO solicitudes de Bienes
+        elseif ($user->hasRole('Jefe Bienes y Servicios')) {
+            $solicitudes = Solicitud::where('tipo', 'Bienes')
+                ->with(['proceso', 'area', 'detalleBienes'])
+                ->latest()
+                ->paginate(15);
+        }
+        // Otros usuarios ven sus propias solicitudes
+        else {
+            $solicitudes = Solicitud::where('proceso_ingreso_id', auth()->id())
                 ->with(['proceso', 'area'])
                 ->latest()
                 ->paginate(15);
-        } else {
-            $solicitudes = Solicitud::paginate(15);
         }
 
         return view('solicitudes.index', compact('solicitudes'));
     }
 
     /**
-     * Ver detalles de la solicitud
+     * Ver detalles de la solicitud - Redirige a vista específica por tipo
      */
     public function show(Solicitud $solicitude)
     {
-        $solicitude->load(['proceso' => function($q) {
-            $q->with(['cargo', 'area', 'jefe']);
-        }, 'area', 'detalleTecnologia', 'detalleUniforme']);
-        
         $this->verificarPermiso($solicitude);
+        
+        $solicitude->load([
+            'proceso' => function($q) {
+                $q->with(['cargo', 'area', 'jefe']);
+            },
+            'area',
+            'detalleTecnologia',
+            'detalleUniforme',
+            'detalleBienes',
+            'puestoTrabajo',
+            'cursos'
+        ]);
 
-        return view('solicitudes.show', compact('solicitude'));
+        // Redirigir a vista específica según el tipo
+        $tipoView = match($solicitude->tipo) {
+            'Tecnología' => 'tipo-tecnologia',
+            'Dotación' => 'tipo-dotacion',
+            'Servicios Generales' => 'tipo-servicios-generales',
+            'Formación' => 'tipo-formacion',
+            'Bienes' => 'tipo-bienes',
+            default => 'show',
+        };
+
+        return view("solicitudes.{$tipoView}", compact('solicitude'));
+    }
+
+    /**
+     * Guardar especificaciones de Tecnología
+     */
+    public function guardarTecnologia(Request $request, $id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $request->validate([
+            'necesita_computador' => 'required|boolean',
+            'gama_computador' => 'nullable|required_if:necesita_computador,1|in:Básica,Media,Premium',
+            'credenciales_plataformas' => 'required|string|max:2000',
+        ]);
+
+        $detalleTecnologia = DetalleTecnologia::firstOrCreate(
+            ['solicitud_id' => $solicitud->id],
+            []
+        );
+
+        $detalleTecnologia->update([
+            'necesita_computador' => (bool) $request->necesita_computador,
+            'gama_computador' => $request->gama_computador,
+            'credenciales_plataformas' => $request->credenciales_plataformas,
+        ]);
+
+        return redirect()->route('solicitudes.show', $solicitud->id)
+                       ->with('success', 'Especificaciones de tecnología guardadas correctamente');
+    }
+
+    /**
+     * Guardar especificaciones de Dotación
+     */
+    public function guardarDotacion(Request $request, $id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $request->validate([
+            'necesita_dotacion' => 'required|boolean',
+            'genero' => 'nullable|required_if:necesita_dotacion,1|in:Masculino,Femenino,Otro',
+            'talla_pantalon' => 'nullable|required_if:necesita_dotacion,1|string|max:50',
+            'talla_camiseta' => 'nullable|required_if:necesita_dotacion,1|string|max:50',
+            'justificacion_no_dotacion' => 'nullable|required_if:necesita_dotacion,0|string|max:1000',
+        ]);
+
+        $detalleUniforme = DetalleUniforme::firstOrCreate(
+            ['solicitud_id' => $solicitud->id],
+            []
+        );
+
+        $detalleUniforme->update([
+            'necesita_dotacion' => (bool) $request->necesita_dotacion,
+            'genero' => $request->genero,
+            'talla_pantalon' => $request->talla_pantalon,
+            'talla_camiseta' => $request->talla_camiseta,
+            'justificacion_no_dotacion' => $request->justificacion_no_dotacion,
+        ]);
+
+        return redirect()->route('solicitudes.show', $solicitud->id)
+                       ->with('success', 'Especificaciones de dotación guardadas correctamente');
+    }
+
+    /**
+     * Guardar asignación de puesto (Servicios Generales)
+     */
+    public function guardarServiciosGenerales(Request $request, $id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $request->validate([
+            'puesto_trabajo_id' => 'required|exists:puestos_trabajo,id',
+        ]);
+
+        $solicitud->puesto_trabajo_id = $request->puesto_trabajo_id;
+        $solicitud->save();
+
+        // Marcar el puesto como asignado
+        $puesto = \App\Models\PuestoTrabajo::find($request->puesto_trabajo_id);
+        if ($puesto) {
+            $puesto->estado = 'Asignado';
+            $puesto->save();
+        }
+
+        return redirect()->route('solicitudes.show', $solicitud->id)
+                       ->with('success', 'Puesto de trabajo asignado correctamente');
+    }
+
+    /**
+     * Guardar cursos de Formación
+     */
+    public function guardarFormacion(Request $request, $id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $request->validate([
+            'curso_ids' => 'nullable|array',
+            'curso_ids.*' => 'exists:cursos,id',
+        ]);
+
+        // Limpiar cursos anteriores
+        $solicitud->cursos()->detach();
+
+        // Asignar nuevos cursos
+        if ($request->has('curso_ids')) {
+            $solicitud->cursos()->attach($request->curso_ids);
+        }
+
+        return redirect()->route('solicitudes.show', $solicitud->id)
+                       ->with('success', 'Plan de formación guardado correctamente');
+    }
+
+    /**
+     * Guardar bienes y servicios
+     */
+    public function guardarBienes(Request $request, $id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $request->validate([
+            'bienes' => 'nullable|array',
+            'observaciones_bienes' => 'nullable|string|max:1000',
+        ]);
+
+        $detalleBienes = \App\Models\DetalleBienes::firstOrCreate(
+            ['solicitud_id' => $solicitud->id],
+            []
+        );
+
+        $detalleBienes->update([
+            'bienes_requeridos' => json_encode($request->bienes ?? []),
+            'observaciones' => $request->observaciones_bienes,
+        ]);
+
+        return redirect()->route('solicitudes.show', $solicitud->id)
+                       ->with('success', 'Bienes y servicios guardados correctamente');
     }
 
     /**
@@ -193,23 +362,27 @@ class SolicitudController extends Controller
         $solicitud = Solicitud::findOrFail($id);
         $user = auth()->user();
 
-        // Verificar que el usuario sea operador del área o Admin
-        $isOperador = $user->getRoleNames()->contains(fn($role) => str_contains($role, 'Operador'));
-        $isAdmin = $user->hasRole('Admin');
+        // Root y Jefe RRHH pueden cambiar estado de cualquier solicitud
+        $puedeEditar = $user->hasRole(['Root', 'Jefe RRHH']);
 
-        // Admin puede siempre
-        if ($isAdmin) {
-            // allow
-        } elseif ($isOperador) {
-            // Operador: permitir si la solicitud pertenece a su área OR si su rol coincide con el tipo de solicitud
-            $areaMatches = $solicitud->area_id && $user->area_id && $solicitud->area_id === $user->area_id;
-            $roleMatchesTipo = $user->getRoleNames()->contains(fn($role) => $solicitud->tipo ? str_contains($role, $solicitud->tipo) : false);
+        // Jefes específicos pueden cambiar estado de sus tipos
+        if (!$puedeEditar) {
+            $tipoRolMap = [
+                'Tecnología' => 'Jefe Tecnología',
+                'Dotación' => 'Jefe Dotación',
+                'Servicios Generales' => 'Jefe Servicios Generales',
+                'Formación' => 'Jefe RRHH', // Formación la maneja Jefe RRHH
+                'Bienes' => 'Jefe Bienes y Servicios',
+            ];
 
-            if (! $areaMatches && ! $roleMatchesTipo) {
-                return back()->withErrors(['error' => 'No tiene permiso para editar esta solicitud (operador)']);
+            $rolRequerido = $tipoRolMap[$solicitud->tipo] ?? null;
+            if ($rolRequerido && $user->hasRole($rolRequerido)) {
+                $puedeEditar = true;
             }
-        } else {
-            return back()->withErrors(['error' => 'No tiene permiso para editar solicitudes']);
+        }
+
+        if (!$puedeEditar) {
+            return back()->withErrors(['error' => 'No tienes permiso para cambiar el estado de esta solicitud']);
         }
 
         $request->validate([
@@ -241,10 +414,15 @@ class SolicitudController extends Controller
             \Illuminate\Support\Facades\Log::warning("notificacion_state_change_failed: {$e->getMessage()}");
         }
 
-        // Si existe proceso y todas las solicitudes están entregadas o completadas, marcar el proceso como exitoso
+        // Si todas las solicitudes están en 'Finalizada', marcar el proceso como completado
         $proceso = $solicitud->proceso;
-        if ($proceso && $proceso->solicitudes()->whereNotIn('estado', ['Entregado', 'Completado', 'Finalizada'])->doesntExist()) {
-            $proceso->marcarExitoso();
+        if ($proceso && $estadoNuevo === 'Finalizada') {
+            // Verificar si TODAS las solicitudes están en Finalizada
+            $todasFinalizadas = $proceso->solicitudes()->where('estado', '!=', 'Finalizada')->doesntExist();
+            if ($todasFinalizadas) {
+                $proceso->update(['estado' => 'Finalizado']);
+                session()->flash('success', "¡Proceso de onboarding completado! Ahora puede generar el check-in consolidado.");
+            }
         }
 
         return back()->with('success', "Solicitud actualizada a '{$estadoNuevo}' exitosamente");
@@ -253,6 +431,46 @@ class SolicitudController extends Controller
     /**
      * Enviar notificación de cambio de estado
      */
+    /**
+     * Mostrar check-in consolidado (cuando todas las solicitudes están finalizadas)
+     */
+    public function checkinConsolidado($procesoId)
+    {
+        $proceso = \App\Models\ProcesoIngreso::with(['solicitudes', 'cargo', 'area', 'jefe'])->findOrFail($procesoId);
+
+        // Verificar que sea Jefe RRHH, Root, o un Jefe del proceso
+        $user = auth()->user();
+        $puedeVerCheckin = $user->hasRole(['Root', 'Jefe RRHH']) || 
+                          $user->hasRole(['Jefe Tecnología', 'Jefe Dotación', 'Jefe Servicios Generales', 'Jefe Bienes y Servicios']);
+
+        if (!$puedeVerCheckin) {
+            abort(403, 'No tienes permiso para ver este check-in.');
+        }
+
+        // Verificar que TODAS las solicitudes estén finalizadas
+        if ($proceso->solicitudes()->where('estado', '!=', 'Finalizada')->exists()) {
+            return back()->withErrors(['error' => 'No todas las solicitudes están finalizadas. El check-in solo puede verse cuando todas sean "Finalizada".']);
+        }
+
+        // Cargar todas las solicitudes y sus detalles
+        $solicitudes = $proceso->solicitudes()->with(['detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])->get();
+
+        $tecnologia = $solicitudes->firstWhere('tipo', 'Tecnología');
+        $dotacion = $solicitudes->firstWhere('tipo', 'Dotación');
+        $serviciosGenerales = $solicitudes->firstWhere('tipo', 'Servicios Generales');
+        $formacion = $solicitudes->firstWhere('tipo', 'Formación');
+        $bienes = $solicitudes->firstWhere('tipo', 'Bienes');
+
+        return view('solicitudes.checkin-consolidado', compact(
+            'proceso',
+            'tecnologia',
+            'dotacion',
+            'serviciosGenerales',
+            'formacion',
+            'bienes'
+        ));
+    }
+
     private function enviarNotificacionEstado(Solicitud $solicitud, string $estadoAnterior, string $estadoNuevo)
     {
         $notificationService = new \App\Services\NotificationService();
@@ -292,50 +510,46 @@ class SolicitudController extends Controller
     {
         $user = auth()->user();
 
-        // Admin ve todo
-        if ($user->hasRole('Admin')) {
-            return true;
-        }
-
-        // Root ve todo
+        // Root puede ver todo
         if ($user->hasRole('Root')) {
             return true;
         }
 
-        // Operador (Operador Dotación, Operador Formación, etc.) puede ver solicitudes de su área
-        // o aquellas cuyo tipo coincide con su rol (e.g., 'Operador Dotación' -> 'Dotación')
-        $isOperador = $user->getRoleNames()->contains(fn($role) => str_contains($role, 'Operador'));
-        if ($isOperador) {
-            $areaMatches = $solicitud->area_id && $user->area_id && $solicitud->area_id === $user->area_id;
-            $roleMatchesTipo = $solicitud->tipo ? $user->getRoleNames()->contains(fn($role) => str_contains($role, $solicitud->tipo)) : false;
-            if ($areaMatches || $roleMatchesTipo) {
+        // Jefe RRHH puede ver todas las solicitudes
+        if ($user->hasRole('Jefe RRHH')) {
+            return true;
+        }
+
+        // Jefe Tecnología puede ver SOLO solicitudes de Tecnología
+        if ($user->hasRole('Jefe Tecnología')) {
+            if ($solicitud->tipo === 'Tecnología') {
                 return true;
             }
         }
 
-        // Jefe puede ver solicitudes relacionadas con procesos donde es jefe
-        // o solicitudes del área que dirige
-        if ($user->hasRole('Jefe')) {
-            if ($solicitud->proceso && $solicitud->proceso->jefe_id === $user->id) {
-                return true;
-            }
-            if ($solicitud->area_id && $user->area_id && $solicitud->area_id === $user->area_id) {
+        // Jefe Dotación puede ver SOLO solicitudes de Dotación
+        if ($user->hasRole('Jefe Dotación')) {
+            if ($solicitud->tipo === 'Dotación') {
                 return true;
             }
         }
 
-        // Log debug info to help diagnose permission issues
-        Log::warning('Solicitud permiso denegado', [
-            'user_id' => $user->id ?? null,
-            'user_area_id' => $user->area_id ?? null,
-            'user_roles' => $user->getRoleNames()->toArray(),
-            'solicitud_id' => $solicitud->id ?? null,
-            'solicitud_area_id' => $solicitud->area_id ?? null,
-            'solicitud_tipo' => $solicitud->tipo ?? null,
-            'solicitud_proceso_jefe' => $solicitud->proceso->jefe_id ?? null,
-        ]);
+        // Jefe Servicios Generales puede ver SOLO solicitudes de Servicios Generales
+        if ($user->hasRole('Jefe Servicios Generales')) {
+            if ($solicitud->tipo === 'Servicios Generales') {
+                return true;
+            }
+        }
 
-        abort(403, 'No tiene permiso para ver esta solicitud (user_id: '.($user->id ?? 'null').', user_area: '.($user->area_id ?? 'null').', solicitud_id: '.($solicitud->id ?? 'null').', solicitud_area: '.($solicitud->area_id ?? 'null').', tipo: '.($solicitud->tipo ?? 'null').')');
+        // Jefe Bienes y Servicios puede ver SOLO solicitudes de Bienes
+        if ($user->hasRole('Jefe Bienes y Servicios')) {
+            if ($solicitud->tipo === 'Bienes') {
+                return true;
+            }
+        }
+
+        // Si no tiene permiso, lanzar excepción
+        abort(403, 'No tienes permiso para ver esta solicitud.');
     }
 }
 

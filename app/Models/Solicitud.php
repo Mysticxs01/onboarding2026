@@ -14,6 +14,7 @@ class Solicitud extends Model
     protected $fillable = [
         'proceso_ingreso_id',
         'area_id',
+        'puesto_trabajo_id',
         'tipo',
         'fecha_limite',
         'estado',
@@ -38,6 +39,21 @@ class Solicitud extends Model
     public function detalleUniforme()
     {
         return $this->hasOne(DetalleUniforme::class);
+    }
+
+    public function detalleBienes()
+    {
+        return $this->hasOne(DetalleBienes::class);
+    }
+
+    public function puestoTrabajo()
+    {
+        return $this->belongsTo(PuestoTrabajo::class);
+    }
+
+    public function cursos()
+    {
+        return $this->belongsToMany(Curso::class, 'solicitud_curso');
     }
 
     public function solicitudServiciosGenerales()

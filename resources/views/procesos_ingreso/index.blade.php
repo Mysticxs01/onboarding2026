@@ -6,7 +6,7 @@
                 <a href="{{ route('procesos-ingreso.historico') }}" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-center">
                     📚 Histórico
                 </a>
-                @if (Auth::user()->hasRole(['Root', 'Admin']))
+                @if (Auth::user()->hasRole(['Root', 'Jefe RRHH']))
                     <a href="{{ route('procesos-ingreso.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
                         ➕ Nuevo Ingreso
                     </a>

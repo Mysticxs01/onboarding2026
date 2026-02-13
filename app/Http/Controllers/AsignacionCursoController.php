@@ -14,7 +14,7 @@ class AsignacionCursoController extends Controller
     {
         $this->authorize('view', AsignacionCurso::class);
 
-        $query = AsignacionCurso::query();
+        $query = AsignacionCurso::with(['procesoIngreso.cargo', 'procesoIngreso.area', 'curso']);
 
         if ($request->estado) {
             $query->where('estado', $request->estado);
@@ -24,7 +24,14 @@ class AsignacionCursoController extends Controller
             $query->where('proceso_ingreso_id', $request->proceso_id);
         }
 
-        $asignaciones = $query->paginate(15);
+        // Filtro por búsqueda en nombre de curso
+        if ($request->busqueda) {
+            $query->whereHas('curso', function($q) use ($request) {
+                $q->where('nombre', 'like', "%{$request->busqueda}%");
+            });
+        }
+
+        $asignaciones = $query->orderBy('fecha_asignacion', 'DESC')->paginate(15);
 
         return view('formacion.asignaciones.index', [
             'asignaciones' => $asignaciones,
@@ -51,7 +58,7 @@ class AsignacionCursoController extends Controller
         $this->authorize('createAssignment', AsignacionCurso::class);
 
         $cursosAsignados = $procesoIngreso->asignacionesCursos()->pluck('curso_id')->toArray();
-        $cursosDisponibles = Curso::activos()->get();
+        $cursosDisponibles = Curso::activos()->orderBy('nombre')->get();
         $cursosSugeridos = $this->obtenerCursosSugeridos($procesoIngreso);
 
         return view('formacion.asignaciones.asignar', [
@@ -125,29 +132,48 @@ class AsignacionCursoController extends Controller
         $this->authorize('update', $asignacion);
 
         $validated = $request->validate([
-            'calificacion' => 'nullable|integer|min:0|max:100',
-            'certificado_url' => 'nullable|string',
+            'calificacion' => 'nullable|numeric|min:0|max:100',
+            'certificado_url' => 'nullable|url',
         ]);
 
-        $asignacion->marcarCompletado(
-            $validated['calificacion'] ?? null,
-            $validated['certificado_url'] ?? null
+        $asignacion->update([
+            'estado' => 'Completado',
+            'fecha_completado' => now(),
+            'calificacion' => $validated['calificacion'] ?? null,
+            'certificado_url' => $validated['certificado_url'] ?? null,
+        ]);
+
+        AuditoriaOnboarding::registrar(
+            'update', 
+            'AsignacionCurso', 
+            $asignacion->proceso_ingreso_id,
+            "Curso '{$asignacion->curso->nombre}' marcado como completado (Calificación: {$validated['calificacion']})"
         );
 
-        return redirect()->back()
-                       ->with('success', 'Curso marcado como completado.');
+        return redirect()->route('asignaciones.show', $asignacion)
+                       ->with('success', 'Curso marcado como completado exitosamente.');
     }
 
     public function marcarEnProgreso(AsignacionCurso $asignacion)
     {
         $this->authorize('update', $asignacion);
 
-        if (!$asignacion->puedeProceder()) {
+        if ($asignacion->estado !== 'Asignado') {
             return redirect()->back()
-                           ->with('error', 'No se puede cambiar el estado de esta asignación.');
+                           ->with('error', 'Solo se pueden marcar en progreso los cursos asignados.');
         }
 
-        $asignacion->marcarEnProgreso();
+        $asignacion->update([
+            'estado' => 'En Progreso',
+            'fecha_inicio' => now(),
+        ]);
+
+        AuditoriaOnboarding::registrar(
+            'update', 
+            'AsignacionCurso', 
+            $asignacion->proceso_ingreso_id,
+            "Curso '{$asignacion->curso->nombre}' marcado como en progreso"
+        );
 
         return redirect()->back()
                        ->with('success', 'Curso marcado como en progreso.');
@@ -157,14 +183,30 @@ class AsignacionCursoController extends Controller
     {
         $this->authorize('delete', $asignacion);
 
+        if (!in_array($asignacion->estado, ['Asignado', 'En Progreso'])) {
+            return redirect()->back()
+                           ->with('error', 'No se puede cancelar un curso completado o ya cancelado.');
+        }
+
         $validated = $request->validate([
             'motivo' => 'required|string|max:500',
         ]);
 
-        $asignacion->cancelar($validated['motivo']);
+        $asignacion->update([
+            'estado' => 'Cancelado',
+            'motivo_cancelacion' => $validated['motivo'],
+            'fecha_cancelacion' => now(),
+        ]);
+
+        AuditoriaOnboarding::registrar(
+            'delete', 
+            'AsignacionCurso', 
+            $asignacion->proceso_ingreso_id,
+            "Asignación de curso '{$asignacion->curso->nombre}' cancelada. Motivo: {$validated['motivo']}"
+        );
 
         return redirect()->back()
-                       ->with('success', 'Asignación cancelada.');
+                       ->with('success', 'Asignación cancelada exitosamente.');
     }
 
     // Método para obtener cursos sugeridos basado en cargo

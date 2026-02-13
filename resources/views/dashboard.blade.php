@@ -65,7 +65,7 @@
                         </h2>
                         <div class="flex gap-4 flex-wrap items-start">
                             <div class="flex gap-3 flex-wrap">
-                                @if (Auth::user()->hasRole(['Root', 'Admin']))
+                                @if (Auth::user()->hasRole(['Root', 'Jefe RRHH']))
                                     <a href="{{ route('procesos-ingreso.create') }}" class="btn-secondary">
                                         ➕ Crear Nuevo Proceso
                                     </a>

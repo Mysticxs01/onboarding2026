@@ -23,6 +23,11 @@ class ProcesoIngresoController extends Controller
 
     public function create()
     {
+        // Solo Jefe RRHH y Root pueden crear nuevos procesos de ingreso
+        if (!auth()->user()->hasRole(['Root', 'Jefe RRHH'])) {
+            abort(403, 'Solo el Jefe de RRHH puede crear nuevos procesos de ingreso.');
+        }
+
         $cargos = Cargo::with('area')->get();
         $jefes = User::all();
 
@@ -31,6 +36,11 @@ class ProcesoIngresoController extends Controller
 
 public function store(Request $request)
 {
+    // Solo Jefe RRHH y Root pueden crear nuevos procesos
+    if (!auth()->user()->hasRole(['Root', 'Jefe RRHH'])) {
+        abort(403, 'Solo el Jefe de RRHH puede crear nuevos procesos de ingreso.');
+    }
+
     // Validación inicial
     $request->validate([
         'nombre_completo' => 'required|string|max:255',

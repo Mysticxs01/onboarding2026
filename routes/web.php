@@ -49,14 +49,24 @@ Route::middleware('auth')->group(function () {
     // SOLICITUDES - Módulo completo de solicitudes por área
     Route::resource('solicitudes', SolicitudController::class);
     
-    // Detalles técnicos - Jefe especifica requerimientos
+    // Guardar detalles de cada tipo de solicitud (vistas específicas)
+    Route::post('/solicitudes/{id}/guardar-tecnologia', [SolicitudController::class, 'guardarTecnologia'])->name('solicitudes.guardar-tecnologia');
+    Route::post('/solicitudes/{id}/guardar-dotacion', [SolicitudController::class, 'guardarDotacion'])->name('solicitudes.guardar-dotacion');
+    Route::post('/solicitudes/{id}/guardar-servicios-generales', [SolicitudController::class, 'guardarServiciosGenerales'])->name('solicitudes.guardar-servicios-generales');
+    Route::post('/solicitudes/{id}/guardar-formacion', [SolicitudController::class, 'guardarFormacion'])->name('solicitudes.guardar-formacion');
+    Route::post('/solicitudes/{id}/guardar-bienes', [SolicitudController::class, 'guardarBienes'])->name('solicitudes.guardar-bienes');
+    
+    // Cambiar estado de solicitudes
+    Route::post('/solicitudes/{id}/cambiar-estado', [SolicitudController::class, 'cambiarEstado'])->name('solicitudes.cambiar-estado');
+    
+    // Check-in consolidado (cuando todas las solicitudes están finalizadas)
+    Route::get('/procesos-ingreso/{id}/checkin-consolidado', [SolicitudController::class, 'checkinConsolidado'])->name('solicitudes.checkin-consolidado');
+    
+    // Detalles técnicos - Jefe especifica requerimientos (RUTAS ANTIGUAS - MANTENER POR COMPATIBILIDAD)
     Route::get('/solicitudes/{id}/especificar-ti', [SolicitudController::class, 'especificarTI'])->name('solicitudes.especificar-ti');
     Route::post('/solicitudes/{id}/guardar-ti', [SolicitudController::class, 'guardarTI'])->name('solicitudes.guardar-ti');
     Route::get('/solicitudes/{id}/especificar-tallas', [SolicitudController::class, 'especificarTallas'])->name('solicitudes.especificar-tallas');
     Route::post('/solicitudes/{id}/guardar-tallas', [SolicitudController::class, 'guardarTallas'])->name('solicitudes.guardar-tallas');
-    
-    // Cambiar estado de solicitudes (Operadores)
-    Route::post('/solicitudes/{id}/cambiar-estado', [SolicitudController::class, 'cambiarEstado'])->name('solicitudes.cambiar-estado');
 
     // CHECK-IN - Módulo de seguimiento y recepción de activos
     Route::resource('checkins', CheckinController::class)->only(['index', 'show']);

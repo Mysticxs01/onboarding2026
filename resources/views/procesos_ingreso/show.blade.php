@@ -64,9 +64,15 @@
                         {{ $progreso }}%
                     </div>
                 </div>
-                <p class="text-sm text-gray-600">
+                <p class="text-sm text-gray-600 mb-4">
                     {{ $proceso->solicitudes()->where('estado', 'Finalizada')->count() }} de {{ $proceso->solicitudes()->count() }} solicitudes completadas
                 </p>
+
+                @if($progreso === 100 && $proceso->solicitudes()->count() > 0)
+                    <a href="{{ route('solicitudes.checkin-consolidado', $proceso->id) }}" class="inline-block w-full text-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        ✅ Ver Check-in Consolidado
+                    </a>
+                @endif
             </div>
         </div>
 
