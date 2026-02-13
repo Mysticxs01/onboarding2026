@@ -1,8 +1,3 @@
-@extends('layouts.app')
-
-@section('title', 'Solicitud de Bienes #'.$solicitude->id)
-
-@section('content')
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -208,4 +203,3 @@
         </div>
     </div>
 </x-app-layout>
-@endsection

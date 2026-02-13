@@ -62,8 +62,8 @@
                 <tbody>
                     @forelse ($solicitudes as $solicitud)
                         <tr class="border-b hover:bg-gray-50 @if($solicitud->fecha_limite < now()->addDays(3)) bg-red-50 @endif">
-                            <td class="px-4 py-3 font-bold text-sm">{{ $solicitud->proceso->codigo }}</td>
-                            <td class="px-4 py-3 text-sm">{{ $solicitud->proceso->nombre_completo }}</td>
+                            <td class="px-4 py-3 font-bold text-sm">{{ $solicitud->proceso?->codigo ?? 'N/A' }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $solicitud->proceso?->nombre_completo ?? 'Sin proceso' }}</td>
                             <td class="px-4 py-3 text-sm">
                                 <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">
                                     {{ $solicitud->tipo }}
@@ -133,8 +133,8 @@
                     
                     <div class="flex justify-between items-start mb-3">
                         <div>
-                            <p class="font-bold text-lg text-gray-800">{{ $solicitud->proceso->codigo }}</p>
-                            <p class="text-sm text-gray-600">{{ $solicitud->proceso->nombre_completo }}</p>
+                            <p class="font-bold text-lg text-gray-800">{{ $solicitud->proceso?->codigo ?? 'N/A' }}</p>
+                            <p class="text-sm text-gray-600">{{ $solicitud->proceso?->nombre_completo ?? 'Sin proceso' }}</p>
                         </div>
                         <span class="px-3 py-1 rounded text-white text-xs font-bold
                             @if ($solicitud->estado === 'Pendiente') bg-yellow-500
