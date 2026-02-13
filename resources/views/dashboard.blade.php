@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl leading-tight" style="color: #1B365D;">
                 {{ __('Dashboard') }} - Bienvenido {{ Auth::user()->name }}
             </h2>
-            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-semibold">
+            <span class="text-white px-3 py-1 rounded text-sm font-semibold" style="background-color: #1B365D;">
                 {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
             </span>
         </div>
@@ -16,27 +16,27 @@
             <!-- Estadísticas Rápidas -->
             @if (Auth::user()->hasRole(['Root', 'Admin']))
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <div class="bg-blue-50 p-6 rounded-lg shadow">
-                        <p class="text-gray-600 text-sm">Procesos de Ingreso</p>
-                        <p class="text-3xl font-bold text-blue-600">
+                    <div class="p-6 rounded-lg shadow" style="background-color: #F8F9FA; border-left: 4px solid #1B365D;">
+                        <p style="color: #1B365D;" class="text-sm font-semibold">Procesos de Ingreso</p>
+                        <p class="text-3xl font-bold mt-2" style="color: #1B365D;">
                             {{ \App\Models\ProcesoIngreso::count() }}
                         </p>
                     </div>
-                    <div class="bg-green-50 p-6 rounded-lg shadow">
-                        <p class="text-gray-600 text-sm">Solicitudes Pendientes</p>
-                        <p class="text-3xl font-bold text-green-600">
+                    <div class="p-6 rounded-lg shadow" style="background-color: #F8F9FA; border-left: 4px solid #28A745;">
+                        <p style="color: #28A745;" class="text-sm font-semibold">Solicitudes Pendientes</p>
+                        <p class="text-3xl font-bold mt-2" style="color: #28A745;">
                             {{ \App\Models\Solicitud::where('estado', 'Pendiente')->count() }}
                         </p>
                     </div>
-                    <div class="bg-yellow-50 p-6 rounded-lg shadow">
-                        <p class="text-gray-600 text-sm">Check-ins Pendientes</p>
-                        <p class="text-3xl font-bold text-yellow-600">
+                    <div class="p-6 rounded-lg shadow" style="background-color: #F8F9FA; border-left: 4px solid #C59D42;">
+                        <p style="color: #C59D42;" class="text-sm font-semibold">Check-ins Pendientes</p>
+                        <p class="text-3xl font-bold mt-2" style="color: #C59D42;">
                             {{ \App\Models\Checkin::where('estado_checkin', 'Pendiente')->count() }}
                         </p>
                     </div>
-                    <div class="bg-purple-50 p-6 rounded-lg shadow">
-                        <p class="text-gray-600 text-sm">Usuarios Registrados</p>
-                        <p class="text-3xl font-bold text-purple-600">
+                    <div class="p-6 rounded-lg shadow" style="background-color: #F8F9FA; border-left: 4px solid #28A745; opacity: 0.8;">
+                        <p style="color: #1B365D;" class="text-sm font-semibold">Usuarios Registrados</p>
+                        <p class="text-3xl font-bold mt-2" style="color: #1B365D;">
                             {{ \App\Models\User::count() }}
                         </p>
                     </div>
@@ -44,9 +44,9 @@
             @endif
 
             <!-- Panel Principal -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg mb-6" style="border-left: 4px solid #1B365D;">
                 <div class="p-6 text-gray-900">
-                    <h1 class="text-2xl font-bold mb-6">
+                    <h1 class="text-2xl font-bold mb-6" style="color: #1B365D;">
                         @if (Auth::user()->hasRole('Root'))
                             🔐 Panel de Control Raíz
                         @elseif (Auth::user()->hasRole('Admin'))
@@ -60,21 +60,23 @@
 
                     <!-- Sección: Procesos de Ingreso -->
                     <div class="mb-8">
-                        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-blue-500 pb-2">
+                        <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             📋 Procesos de Ingreso
                         </h2>
                         <div class="flex gap-3 flex-wrap">
-                            <a href="{{ route('procesos-ingreso.create') }}"
-                               class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition">
-                                ➕ Crear Nuevo Proceso
-                            </a>
+                            @if (Auth::user()->hasRole(['Root', 'Admin']))
+                                <a href="{{ route('procesos-ingreso.create') }}"
+                                   class="btn-secondary text-white px-4 py-2 rounded shadow transition">
+                                    ➕ Crear Nuevo Proceso
+                                </a>
+                            @endif
                             <a href="{{ route('procesos-ingreso.index') }}"
-                               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+                               class="btn-primary text-white px-4 py-2 rounded shadow transition">
                                 👁️ Ver Procesos
                             </a>
                             @if (Auth::user()->hasRole(['Root', 'Admin']))
                                 <a href="{{ route('procesos-ingreso.historico') }}"
-                                   class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow transition">
+                                   class="text-white px-4 py-2 rounded shadow transition" style="background-color: #1B365D;">
                                     📜 Histórico
                                 </a>
                             @endif
@@ -83,20 +85,20 @@
 
                     <!-- Sección: Solicitudes por Área -->
                     <div class="mb-8">
-                        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-green-500 pb-2">
+                        <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #28A745;">
                             🎯 Solicitudes por Área
                         </h2>
                         <div class="flex gap-3 flex-wrap">
                             <a href="{{ route('solicitudes.index') }}"
-                               class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition">
+                               class="btn-primary text-white px-4 py-2 rounded shadow transition">
                                 📊 Ver Solicitudes
                             </a>
                             @if (Auth::user()->hasRole('Jefe'))
-                                <p class="text-gray-600 text-sm mt-2 italic">
+                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
                                     📝 Valida y especifica requerimientos técnicos de tu área
                                 </p>
                             @elseif (Auth::user()->hasRole('Operador') || Auth::user()->getRoleNames()->contains('Operador'))
-                                <p class="text-gray-600 text-sm mt-2 italic">
+                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
                                     ✅ Completa las solicitudes de {{ Auth::user()->area->nombre ?? 'tu área' }}
                                 </p>
                             @endif
@@ -105,16 +107,16 @@
 
                     <!-- Sección: Check-in de Activos -->
                     <div class="mb-8">
-                        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-yellow-500 pb-2">
+                        <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             ✅ Check-in de Activos
                         </h2>
                         <div class="flex gap-3 flex-wrap">
                             <a href="{{ route('checkins.index') }}"
-                               class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded shadow transition">
+                               class="btn-secondary text-white px-4 py-2 rounded shadow transition">
                                 📦 Ver Check-ins
                             </a>
                             @if (Auth::user()->hasRole(['Root', 'Admin']))
-                                <p class="text-gray-600 text-sm mt-2 italic">
+                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
                                     🔍 Monitorea la entrega de activos a empleados
                                 </p>
                             @endif
@@ -124,15 +126,15 @@
                     <!-- Sección: Administración (solo Admin/Root) -->
                     @if (Auth::user()->hasRole(['Root', 'Admin']))
                         <div class="mb-8">
-                            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-purple-500 pb-2">
+                            <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #1B365D;">
                                 ⚙️ Administración
                             </h2>
                             <div class="flex gap-3 flex-wrap">
                                 <a href="{{ route('procesos-ingreso.index') }}"
-                                   class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded shadow transition">
+                                   class="text-white px-4 py-2 rounded shadow transition" style="background-color: #28A745;">
                                     🗺️ Gestionar Procesos
                                 </a>
-                                <p class="text-gray-600 text-sm mt-2 italic">
+                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
                                     🔧 Selecciona un proceso para asignar puestos de trabajo
                                 </p>
                             </div>
@@ -140,8 +142,8 @@
                     @endif
 
                     <!-- Documentación -->
-                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mt-8">
-                        <p class="text-sm text-gray-700">
+                    <div class="border-l-4 p-4 rounded mt-8" style="background-color: #F8F9FA; border-left-color: #1B365D;">
+                        <p style="color: #1B365D;" class="text-sm">
                             <strong>ℹ️ Información:</strong> Este sistema gestiona todo el proceso de onboarding de nuevos empleados.
                             Cuando creas un nuevo proceso de ingreso, se generan automáticamente solicitudes para todas las áreas
                             correspondientes basadas en el cargo del empleado.
@@ -152,18 +154,18 @@
 
             <!-- Atajos Rápidos por Rol -->
             @if (Auth::user()->hasRole('Jefe'))
-                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6 shadow mb-6">
-                    <h3 class="text-lg font-bold text-indigo-900 mb-4">🚀 Acciones Rápidas - Jefe</h3>
-                    <ul class="space-y-2 text-indigo-700">
+                <div class="border-l-4 rounded-lg p-6 shadow mb-6" style="background-color: #F8F9FA; border-left-color: #28A745;">
+                    <h3 class="text-lg font-bold mb-4" style="color: #28A745;">🚀 Acciones Rápidas - Jefe</h3>
+                    <ul class="space-y-2" style="color: #1B365D;">
                         <li>✓ Especifica requerimientos técnicos (TI, uniformes, etc.)</li>
                         <li>✓ Valida que se complete todo antes de la fecha límite</li>
                         <li>✓ Supervisa check-in de activos al empleado</li>
                     </ul>
                 </div>
             @elseif (Auth::user()->hasRole('Operador') || Auth::user()->getRoleNames()->contains('Operador'))
-                <div class="bg-green-50 border border-green-200 rounded-lg p-6 shadow">
-                    <h3 class="text-lg font-bold text-green-900 mb-4">🚀 Acciones Rápidas - Operador</h3>
-                    <ul class="space-y-2 text-green-700">
+                <div class="border-l-4 rounded-lg p-6 shadow" style="background-color: #F8F9FA; border-left-color: #28A745;">
+                    <h3 class="text-lg font-bold mb-4" style="color: #28A745;">🚀 Acciones Rápidas - Operador</h3>
+                    <ul class="space-y-2" style="color: #1B365D;">
                         <li>✓ Completa todas las solicitudes de {{ Auth::user()->area->nombre ?? 'tu área' }}</li>
                         <li>✓ Marca cada ítem como completado</li>
                         <li>✓ Prepara todo antes de la fecha límite</li>

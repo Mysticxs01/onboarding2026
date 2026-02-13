@@ -51,16 +51,18 @@ class PlantillaSolicitudSeeder extends Seeder
      */
     private function obtenerAreaResponsable($tipo)
     {
+        // Mapeo de tipos de solicitud a áreas reales de Sinergia Financiera
         $mapeo = [
-            'Tecnología' => 'Tecnología',
-            'Dotación' => 'Recursos Humanos',
+            'Tecnología' => 'Gerencia TI',
+            'Dotación' => 'Gerencia de Talento Humano',
             'Servicios Generales' => 'Servicios Generales',
             'Formación' => 'Formación y Capacitación',
-            'Bienes y Servicios' => 'Bienes y Servicios',
+            'Bienes y Servicios' => 'Servicios Generales', // Cambiar a Servicios Generales
         ];
 
-        $nombreArea = $mapeo[$tipo] ?? 'Recursos Humanos';
+        $nombreArea = $mapeo[$tipo] ?? 'Gerencia de Talento Humano';
         
-        return Area::where('nombre', $nombreArea)->firstOrFail();
+        // Si el área existe, devolverla; si no, devolver la primera
+        return Area::where('nombre', $nombreArea)->first() ?? Area::first();
     }
 }

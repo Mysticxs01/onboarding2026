@@ -6,9 +6,11 @@
                 <a href="{{ route('procesos-ingreso.historico') }}" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 text-center">
                     📚 Histórico
                 </a>
-                <a href="{{ route('procesos-ingreso.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
-                    ➕ Nuevo Ingreso
-                </a>
+                @if (Auth::user()->hasRole(['Root', 'Admin']))
+                    <a href="{{ route('procesos-ingreso.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
+                        ➕ Nuevo Ingreso
+                    </a>
+                @endif
             </div>
         </div>
     </x-slot>

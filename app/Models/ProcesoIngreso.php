@@ -16,6 +16,9 @@ class ProcesoIngreso extends Model
         'cargo_id',
         'area_id',
         'fecha_ingreso',
+        'email',
+        'telefono',
+        'fecha_esperada_finalizacion',
         'jefe_id',
         'estado',
         'observaciones',
@@ -27,6 +30,7 @@ class ProcesoIngreso extends Model
         'fecha_ingreso' => 'date',
         'fecha_cancelacion' => 'datetime',
         'fecha_finalizacion' => 'datetime',
+        'fecha_esperada_finalizacion' => 'date',
     ];
 
     public function cargo()
@@ -57,6 +61,11 @@ class ProcesoIngreso extends Model
     public function checkin()
     {
         return $this->hasOne(Checkin::class, 'proceso_ingreso_id');
+    }
+
+    public function asignacionesCursos()
+    {
+        return $this->hasMany(AsignacionCurso::class, 'proceso_ingreso_id');
     }
 
     /**

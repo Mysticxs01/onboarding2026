@@ -12,7 +12,7 @@ use App\Http\Controllers\SolicitudTecnologiaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 // Dashboard
@@ -127,5 +127,8 @@ Route::get('/checkin/{codigo}', [CheckinController::class, 'confirmar'])->name('
 Route::post('/checkin/{codigo}/procesar', [CheckinController::class, 'procesarConfirmacion'])->name('checkin.procesar');
 Route::get('/checkin/{codigo}/confirmado', [CheckinController::class, 'confirmado'])->name('checkin.confirmado');
 Route::get('/checkin/{codigo}/estado', [CheckinController::class, 'verificarEstado'])->name('checkin.estado');
+
+// MÓDULO DE FORMACIÓN - Cursos, Asignaciones, Rutas, Reportes y Auditoría
+require __DIR__.'/web-formacion.php';
 
 require __DIR__.'/auth.php';

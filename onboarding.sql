@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-02-2026 a las 06:00:19
+-- Tiempo de generación: 13-02-2026 a las 16:51:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -39,11 +39,74 @@ CREATE TABLE `areas` (
 --
 
 INSERT INTO `areas` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'Recursos Humanos', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 'Tecnología', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 'Servicios Generales', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 'Formación y Capacitación', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 'Bienes y Servicios', '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+(1, 'Gerencia Administración', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(2, 'Servicios Generales', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(3, 'Mantenimiento', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(4, 'Gerencia Comercial', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(5, 'Ventas y Captación', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(6, 'Gestión de Canales', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(7, 'Marketing y Producto', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(8, 'Servicio al Cliente', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(9, 'Gerencia Riesgo y Crédito', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(10, 'Análisis de Crédito', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(11, 'Riesgo Operativo', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(12, 'Gerencia Financiera', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(13, 'Tesorería', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(14, 'Contabilidad', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(15, 'Planeación', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(16, 'Gerencia TI', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(17, 'Infraestructura y Redes', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(18, 'Desarrollo de Software', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(19, 'Soporte Técnico', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(20, 'Gerencia de Talento Humano', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(21, 'Selección y Reclutamiento', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(22, 'Formación y Capacitación', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(23, 'Nómina', '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(24, 'Clima Organizacional', '2026-02-13 20:38:12', '2026-02-13 20:38:12');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignacion_cursos`
+--
+
+CREATE TABLE `asignacion_cursos` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `proceso_ingreso_id` bigint(20) UNSIGNED NOT NULL,
+  `curso_id` bigint(20) UNSIGNED NOT NULL,
+  `fecha_asignacion` date NOT NULL,
+  `fecha_limite` date DEFAULT NULL,
+  `fecha_completacion` date DEFAULT NULL,
+  `estado` enum('Asignado','En Progreso','Completado','Vencido','Cancelado') NOT NULL DEFAULT 'Asignado',
+  `calificacion` int(11) DEFAULT NULL,
+  `certificado_url` varchar(255) DEFAULT NULL,
+  `asignado_por_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `responsable_validacion_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `observaciones` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `auditoria_onboarding`
+--
+
+CREATE TABLE `auditoria_onboarding` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `usuario_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `accion` enum('create','update','delete','view','export','anular') NOT NULL,
+  `entidad` varchar(255) NOT NULL,
+  `entidad_id` bigint(20) UNSIGNED NOT NULL,
+  `valores_anteriores` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`valores_anteriores`)),
+  `valores_nuevos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`valores_nuevos`)),
+  `motivo` text DEFAULT NULL,
+  `ip_origin` varchar(255) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -56,14 +119,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-admin@empresa.com|127.0.0.1', 'i:1;', 1770526746),
-('laravel-cache-admin@empresa.com|127.0.0.1:timer', 'i:1770526746;', 1770526746);
 
 -- --------------------------------------------------------
 
@@ -96,11 +151,60 @@ CREATE TABLE `cargos` (
 --
 
 INSERT INTO `cargos` (`id`, `nombre`, `area_id`, `created_at`, `updated_at`) VALUES
-(1, 'Analista de RRHH', 1, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 'Desarrollador', 2, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 'Técnico de Servicios', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 'Instructor', 4, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 'Administrador de Inventario', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+(1, 'Gerente Administrativo', 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(2, 'Coordinador de Servicios Corporativos', 2, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(3, 'Auxiliar de Servicios Generales y Cafetería', 2, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(4, 'Asistente de Compras e Inventario', 2, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(5, 'Jefe de Infraestructura y Mantenimiento', 3, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(6, 'Técnico de Mantenimiento Locativo', 3, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(7, 'Técnico en Climatización y Electricidad', 3, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(8, 'Gerente Comercial', 4, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(9, 'Coordinador de Ventas y Captación', 5, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(10, 'Ejecutivo de Captación y Colocación', 5, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(11, 'Asesor de Crédito Externo', 5, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(12, 'Jefe de Canales', 6, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(13, 'Coordinador de Sucursales', 6, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(14, 'Administrador de Canales Digitales', 6, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(15, 'Coordinador de Marketing y Producto', 7, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(16, 'Analista de Producto', 7, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(17, 'Especialista en Comunicación y Marca', 7, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(18, 'Coordinador de Servicio al Cliente', 8, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(19, 'Oficial de Experiencia al Asociado', 8, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(20, 'Analista de Fidelización y Retención', 8, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(21, 'Gerente de Riesgos', 9, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(22, 'Coordinador de Análisis y Crédito', 10, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(23, 'Analista de Crédito Senior', 10, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(24, 'Asistente de Verificación y Garantías', 10, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(25, 'Analista de Microcrédito y Terreno', 10, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(26, 'Coordinador de Riesgo Operativo', 11, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(27, 'Oficial de Cumplimiento (SARLAFT)', 11, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(28, 'Analista de Riesgo Operacional', 11, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(29, 'Auditor de Procesos Crediticios', 11, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(30, 'Gerente Financiero', 12, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(31, 'Coordinador de Tesorería', 13, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(32, 'Analista de Tesorería y Pagos', 13, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(33, 'Coordinador de Contabilidad', 14, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(34, 'Analista de Impuestos y Costos', 14, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(35, 'Asistente Contable', 14, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(36, 'Coordinador de Planeación', 15, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(37, 'Analista de Estudios Económicos', 15, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(38, 'Gerente de TI', 16, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(39, 'Coordinador de Infraestructura y Redes', 17, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(40, 'Administrador de Servidores y Nube', 17, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(41, 'Coordinador de Desarrollo de Software', 18, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(42, 'Desarrollador Full Stack', 18, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(43, 'Analista de QA (Aseguramiento de Calidad)', 18, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(44, 'Coordinador de Soporte Técnico', 19, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(45, 'Técnico de Soporte Nivel 1', 19, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(46, 'Gerente Talento Humano', 20, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(47, 'Coordinador de Selección y Reclutamiento', 21, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(48, 'Analista de Atracción de Talento', 21, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(49, 'Coordinador de Formación y Capacitación', 22, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(50, 'Facilitador de Aprendizaje Interno', 22, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(51, 'Coordinador de Nómina y Compensación', 23, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(52, 'Analista de Prestaciones y Seguridad Social', 23, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(53, 'Coordinador de Clima Organizacional', 24, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(54, 'Especialista en Bienestar y Cultura', 24, '2026-02-13 20:38:12', '2026-02-13 20:38:12');
 
 -- --------------------------------------------------------
 
@@ -122,6 +226,87 @@ CREATE TABLE `checkins` (
   `firma_digital` text DEFAULT NULL,
   `dispositivo_confirmacion` varchar(255) DEFAULT NULL,
   `ip_confirmacion` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cursos`
+--
+
+CREATE TABLE `cursos` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `codigo` varchar(255) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `categoria` enum('Obligatorio','Opcional','Cumplimiento Normativo','Desarrollo','Liderazgo') NOT NULL DEFAULT 'Opcional',
+  `modalidad` enum('Presencial','Virtual','Híbrida') NOT NULL DEFAULT 'Virtual',
+  `duracion_horas` int(11) NOT NULL,
+  `objetivo` text DEFAULT NULL,
+  `contenido` longtext DEFAULT NULL,
+  `area_responsable_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `costo` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `requiere_certificado` tinyint(1) NOT NULL DEFAULT 1,
+  `vigencia_meses` int(11) DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `cursos`
+--
+
+INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `categoria`, `modalidad`, `duracion_horas`, `objetivo`, `contenido`, `area_responsable_id`, `costo`, `requiere_certificado`, `vigencia_meses`, `activo`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'CUR-001', 'Inducción a la Cultura Cooperativa', 'Conocer la historia, valores y principios del modelo solidario.', 'Obligatorio', 'Presencial', 4, 'Conocer la historia, valores y principios del modelo solidario.', 'Inducción a la Cultura Cooperativa', 22, 50.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(2, 'CUR-002', 'Portafolio de Productos y Servicios', 'Dominar las características de los ahorros y créditos vigentes.', 'Obligatorio', 'Virtual', 8, 'Dominar las características de los ahorros y créditos vigentes.', 'Portafolio de Productos y Servicios', 22, 60.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(3, 'CUR-003', 'Prevención de Lavado de Activos (SARLAFT)', 'Detectar operaciones sospechosas y cumplir con la ley financiera.', 'Cumplimiento Normativo', 'Virtual', 4, 'Detectar operaciones sospechosas y cumplir con la ley financiera.', 'Prevención de Lavado de Activos (SARLAFT)', 22, 75.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(4, 'CUR-004', 'Seguridad y Salud en el Trabajo (SST)', 'Identificar riesgos laborales y protocolos de emergencia.', 'Cumplimiento Normativo', 'Presencial', 4, 'Identificar riesgos laborales y protocolos de emergencia.', 'Seguridad y Salud en el Trabajo (SST)', 22, 40.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(5, 'CUR-005', 'Brigadas de Primeros Auxilios', 'Capacitar al personal en respuesta ante accidentes físicos.', 'Cumplimiento Normativo', 'Presencial', 6, 'Capacitar al personal en respuesta ante accidentes físicos.', 'Brigadas de Primeros Auxilios', 22, 45.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(6, 'CUR-006', 'Prevención de Acoso Laboral', 'Fomentar un ambiente de respeto y convivencia sana.', 'Cumplimiento Normativo', 'Virtual', 3, 'Fomentar un ambiente de respeto y convivencia sana.', 'Prevención de Acoso Laboral', 22, 35.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(7, 'CUR-007', 'Manejo de Extintores y Evacuación', 'Actuar correctamente ante incendios o desastres naturales.', 'Cumplimiento Normativo', 'Presencial', 3, 'Actuar correctamente ante incendios o desastres naturales.', 'Manejo de Extintores y Evacuación', 22, 30.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(8, 'CUR-008', 'Venta Consultiva Financiera', 'Desarrollar técnicas para ofrecer créditos según la necesidad del socio.', 'Desarrollo', 'Presencial', 8, 'Desarrollar técnicas para ofrecer créditos según la necesidad del socio.', 'Venta Consultiva Financiera', 22, 70.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(9, 'CUR-009', 'Técnicas de Negociación y Cierre', 'Mejorar la efectividad en la colocación de servicios financieros.', 'Desarrollo', 'Virtual', 6, 'Mejorar la efectividad en la colocación de servicios financieros.', 'Técnicas de Negociación y Cierre', 22, 65.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(10, 'CUR-010', 'Captación de Depósitos y Ahorro', 'Aprender estrategias para atraer liquidez a la cooperativa.', 'Desarrollo', 'Virtual', 6, 'Aprender estrategias para atraer liquidez a la cooperativa.', 'Captación de Depósitos y Ahorro', 22, 60.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(11, 'CUR-011', 'Análisis de Capacidad de Pago', 'Estudiar detalladamente la relación ingreso/gasto del solicitante.', 'Desarrollo', 'Presencial', 8, 'Estudiar detalladamente la relación ingreso/gasto del solicitante.', 'Análisis de Capacidad de Pago', 22, 80.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(12, 'CUR-012', 'Interpretación de Centrales de Riesgo', 'Aprender a leer e interpretar reportes de burós de crédito.', 'Desarrollo', 'Virtual', 6, 'Aprender a leer e interpretar reportes de burós de crédito.', 'Interpretación de Centrales de Riesgo', 22, 70.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(13, 'CUR-013', 'Evaluación de Garantías Reales', 'Conocer los aspectos legales de hipotecas y prendas vehiculares.', 'Desarrollo', 'Presencial', 8, 'Conocer los aspectos legales de hipotecas y prendas vehiculares.', 'Evaluación de Garantías Reales', 22, 85.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(14, 'CUR-014', 'Gestión de Riesgo Operativo', 'Identificar fallas en procesos que puedan generar pérdidas.', 'Cumplimiento Normativo', 'Virtual', 6, 'Identificar fallas en procesos que puedan generar pérdidas.', 'Gestión de Riesgo Operativo', 22, 75.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(15, 'CUR-015', 'Gestión de Cobranza Preventiva', 'Aprender a contactar al socio antes de que caiga en mora.', 'Desarrollo', 'Virtual', 5, 'Aprender a contactar al socio antes de que caiga en mora.', 'Gestión de Cobranza Preventiva', 22, 60.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(16, 'CUR-016', 'Actualización en Normas NIIF', 'Aplicar los estándares internacionales de contabilidad vigentes.', 'Cumplimiento Normativo', 'Virtual', 8, 'Aplicar los estándares internacionales de contabilidad vigentes.', 'Actualización en Normas NIIF', 22, 95.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(17, 'CUR-017', 'Manejo de Flujo de Caja y Liquidez', 'Optimizar el dinero disponible para desembolsos diarios.', 'Desarrollo', 'Presencial', 6, 'Optimizar el dinero disponible para desembolsos diarios.', 'Manejo de Flujo de Caja y Liquidez', 22, 70.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(18, 'CUR-018', 'Preparación de Reportes a Entes de Control', 'Cumplir con los informes para la Superintendencia.', 'Cumplimiento Normativo', 'Virtual', 6, 'Cumplir con los informes para la Superintendencia.', 'Preparación de Reportes a Entes de Control', 22, 80.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(19, 'CUR-019', 'Ciberseguridad para No Técnicos', 'Enseñar al personal a evitar phishing y proteger contraseñas.', 'Cumplimiento Normativo', 'Virtual', 4, 'Enseñar al personal a evitar phishing y proteger contraseñas.', 'Ciberseguridad para No Técnicos', 22, 50.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(20, 'CUR-020', 'Manejo del Core Financiero (Software)', 'Capacitar en el uso de la plataforma principal de la entidad.', 'Desarrollo', 'Presencial', 16, 'Capacitar en el uso de la plataforma principal de la entidad.', 'Manejo del Core Financiero (Software)', 22, 120.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(21, 'CUR-021', 'Protección de Datos Personales', 'Cumplir con la ley de Habeas Data y privacidad del socio.', 'Cumplimiento Normativo', 'Virtual', 4, 'Cumplir con la ley de Habeas Data y privacidad del socio.', 'Protección de Datos Personales', 22, 40.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(22, 'CUR-022', 'Liderazgo y Trabajo en Equipo', 'Desarrollar habilidades blandas para coordinadores y jefes.', 'Desarrollo', 'Presencial', 12, 'Desarrollar habilidades blandas para coordinadores y jefes.', 'Liderazgo y Trabajo en Equipo', 22, 100.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(23, 'CUR-023', 'Inteligencia Emocional en el Trabajo', 'Brindar herramientas para el manejo del estrés y la empatía.', 'Desarrollo', 'Virtual', 8, 'Brindar herramientas para el manejo del estrés y la empatía.', 'Inteligencia Emocional en el Trabajo', 22, 80.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(24, 'CUR-024', 'Comunicación Asertiva', 'Mejorar el flujo de información interna y externa.', 'Desarrollo', 'Virtual', 6, 'Mejorar el flujo de información interna y externa.', 'Comunicación Asertiva', 22, 60.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(25, 'CUR-025', 'Excel Avanzado para Finanzas', 'Dominar tablas dinámicas y fórmulas para análisis de datos.', 'Desarrollo', 'Virtual', 10, 'Dominar tablas dinámicas y fórmulas para análisis de datos.', 'Excel Avanzado para Finanzas', 22, 90.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(26, 'CUR-026', 'Protocolo de Servicio al Cliente', 'Estandarizar el saludo y la atención en las sucursales.', 'Desarrollo', 'Presencial', 4, 'Estandarizar el saludo y la atención en las sucursales.', 'Protocolo de Servicio al Cliente', 22, 50.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(27, 'CUR-027', 'Manejo de Clientes Difíciles', 'Aprender técnicas de desescalamiento de conflictos.', 'Desarrollo', 'Presencial', 6, 'Aprender técnicas de desescalamiento de conflictos.', 'Manejo de Clientes Difíciles', 22, 65.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(28, 'CUR-028', 'Gestión de PQRS Eficiente', 'Reducir los tiempos de respuesta a los reclamos de los socios.', 'Desarrollo', 'Virtual', 5, 'Reducir los tiempos de respuesta a los reclamos de los socios.', 'Gestión de PQRS Eficiente', 22, 55.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(29, 'CUR-029', 'Manipulación de Productos Químicos', 'Uso seguro de implementos de aseo (Para Servicios Generales).', 'Cumplimiento Normativo', 'Presencial', 3, 'Uso seguro de implementos de aseo (Para Servicios Generales).', 'Manipulación de Productos Químicos', 22, 30.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(30, 'CUR-030', 'Mantenimiento Preventivo de Sedes', 'Protocolos de revisión técnica locativa (Para Mantenimiento).', 'Cumplimiento Normativo', 'Presencial', 6, 'Protocolos de revisión técnica locativa (Para Mantenimiento).', 'Mantenimiento Preventivo de Sedes', 22, 50.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(31, 'CUR-031', 'Gestión de Compras y Proveedores', 'Aprender procesos de licitación y selección de compras.', 'Desarrollo', 'Virtual', 6, 'Aprender procesos de licitación y selección de compras.', 'Gestión de Compras y Proveedores', 22, 70.00, 1, 12, 1, NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `curso_x_cargo`
+--
+
+CREATE TABLE `curso_x_cargo` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `curso_id` bigint(20) UNSIGNED NOT NULL,
+  `cargo_id` bigint(20) UNSIGNED NOT NULL,
+  `es_obligatorio` tinyint(1) NOT NULL DEFAULT 0,
+  `orden_secuencia` int(11) NOT NULL DEFAULT 0,
+  `fecha_desde` date DEFAULT NULL,
+  `fecha_hasta` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -169,6 +354,28 @@ CREATE TABLE `detalles_uniformes` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `elementos_proteccion`
+--
+
+CREATE TABLE `elementos_proteccion` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `tipo_elemento` varchar(255) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1,
+  `talla` varchar(255) DEFAULT NULL,
+  `color` varchar(255) DEFAULT NULL,
+  `estado` enum('Pendiente de Entrega','Disponible para Entregar','Entregado','Sin Talla Disponible','Artículo Descontinuado') NOT NULL DEFAULT 'Pendiente de Entrega',
+  `entregado` tinyint(1) NOT NULL DEFAULT 0,
+  `fecha_entrega` datetime DEFAULT NULL,
+  `observaciones` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `failed_jobs`
 --
 
@@ -180,6 +387,26 @@ CREATE TABLE `failed_jobs` (
   `payload` longtext NOT NULL,
   `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `items_inmobiliario`
+--
+
+CREATE TABLE `items_inmobiliario` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `tipo_item` varchar(255) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1,
+  `estado` enum('Pendiente','Disponible','Asignado','Entregado','No Disponible') NOT NULL DEFAULT 'Pendiente',
+  `observaciones` text DEFAULT NULL,
+  `entregado_por` varchar(255) DEFAULT NULL,
+  `fecha_entrega` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -244,9 +471,18 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2026_02_08_022631_create_proceso_ingresos_table', 1),
 (9, '2026_02_08_022721_create_solicituds_table', 1),
 (10, '2026_02_08_023817_create_plantilla_solicituds_table', 1),
-(11, '2026_02_09_add_fields_to_procesos_ingresos', 1),
-(12, '2026_02_09_create_puestos_tabla', 1),
-(13, '2026_02_10_create_detalles_tecnicas_tables', 1);
+(11, '2026_02_08_100000_create_area_specific_tables', 1),
+(12, '2026_02_09_add_fields_to_procesos_ingresos', 1),
+(13, '2026_02_09_create_puestos_tabla', 1),
+(14, '2026_02_10_create_detalles_tecnicas_tables', 1),
+(15, '2026_02_13_000001_create_cursos_table', 1),
+(16, '2026_02_13_000002_create_curso_x_cargo_table', 1),
+(17, '2026_02_13_000003_create_asignacion_cursos_table', 1),
+(18, '2026_02_13_000004_create_rutas_formacion_table', 1),
+(19, '2026_02_13_000005_create_ruta_x_curso_table', 1),
+(20, '2026_02_13_000006_create_auditoria_onboarding_table', 1),
+(21, '2026_02_13_000007_create_reporte_cumplimiento_table', 1),
+(22, '2026_02_13_000008_add_fields_to_procesos_ingresos', 1);
 
 -- --------------------------------------------------------
 
@@ -277,14 +513,14 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 3),
-(2, 'App\\Models\\User', 4),
-(3, 'App\\Models\\User', 2),
-(5, 'App\\Models\\User', 6),
-(6, 'App\\Models\\User', 5),
-(7, 'App\\Models\\User', 7),
-(8, 'App\\Models\\User', 8),
-(9, 'App\\Models\\User', 9);
+(1, 'App\\Models\\User', 4),
+(2, 'App\\Models\\User', 5),
+(3, 'App\\Models\\User', 6),
+(5, 'App\\Models\\User', 8),
+(6, 'App\\Models\\User', 7),
+(7, 'App\\Models\\User', 9),
+(8, 'App\\Models\\User', 10),
+(9, 'App\\Models\\User', 11);
 
 -- --------------------------------------------------------
 
@@ -317,24 +553,64 @@ CREATE TABLE `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'ver-procesos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 'crear-procesos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 'editar-procesos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 'cancelar-procesos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 'ver-historico-procesos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(6, 'ver-solicitudes', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(7, 'editar-solicitudes', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(8, 'completar-solicitudes', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(9, 'ver-solicitudes-area', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(10, 'especificar-requerimientos-ti', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(11, 'especificar-tallas', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(12, 'validar-solicitudes', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(13, 'generar-pdf-checkin', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(14, 'confirmar-entrada-activos', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(15, 'ver-checkin', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(16, 'gestionar-usuarios', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(17, 'asignar-roles', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(18, 'ver-usuarios', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+(1, 'ver-procesos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(2, 'crear-procesos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(3, 'editar-procesos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(4, 'cancelar-procesos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(5, 'ver-historico-procesos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(6, 'ver-solicitudes', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(7, 'editar-solicitudes', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(8, 'completar-solicitudes', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(9, 'ver-solicitudes-area', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(10, 'especificar-requerimientos-ti', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(11, 'especificar-tallas', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(12, 'validar-solicitudes', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(13, 'generar-pdf-checkin', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(14, 'confirmar-entrada-activos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(15, 'ver-checkin', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(16, 'gestionar-usuarios', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(17, 'asignar-roles', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(18, 'ver-usuarios', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(19, 'view-cursos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(20, 'create-cursos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(21, 'update-cursos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(22, 'delete-cursos', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(23, 'view-asignaciones', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(24, 'create-asignaciones', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(25, 'update-asignaciones', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(26, 'delete-asignaciones', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(27, 'view-rutas', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(28, 'create-rutas', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(29, 'update-rutas', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(30, 'delete-rutas', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(31, 'view-reportes', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(32, 'export-reportes', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(33, 'view-auditoria', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(34, 'export-auditoria', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `planes_capacitacion`
+--
+
+CREATE TABLE `planes_capacitacion` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `cargo_id` bigint(20) UNSIGNED NOT NULL,
+  `titulo_plan` varchar(255) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `duracion_horas` int(11) NOT NULL DEFAULT 40,
+  `fecha_inicio_estimada` datetime DEFAULT NULL,
+  `fecha_fin_estimada` datetime DEFAULT NULL,
+  `modulos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`modulos`)),
+  `responsable_capacitacion` varchar(255) DEFAULT NULL,
+  `estado` enum('Diseño','Programado','En Ejecución','Completado','Cancelado') NOT NULL DEFAULT 'Diseño',
+  `email_enviado` tinyint(1) NOT NULL DEFAULT 0,
+  `fecha_email_enviado` datetime DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -357,31 +633,276 @@ CREATE TABLE `plantilla_solicitudes` (
 --
 
 INSERT INTO `plantilla_solicitudes` (`id`, `cargo_id`, `area_id`, `tipo_solicitud`, `dias_maximos`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 'Tecnología', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 1, 1, 'Dotación', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 1, 3, 'Servicios Generales', 7, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 1, 4, 'Formación', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 1, 5, 'Bienes y Servicios', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(6, 2, 2, 'Tecnología', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(7, 2, 1, 'Dotación', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(8, 2, 3, 'Servicios Generales', 7, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(9, 2, 4, 'Formación', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(10, 2, 5, 'Bienes y Servicios', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(11, 3, 2, 'Tecnología', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(12, 3, 1, 'Dotación', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(13, 3, 3, 'Servicios Generales', 7, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(14, 3, 4, 'Formación', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(15, 3, 5, 'Bienes y Servicios', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(16, 4, 2, 'Tecnología', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(17, 4, 1, 'Dotación', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(18, 4, 3, 'Servicios Generales', 7, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(19, 4, 4, 'Formación', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(20, 4, 5, 'Bienes y Servicios', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(21, 5, 2, 'Tecnología', 5, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(22, 5, 1, 'Dotación', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(23, 5, 3, 'Servicios Generales', 7, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(24, 5, 4, 'Formación', 3, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(25, 5, 5, 'Bienes y Servicios', 10, '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+(1, 1, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(2, 1, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(3, 1, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(4, 1, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(5, 1, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(6, 2, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(7, 2, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(8, 2, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(9, 2, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(10, 2, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(11, 3, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(12, 3, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(13, 3, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(14, 3, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(15, 3, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(16, 4, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(17, 4, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(18, 4, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(19, 4, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(20, 4, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(21, 5, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(22, 5, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(23, 5, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(24, 5, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(25, 5, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(26, 6, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(27, 6, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(28, 6, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(29, 6, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(30, 6, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(31, 7, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(32, 7, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(33, 7, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(34, 7, 22, 'Formación', 3, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(35, 7, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(36, 8, 16, 'Tecnología', 5, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(37, 8, 20, 'Dotación', 10, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(38, 8, 2, 'Servicios Generales', 7, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(39, 8, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(40, 8, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(41, 9, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(42, 9, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(43, 9, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(44, 9, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(45, 9, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(46, 10, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(47, 10, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(48, 10, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(49, 10, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(50, 10, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(51, 11, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(52, 11, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(53, 11, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(54, 11, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(55, 11, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(56, 12, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(57, 12, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(58, 12, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(59, 12, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(60, 12, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(61, 13, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(62, 13, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(63, 13, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(64, 13, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(65, 13, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(66, 14, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(67, 14, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(68, 14, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(69, 14, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(70, 14, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(71, 15, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(72, 15, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(73, 15, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(74, 15, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(75, 15, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(76, 16, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(77, 16, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(78, 16, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(79, 16, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(80, 16, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(81, 17, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(82, 17, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(83, 17, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(84, 17, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(85, 17, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(86, 18, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(87, 18, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(88, 18, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(89, 18, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(90, 18, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(91, 19, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(92, 19, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(93, 19, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(94, 19, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(95, 19, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(96, 20, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(97, 20, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(98, 20, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(99, 20, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(100, 20, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(101, 21, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(102, 21, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(103, 21, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(104, 21, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(105, 21, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(106, 22, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(107, 22, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(108, 22, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(109, 22, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(110, 22, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(111, 23, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(112, 23, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(113, 23, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(114, 23, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(115, 23, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(116, 24, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(117, 24, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(118, 24, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(119, 24, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(120, 24, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(121, 25, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(122, 25, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(123, 25, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(124, 25, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(125, 25, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(126, 26, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(127, 26, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(128, 26, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(129, 26, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(130, 26, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(131, 27, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(132, 27, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(133, 27, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(134, 27, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(135, 27, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(136, 28, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(137, 28, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(138, 28, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(139, 28, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(140, 28, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(141, 29, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(142, 29, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(143, 29, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(144, 29, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(145, 29, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(146, 30, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(147, 30, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(148, 30, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(149, 30, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(150, 30, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(151, 31, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(152, 31, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(153, 31, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(154, 31, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(155, 31, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(156, 32, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(157, 32, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(158, 32, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(159, 32, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(160, 32, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(161, 33, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(162, 33, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(163, 33, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(164, 33, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(165, 33, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(166, 34, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(167, 34, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(168, 34, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(169, 34, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(170, 34, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(171, 35, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(172, 35, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(173, 35, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(174, 35, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(175, 35, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(176, 36, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(177, 36, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(178, 36, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(179, 36, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(180, 36, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(181, 37, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(182, 37, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(183, 37, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(184, 37, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(185, 37, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(186, 38, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(187, 38, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(188, 38, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(189, 38, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(190, 38, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(191, 39, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(192, 39, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(193, 39, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(194, 39, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(195, 39, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(196, 40, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(197, 40, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(198, 40, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(199, 40, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(200, 40, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(201, 41, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(202, 41, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(203, 41, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(204, 41, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(205, 41, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(206, 42, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(207, 42, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(208, 42, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(209, 42, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(210, 42, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(211, 43, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(212, 43, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(213, 43, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(214, 43, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(215, 43, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(216, 44, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(217, 44, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(218, 44, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(219, 44, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(220, 44, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(221, 45, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(222, 45, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(223, 45, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(224, 45, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(225, 45, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(226, 46, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(227, 46, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(228, 46, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(229, 46, 22, 'Formación', 3, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(230, 46, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(231, 47, 16, 'Tecnología', 5, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(232, 47, 20, 'Dotación', 10, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(233, 47, 2, 'Servicios Generales', 7, '2026-02-13 20:38:14', '2026-02-13 20:38:14'),
+(234, 47, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(235, 47, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(236, 48, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(237, 48, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(238, 48, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(239, 48, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(240, 48, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(241, 49, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(242, 49, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(243, 49, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(244, 49, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(245, 49, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(246, 50, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(247, 50, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(248, 50, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(249, 50, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(250, 50, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(251, 51, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(252, 51, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(253, 51, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(254, 51, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(255, 51, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(256, 52, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(257, 52, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(258, 52, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(259, 52, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(260, 52, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(261, 53, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(262, 53, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(263, 53, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(264, 53, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(265, 53, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(266, 54, 16, 'Tecnología', 5, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(267, 54, 20, 'Dotación', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(268, 54, 2, 'Servicios Generales', 7, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(269, 54, 22, 'Formación', 3, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(270, 54, 2, 'Bienes y Servicios', 10, '2026-02-13 20:38:15', '2026-02-13 20:38:15');
 
 -- --------------------------------------------------------
 
@@ -395,9 +916,12 @@ CREATE TABLE `procesos_ingresos` (
   `nombre_completo` varchar(255) NOT NULL,
   `tipo_documento` varchar(255) NOT NULL,
   `documento` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `telefono` varchar(255) DEFAULT NULL,
   `cargo_id` bigint(20) UNSIGNED NOT NULL,
   `area_id` bigint(20) UNSIGNED NOT NULL,
   `fecha_ingreso` date NOT NULL,
+  `fecha_esperada_finalizacion` date DEFAULT NULL,
   `jefe_id` bigint(20) UNSIGNED NOT NULL,
   `estado` enum('Pendiente','En Proceso','Finalizado','Cancelado') NOT NULL DEFAULT 'Pendiente',
   `observaciones` text DEFAULT NULL,
@@ -424,41 +948,101 @@ CREATE TABLE `puestos` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `puestos`
+-- Estructura de tabla para la tabla `puestos_trabajo`
 --
 
-INSERT INTO `puestos` (`id`, `numero`, `fila`, `columna`, `estado`, `proceso_ingreso_id`, `created_at`, `updated_at`) VALUES
-(1, 'A1', 1, 1, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 'A2', 1, 2, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 'A3', 1, 3, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 'A4', 1, 4, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 'A5', 1, 5, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(6, 'A6', 1, 6, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(7, 'B1', 2, 1, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(8, 'B2', 2, 2, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(9, 'B3', 2, 3, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(10, 'B4', 2, 4, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(11, 'B5', 2, 5, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(12, 'B6', 2, 6, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(13, 'C1', 3, 1, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(14, 'C2', 3, 2, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(15, 'C3', 3, 3, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(16, 'C4', 3, 4, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(17, 'C5', 3, 5, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(18, 'C6', 3, 6, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(19, 'D1', 4, 1, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(20, 'D2', 4, 2, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(21, 'D3', 4, 3, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(22, 'D4', 4, 4, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(23, 'D5', 4, 5, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(24, 'D6', 4, 6, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(25, 'E1', 5, 1, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(26, 'E2', 5, 2, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(27, 'E3', 5, 3, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(28, 'E4', 5, 4, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(29, 'E5', 5, 5, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(30, 'E6', 5, 6, 'Disponible', NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+CREATE TABLE `puestos_trabajo` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `numero_puesto` varchar(255) NOT NULL,
+  `piso` int(11) NOT NULL DEFAULT 1,
+  `seccion` varchar(255) DEFAULT NULL,
+  `capacidad` int(11) NOT NULL DEFAULT 1,
+  `estado` enum('Disponible','Asignado','En Mantenimiento','Bloqueado') NOT NULL DEFAULT 'Disponible',
+  `ubicacion_x` int(11) DEFAULT NULL,
+  `ubicacion_y` int(11) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `equipamiento` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`equipamiento`)),
+  `notas` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `puestos_trabajo`
+--
+
+INSERT INTO `puestos_trabajo` (`id`, `numero_puesto`, `piso`, `seccion`, `capacidad`, `estado`, `ubicacion_x`, `ubicacion_y`, `descripcion`, `equipamiento`, `notas`, `created_at`, `updated_at`) VALUES
+(1, '1-OPS-1', 1, 'Operaciones', 1, 'Disponible', 160, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(2, '1-OPS-2', 1, 'Operaciones', 1, 'Disponible', 220, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(3, '1-OPS-3', 1, 'Operaciones', 1, 'Disponible', 280, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(4, '1-OPS-4', 1, 'Operaciones', 1, 'Disponible', 340, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(5, '1-OPS-5', 1, 'Operaciones', 1, 'Disponible', 400, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(6, '1-OPS-6', 1, 'Operaciones', 1, 'Disponible', 460, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(7, '1-ADM-1', 1, 'Administrativo', 1, 'Disponible', 160, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(8, '1-ADM-2', 1, 'Administrativo', 1, 'Disponible', 220, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(9, '1-ADM-3', 1, 'Administrativo', 1, 'Disponible', 280, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(10, '1-ADM-4', 1, 'Administrativo', 1, 'Disponible', 340, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(11, '1-AAC-1', 1, 'Atención al Cliente', 1, 'Disponible', 160, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(12, '1-AAC-2', 1, 'Atención al Cliente', 1, 'Disponible', 220, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(13, '1-AAC-3', 1, 'Atención al Cliente', 1, 'Disponible', 280, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(14, '2-GER-1', 2, 'Gerencia', 1, 'Disponible', 200, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono IP\\\",\\\"Impresora L\\\\u00e1ser\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(15, '2-GER-2', 2, 'Gerencia', 1, 'Disponible', 300, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono IP\\\",\\\"Impresora L\\\\u00e1ser\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(16, '2-GER-3', 2, 'Gerencia', 1, 'Disponible', 400, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono IP\\\",\\\"Impresora L\\\\u00e1ser\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(17, '2-COORD-1', 2, 'Coordinación', 1, 'Disponible', 170, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(18, '2-COORD-2', 2, 'Coordinación', 1, 'Disponible', 240, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(19, '2-COORD-3', 2, 'Coordinación', 1, 'Disponible', 310, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(20, '2-COORD-4', 2, 'Coordinación', 1, 'Disponible', 380, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(21, '2-COORD-5', 2, 'Coordinación', 1, 'Disponible', 450, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(22, '3-DEV-1', 3, 'Desarrollo', 1, 'Disponible', 150, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(23, '3-DEV-2', 3, 'Desarrollo', 1, 'Disponible', 200, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(24, '3-DEV-3', 3, 'Desarrollo', 1, 'Disponible', 250, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(25, '3-DEV-4', 3, 'Desarrollo', 1, 'Disponible', 300, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(26, '3-DEV-5', 3, 'Desarrollo', 1, 'Disponible', 350, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(27, '3-DEV-6', 3, 'Desarrollo', 1, 'Disponible', 400, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(28, '3-DEV-7', 3, 'Desarrollo', 1, 'Disponible', 450, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(29, '3-DEV-8', 3, 'Desarrollo', 1, 'Disponible', 500, 100, NULL, '\"[\\\"Computadora High-end\\\",\\\"2x Monitor Ultrawide\\\",\\\"Teclado Mec\\\\u00e1nico\\\",\\\"Mouse Gamer\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(30, '3-QA-1', 3, 'QA', 1, 'Disponible', 160, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(31, '3-QA-2', 3, 'QA', 1, 'Disponible', 220, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(32, '3-QA-3', 3, 'QA', 1, 'Disponible', 280, 250, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(33, '4-SALA-1', 4, 'Salas', 1, 'Disponible', 180, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(34, '4-SALA-2', 4, 'Salas', 1, 'Disponible', 260, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(35, '4-SALA-3', 4, 'Salas', 1, 'Disponible', 340, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(36, '4-SALA-4', 4, 'Salas', 1, 'Disponible', 420, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(37, '4-SALA-5', 4, 'Salas', 1, 'Disponible', 500, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(38, '4-SALA-6', 4, 'Salas', 1, 'Disponible', 580, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(39, '4-COLABO-1', 4, 'Colaboración', 1, 'Disponible', 140, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(40, '4-COLABO-2', 4, 'Colaboración', 1, 'Disponible', 180, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(41, '4-COLABO-3', 4, 'Colaboración', 1, 'Disponible', 220, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(42, '4-COLABO-4', 4, 'Colaboración', 1, 'Disponible', 260, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(43, '4-COLABO-5', 4, 'Colaboración', 1, 'Disponible', 300, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(44, '4-COLABO-6', 4, 'Colaboración', 1, 'Disponible', 340, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(45, '4-COLABO-7', 4, 'Colaboración', 1, 'Disponible', 380, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(46, '4-COLABO-8', 4, 'Colaboración', 1, 'Disponible', 420, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(47, '4-COLABO-9', 4, 'Colaboración', 1, 'Disponible', 460, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(48, '4-COLABO-10', 4, 'Colaboración', 1, 'Disponible', 500, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reporte_cumplimiento`
+--
+
+CREATE TABLE `reporte_cumplimiento` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `fecha_reporte` date NOT NULL,
+  `area_id` bigint(20) UNSIGNED NOT NULL,
+  `total_procesos` int(11) NOT NULL DEFAULT 0,
+  `procesos_completados` int(11) NOT NULL DEFAULT 0,
+  `procesos_retrasados` int(11) NOT NULL DEFAULT 0,
+  `procesos_pendientes` int(11) NOT NULL DEFAULT 0,
+  `porcentaje_cumplimiento` double NOT NULL DEFAULT 0,
+  `dias_promedio_completacion` double NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -479,15 +1063,16 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Root', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 'Admin', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 'Jefe', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 'Operador', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 'Operador Dotación', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(6, 'Operador Tecnología', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(7, 'Operador Servicios Generales', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(8, 'Operador Formación', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(9, 'Operador Bienes y Servicios', 'web', '2026-02-08 09:57:53', '2026-02-08 09:57:53');
+(1, 'Root', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(2, 'Admin', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(3, 'Jefe', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(4, 'Operador', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(5, 'Operador Dotación', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(6, 'Operador Tecnología', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(7, 'Operador Servicios Generales', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(8, 'Operador Formación', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(9, 'Operador Bienes y Servicios', 'web', '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(10, 'Jefe RRHH', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16');
 
 -- --------------------------------------------------------
 
@@ -537,7 +1122,97 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (16, 1),
 (17, 1),
 (18, 1),
-(18, 2);
+(18, 2),
+(19, 1),
+(19, 2),
+(19, 3),
+(19, 4),
+(19, 10),
+(20, 1),
+(20, 2),
+(20, 10),
+(21, 1),
+(21, 2),
+(21, 10),
+(22, 1),
+(22, 2),
+(23, 1),
+(23, 2),
+(23, 3),
+(23, 4),
+(23, 10),
+(24, 1),
+(24, 2),
+(24, 10),
+(25, 1),
+(25, 2),
+(25, 10),
+(26, 1),
+(26, 2),
+(27, 1),
+(27, 2),
+(27, 3),
+(27, 10),
+(28, 1),
+(28, 2),
+(28, 10),
+(29, 1),
+(29, 2),
+(29, 10),
+(30, 1),
+(30, 2),
+(31, 1),
+(31, 2),
+(31, 3),
+(31, 10),
+(32, 1),
+(32, 2),
+(32, 10),
+(33, 1),
+(33, 2),
+(33, 3),
+(33, 10),
+(34, 1),
+(34, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rutas_formacion`
+--
+
+CREATE TABLE `rutas_formacion` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `cargo_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `area_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `version` varchar(255) NOT NULL DEFAULT '1.0',
+  `activa` tinyint(1) NOT NULL DEFAULT 1,
+  `duracion_total_horas` int(11) NOT NULL DEFAULT 0,
+  `fecha_vigencia` date DEFAULT NULL,
+  `responsable_rrhh_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ruta_x_curso`
+--
+
+CREATE TABLE `ruta_x_curso` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ruta_id` bigint(20) UNSIGNED NOT NULL,
+  `curso_id` bigint(20) UNSIGNED NOT NULL,
+  `numero_secuencia` int(11) NOT NULL DEFAULT 0,
+  `es_obligatorio` tinyint(1) NOT NULL DEFAULT 1,
+  `es_requisito_previo` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -559,7 +1234,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('0LWrBMeLJSlBzxTnnTorUASkH1MsYH3ATTYEdYm3', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiN3hJWFJWZGtscmpYemI0REFaRjNwZzBpdmM4bTZOTTRCVm11cU4zYyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjMzOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvc29saWNpdHVkZXMiO3M6NToicm91dGUiO3M6MTc6InNvbGljaXR1ZGVzLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1770526733);
+('h6YqAA9mUotG0LY4mVNoSfKpFoUkvFnRubwW9o1T', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.109.2 Chrome/142.0.7444.265 Electron/39.3.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoieUE3blFURGh6VmJPRE1YWFIzQTYxOUxOVHVwQ09UaGMxTFM5M2J1OSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6OTU6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC8/aWQ9ZmM3OWE5M2MtNWIyZS00YTdhLTkyMzAtY2NiMjBlZWNmZWEwJnZzY29kZUJyb3dzZXJSZXFJZD0xNzcwOTk3Nzc1NjA0IjtzOjU6InJvdXRlIjtOO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1770997776),
+('i2meVR9g5WuGYAA1YwQOqR9QImbmdctknDKHU3Gy', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNW9IVWxnRGFiamNkRWx5Y1oxWHVsN2xKWVVNeWx0SDQzWTBDanpoUCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mzt9', 1770997808),
+('Uts1EjJNCBgxxM2fGCHFIq2iJb7MLKROK4Llj6eX', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.109.2 Chrome/142.0.7444.265 Electron/39.3.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaGp0QXJJZW5oeXA0WmtmSndhOFM2T0duMGpXUkFOSmZrejBjVkNucSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1770997776);
 
 -- --------------------------------------------------------
 
@@ -574,6 +1251,24 @@ CREATE TABLE `solicitudes` (
   `tipo` varchar(255) NOT NULL,
   `fecha_limite` date NOT NULL,
   `estado` enum('Pendiente','En Proceso','Finalizada') NOT NULL DEFAULT 'Pendiente',
+  `observaciones` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `solicitudes_servicios_generales`
+--
+
+CREATE TABLE `solicitudes_servicios_generales` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `puesto_trabajo_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `carnet_generado` tinyint(1) NOT NULL DEFAULT 0,
+  `numero_carnet` varchar(255) DEFAULT NULL,
+  `fecha_carnetizacion` datetime DEFAULT NULL,
   `observaciones` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -604,15 +1299,17 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `area_id`, `cargo_id`, `name`, `email`, `email_verified_at`, `password`, `activo`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, 'Jefe de RRHH', 'jefe.rrhh@example.com', NULL, '$2y$12$G1RaiIddgLdJvZq9nRJRS.rElwHJCV2uwZ6L87ir6Y1ueruNouUc.', 1, NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(2, 2, NULL, 'Jefe de Tecnología', 'jefe.tecnologia@example.com', NULL, '$2y$12$cTBqEAIwRifHtDfL2O0oM.T0aaNAunTZZoLg8ObB01eMqdsGT6cZO', 1, NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(3, 1, NULL, 'Root Admin', 'root@test.com', NULL, '$2y$12$318cVO4Kg9nWq0/Rviqh8.QNpEs7RG.nmXYA3eVbhGx5TY9hW.jti', 1, NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(4, 1, NULL, 'Administrador', 'admin@test.com', NULL, '$2y$12$2MpQSugTNN.QOzmNCJH4tO7APhVAxYPg/aMirtGFleqxKFfpL0.aC', 1, NULL, '2026-02-08 09:57:53', '2026-02-08 09:57:53'),
-(5, 2, NULL, 'Operador Tecnología', 'operador.ti@test.com', NULL, '$2y$12$adGQRmRHafURcJ.9d9zbiegjiuYurexoN0m7J4UkoCHV6z9pNamFq', 1, NULL, '2026-02-08 09:57:54', '2026-02-08 09:57:54'),
-(6, 1, NULL, 'Operador Dotación', 'operador.dotacion@test.com', NULL, '$2y$12$lkkKJ5jzZIt2yyETla3zuO39AxxPtAcdV5ICUX9xaWWUE1xAzp5TO', 1, NULL, '2026-02-08 09:57:54', '2026-02-08 09:57:54'),
-(7, 3, NULL, 'Operador Servicios', 'operador.servicios@test.com', NULL, '$2y$12$1PSu6Dp.Qlr94.fmb/LRteuqpzTylj.IGSDmGy1.t0i8JYMOgeIoi', 1, NULL, '2026-02-08 09:57:54', '2026-02-08 09:57:54'),
-(8, 4, NULL, 'Operador Formación', 'operador.formacion@test.com', NULL, '$2y$12$4BMEhaPAwVFB9HyACBXslOHc3RU5ZH9VImfmIPZcJhQ7QntFdxWGS', 1, NULL, '2026-02-08 09:57:54', '2026-02-08 09:57:54'),
-(9, 5, NULL, 'Operador Bienes', 'operador.bienes@test.com', NULL, '$2y$12$wmxEk.kmX5rJycAr4SQKzeb/ehdFk9klv8DvagyRjhlKzKr2Kuprq', 1, NULL, '2026-02-08 09:57:54', '2026-02-08 09:57:54');
+(1, 20, NULL, 'Administrador', 'admin@sinergia.com', NULL, '$2y$12$bxWYW2LSNu88d6/9AQwpfOMctfChuKnXKhuSEi3DmsXZLfLWE1EGG', 1, NULL, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(2, 20, NULL, 'Jefe de RRHH', 'jefe.rrhh@sinergia.com', NULL, '$2y$12$O.qengtEMpbWCddciWwazO7XwEDFuxF1.9sddQqcZSCwLeIomslrC', 1, NULL, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(3, 22, NULL, 'Coordinador de Formación', 'coordinador.formacion@sinergia.com', NULL, '$2y$12$FMnBwo82q5TwoxX.MjGF3O5ZpzwUYqB7R54AX6RYk5ZfWQTTaqugG', 1, NULL, '2026-02-13 20:38:13', '2026-02-13 20:38:13'),
+(4, 1, NULL, 'Root Admin', 'root@test.com', NULL, '$2y$12$gs24lLQmNmtzOCZ62l1nUuzenXEgariAgRzMynSOnQr0SZmWt14/O', 1, NULL, '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(5, 1, NULL, 'Administrador', 'admin@test.com', NULL, '$2y$12$RB9od0kc4.875lFanjh4p.b/YcWuvso3QKYvV0jkMk7nsfEOeqeYG', 1, NULL, '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
+(6, 2, NULL, 'Jefe de Tecnología', 'jefe.tecnologia@test.com', NULL, '$2y$12$h8RG3ZZDe2a546Ttj.jILuIuTg.1pFbMMOPfX3Y29WCdEECC5hXsO', 1, NULL, '2026-02-13 20:38:17', '2026-02-13 20:38:17'),
+(7, 2, NULL, 'Operador Tecnología', 'operador.ti@test.com', NULL, '$2y$12$yI0hKB1V6w8mM5abe5Cc4.xtM0IHQOj67l0ZwCXetdY9lQ2xVFLHq', 1, NULL, '2026-02-13 20:38:17', '2026-02-13 20:38:17'),
+(8, 1, NULL, 'Operador Dotación', 'operador.dotacion@test.com', NULL, '$2y$12$SStvGp5vd/9uaf/cCzlj5O9tMKvkTW2.kdqVVAGjG5kcdrrcOX.Z2', 1, NULL, '2026-02-13 20:38:17', '2026-02-13 20:38:17'),
+(9, 3, NULL, 'Operador Servicios', 'operador.servicios@test.com', NULL, '$2y$12$XStq.2yyBg3DaJ2v2fMeS.86Ef2WKO9WJbhkT9dCvmhdWpXJYCCUm', 1, NULL, '2026-02-13 20:38:17', '2026-02-13 20:38:17'),
+(10, 4, NULL, 'Operador Formación', 'operador.formacion@test.com', NULL, '$2y$12$cz6W9eYe2pgbIa/ismiocua./b5GO4WIon.2jNpyEBIfQ5U0SngBu', 1, NULL, '2026-02-13 20:38:18', '2026-02-13 20:38:18'),
+(11, 5, NULL, 'Operador Bienes', 'operador.bienes@test.com', NULL, '$2y$12$FKCyH8D6wzkB90PfEAFb/uRuUdB3raM8L.HLwxdUykRZlX5IKVceC', 1, NULL, '2026-02-13 20:38:18', '2026-02-13 20:38:18');
 
 --
 -- Índices para tablas volcadas
@@ -623,6 +1320,27 @@ INSERT INTO `users` (`id`, `area_id`, `cargo_id`, `name`, `email`, `email_verifi
 --
 ALTER TABLE `areas`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `asignacion_cursos`
+--
+ALTER TABLE `asignacion_cursos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `asignacion_cursos_proceso_ingreso_id_curso_id_unique` (`proceso_ingreso_id`,`curso_id`),
+  ADD KEY `asignacion_cursos_asignado_por_id_foreign` (`asignado_por_id`),
+  ADD KEY `asignacion_cursos_responsable_validacion_id_foreign` (`responsable_validacion_id`),
+  ADD KEY `asignacion_cursos_proceso_ingreso_id_index` (`proceso_ingreso_id`),
+  ADD KEY `asignacion_cursos_curso_id_index` (`curso_id`),
+  ADD KEY `asignacion_cursos_estado_index` (`estado`);
+
+--
+-- Indices de la tabla `auditoria_onboarding`
+--
+ALTER TABLE `auditoria_onboarding`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `auditoria_onboarding_usuario_id_index` (`usuario_id`),
+  ADD KEY `auditoria_onboarding_entidad_entidad_id_index` (`entidad`,`entidad_id`),
+  ADD KEY `auditoria_onboarding_accion_index` (`accion`);
 
 --
 -- Indices de la tabla `cache`
@@ -654,6 +1372,25 @@ ALTER TABLE `checkins`
   ADD KEY `checkins_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
 
 --
+-- Indices de la tabla `cursos`
+--
+ALTER TABLE `cursos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `cursos_codigo_unique` (`codigo`),
+  ADD KEY `cursos_area_responsable_id_foreign` (`area_responsable_id`),
+  ADD KEY `cursos_codigo_index` (`codigo`),
+  ADD KEY `cursos_categoria_index` (`categoria`),
+  ADD KEY `cursos_activo_categoria_index` (`activo`,`categoria`);
+
+--
+-- Indices de la tabla `curso_x_cargo`
+--
+ALTER TABLE `curso_x_cargo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `curso_x_cargo_curso_id_cargo_id_unique` (`curso_id`,`cargo_id`),
+  ADD KEY `curso_x_cargo_cargo_id_es_obligatorio_index` (`cargo_id`,`es_obligatorio`);
+
+--
 -- Indices de la tabla `detalles_tecnologia`
 --
 ALTER TABLE `detalles_tecnologia`
@@ -670,11 +1407,25 @@ ALTER TABLE `detalles_uniformes`
   ADD KEY `detalles_uniformes_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
 
 --
+-- Indices de la tabla `elementos_proteccion`
+--
+ALTER TABLE `elementos_proteccion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `elementos_proteccion_solicitud_id_foreign` (`solicitud_id`);
+
+--
 -- Indices de la tabla `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indices de la tabla `items_inmobiliario`
+--
+ALTER TABLE `items_inmobiliario`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `items_inmobiliario_solicitud_id_foreign` (`solicitud_id`);
 
 --
 -- Indices de la tabla `jobs`
@@ -723,6 +1474,14 @@ ALTER TABLE `permissions`
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
 
 --
+-- Indices de la tabla `planes_capacitacion`
+--
+ALTER TABLE `planes_capacitacion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `planes_capacitacion_solicitud_id_foreign` (`solicitud_id`),
+  ADD KEY `planes_capacitacion_cargo_id_foreign` (`cargo_id`);
+
+--
 -- Indices de la tabla `plantilla_solicitudes`
 --
 ALTER TABLE `plantilla_solicitudes`
@@ -750,6 +1509,20 @@ ALTER TABLE `puestos`
   ADD KEY `puestos_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
 
 --
+-- Indices de la tabla `puestos_trabajo`
+--
+ALTER TABLE `puestos_trabajo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `puestos_trabajo_numero_puesto_unique` (`numero_puesto`);
+
+--
+-- Indices de la tabla `reporte_cumplimiento`
+--
+ALTER TABLE `reporte_cumplimiento`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reporte_cumplimiento_area_id_fecha_reporte_index` (`area_id`,`fecha_reporte`);
+
+--
 -- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -762,6 +1535,24 @@ ALTER TABLE `roles`
 ALTER TABLE `role_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`role_id`),
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
+
+--
+-- Indices de la tabla `rutas_formacion`
+--
+ALTER TABLE `rutas_formacion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `rutas_formacion_responsable_rrhh_id_foreign` (`responsable_rrhh_id`),
+  ADD KEY `rutas_formacion_cargo_id_activa_index` (`cargo_id`,`activa`),
+  ADD KEY `rutas_formacion_area_id_activa_index` (`area_id`,`activa`);
+
+--
+-- Indices de la tabla `ruta_x_curso`
+--
+ALTER TABLE `ruta_x_curso`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ruta_x_curso_ruta_id_curso_id_unique` (`ruta_id`,`curso_id`),
+  ADD KEY `ruta_x_curso_curso_id_foreign` (`curso_id`),
+  ADD KEY `ruta_x_curso_ruta_id_numero_secuencia_index` (`ruta_id`,`numero_secuencia`);
 
 --
 -- Indices de la tabla `sessions`
@@ -780,6 +1571,14 @@ ALTER TABLE `solicitudes`
   ADD KEY `solicitudes_area_id_foreign` (`area_id`);
 
 --
+-- Indices de la tabla `solicitudes_servicios_generales`
+--
+ALTER TABLE `solicitudes_servicios_generales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `solicitudes_servicios_generales_solicitud_id_foreign` (`solicitud_id`),
+  ADD KEY `solicitudes_servicios_generales_puesto_trabajo_id_foreign` (`puesto_trabajo_id`);
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
@@ -794,18 +1593,42 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `areas`
 --
 ALTER TABLE `areas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de la tabla `asignacion_cursos`
+--
+ALTER TABLE `asignacion_cursos`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `auditoria_onboarding`
+--
+ALTER TABLE `auditoria_onboarding`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cargos`
 --
 ALTER TABLE `cargos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `checkins`
 --
 ALTER TABLE `checkins`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `cursos`
+--
+ALTER TABLE `cursos`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT de la tabla `curso_x_cargo`
+--
+ALTER TABLE `curso_x_cargo`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -821,9 +1644,21 @@ ALTER TABLE `detalles_uniformes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `elementos_proteccion`
+--
+ALTER TABLE `elementos_proteccion`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `items_inmobiliario`
+--
+ALTER TABLE `items_inmobiliario`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -836,19 +1671,25 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+
+--
+-- AUTO_INCREMENT de la tabla `planes_capacitacion`
+--
+ALTER TABLE `planes_capacitacion`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `plantilla_solicitudes`
 --
 ALTER TABLE `plantilla_solicitudes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
 
 --
 -- AUTO_INCREMENT de la tabla `procesos_ingresos`
@@ -860,13 +1701,37 @@ ALTER TABLE `procesos_ingresos`
 -- AUTO_INCREMENT de la tabla `puestos`
 --
 ALTER TABLE `puestos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `puestos_trabajo`
+--
+ALTER TABLE `puestos_trabajo`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT de la tabla `reporte_cumplimiento`
+--
+ALTER TABLE `reporte_cumplimiento`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `rutas_formacion`
+--
+ALTER TABLE `rutas_formacion`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `ruta_x_curso`
+--
+ALTER TABLE `ruta_x_curso`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes`
@@ -875,14 +1740,35 @@ ALTER TABLE `solicitudes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `solicitudes_servicios_generales`
+--
+ALTER TABLE `solicitudes_servicios_generales`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `asignacion_cursos`
+--
+ALTER TABLE `asignacion_cursos`
+  ADD CONSTRAINT `asignacion_cursos_asignado_por_id_foreign` FOREIGN KEY (`asignado_por_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `asignacion_cursos_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `asignacion_cursos_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `asignacion_cursos_responsable_validacion_id_foreign` FOREIGN KEY (`responsable_validacion_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `auditoria_onboarding`
+--
+ALTER TABLE `auditoria_onboarding`
+  ADD CONSTRAINT `auditoria_onboarding_usuario_id_foreign` FOREIGN KEY (`usuario_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `cargos`
@@ -895,6 +1781,19 @@ ALTER TABLE `cargos`
 --
 ALTER TABLE `checkins`
   ADD CONSTRAINT `checkins_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `cursos`
+--
+ALTER TABLE `cursos`
+  ADD CONSTRAINT `cursos_area_responsable_id_foreign` FOREIGN KEY (`area_responsable_id`) REFERENCES `areas` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `curso_x_cargo`
+--
+ALTER TABLE `curso_x_cargo`
+  ADD CONSTRAINT `curso_x_cargo_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `curso_x_cargo_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `detalles_tecnologia`
@@ -911,6 +1810,18 @@ ALTER TABLE `detalles_uniformes`
   ADD CONSTRAINT `detalles_uniformes_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 
 --
+-- Filtros para la tabla `elementos_proteccion`
+--
+ALTER TABLE `elementos_proteccion`
+  ADD CONSTRAINT `elementos_proteccion_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `items_inmobiliario`
+--
+ALTER TABLE `items_inmobiliario`
+  ADD CONSTRAINT `items_inmobiliario_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
@@ -921,6 +1832,13 @@ ALTER TABLE `model_has_permissions`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `planes_capacitacion`
+--
+ALTER TABLE `planes_capacitacion`
+  ADD CONSTRAINT `planes_capacitacion_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `planes_capacitacion_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `plantilla_solicitudes`
@@ -944,6 +1862,12 @@ ALTER TABLE `puestos`
   ADD CONSTRAINT `puestos_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE SET NULL;
 
 --
+-- Filtros para la tabla `reporte_cumplimiento`
+--
+ALTER TABLE `reporte_cumplimiento`
+  ADD CONSTRAINT `reporte_cumplimiento_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
@@ -951,11 +1875,33 @@ ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
+-- Filtros para la tabla `rutas_formacion`
+--
+ALTER TABLE `rutas_formacion`
+  ADD CONSTRAINT `rutas_formacion_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `rutas_formacion_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `rutas_formacion_responsable_rrhh_id_foreign` FOREIGN KEY (`responsable_rrhh_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `ruta_x_curso`
+--
+ALTER TABLE `ruta_x_curso`
+  ADD CONSTRAINT `ruta_x_curso_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ruta_x_curso_ruta_id_foreign` FOREIGN KEY (`ruta_id`) REFERENCES `rutas_formacion` (`id`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `solicitudes`
 --
 ALTER TABLE `solicitudes`
   ADD CONSTRAINT `solicitudes_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`),
   ADD CONSTRAINT `solicitudes_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `solicitudes_servicios_generales`
+--
+ALTER TABLE `solicitudes_servicios_generales`
+  ADD CONSTRAINT `solicitudes_servicios_generales_puesto_trabajo_id_foreign` FOREIGN KEY (`puesto_trabajo_id`) REFERENCES `puestos_trabajo` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `solicitudes_servicios_generales_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

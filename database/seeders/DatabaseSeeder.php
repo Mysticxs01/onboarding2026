@@ -14,11 +14,14 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecutar seeders en orden correcto
         $this->call([
-            AreaCargoSeeder::class,           // Crea áreas, cargos y jefes
+            AreaCargoSeeder::class,           // Crea áreas, cargos y jefes (Sinergia Financiera)
             PlantillaSolicitudSeeder::class,  // Crea plantillas de solicitud
             RoleSeeder::class,                 // Crea roles y permisos
-            PuestoTrabajoSeeder::class,        // Crea grid de puestos de trabajo (nuevo)
+            PuestoTrabajoSeeder::class,        // Crea grid de puestos de trabajo
             ProcesoIngresoSeeder::class,      // Crea procesos de ingreso y solicitudes
+            CursoSeeder::class,               // Crea 31 cursos de Sinergia Financiera
+            RutaFormacionSeeder::class,       // Crea rutas de formación
+            PermisosFormacionSeeder::class,   // Asigna permisos de formación
         ]);
 
         // Crear usuarios de prueba con diferentes roles

@@ -112,6 +112,58 @@
                 @endif
             </div>
         @endif
+        {{-- Cursos de Inducción --}}
+        @if ($solicitude->tipo === 'Formación')
+            <div class="bg-white p-6 rounded shadow mb-6">
+                <h3 class="text-lg font-bold mb-4">📚 Cursos de Inducción para {{ optional($solicitude->proceso->cargo)->nombre }}</h3>
+                
+                <div class="bg-blue-50 p-4 rounded border-l-4 border-blue-500 mb-4">
+                    <p class="text-gray-700">
+                        <strong>Cargo:</strong> {{ optional($solicitude->proceso->cargo)->nombre ?? 'N/A' }}<br>
+                        <strong>Área:</strong> {{ optional(optional($solicitude->proceso)->cargo)->area->nombre ?? 'N/A' }}
+                    </p>
+                </div>
+
+                <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500 mb-4">
+                    <p class="text-gray-700 font-semibold mb-2">📋 Módulos de Inducción Estándar:</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Bienvenida e Inducción Corporativa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Políticas y Procedimientos Empresa</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Seguridad y Salud en el Trabajo</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Ética Empresarial y Código de Conducta</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Sistema de Gestión Documentos</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-purple-600 mr-3 font-bold">✓</span>
+                            <span class="text-gray-700">Introducción al Rol y Responsabilidades</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded border-l-4 border-green-500">
+                    <p class="text-gray-700 mb-2">
+                        <strong>Duración Estimada:</strong> 40 horas
+                    </p>
+                    <p class="text-gray-600 text-sm italic">
+                        El plan de capacitación será coordinado y ejecutado por el área de Formación y Capacitación.
+                    </p>
+                </div>
+            </div>
+        @endif
 
         {{-- Actualizar estado (operadores) --}}
         @php
