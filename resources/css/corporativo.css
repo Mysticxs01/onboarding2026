@@ -47,51 +47,74 @@
 
 .btn, button {
   transition: all 0.3s ease;
+  display: inline-block;
+  min-width: fit-content;
 }
 
-.btn-primary, .btn-primary:hover {
+.btn-primary {
   background-color: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-white) !important;
   border: 1px solid var(--color-primary);
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .btn-primary:hover {
   background-color: #0f2438;
-  box-shadow: 0 4px 8px rgba(27, 54, 93, 0.3);
+  box-shadow: 0 4px 12px rgba(27, 54, 93, 0.4);
   transform: translateY(-2px);
+  color: var(--color-white) !important;
+  text-decoration: none;
 }
 
-.btn-secondary, .btn-secondary:hover {
+.btn-secondary {
   background-color: var(--color-secondary);
-  color: var(--color-white);
+  color: var(--color-white) !important;
   border: 1px solid var(--color-secondary);
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .btn-secondary:hover {
   background-color: #1f7a31;
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
   transform: translateY(-2px);
+  color: var(--color-white) !important;
+  text-decoration: none;
 }
 
-.btn-accent, .btn-accent:hover {
+.btn-accent {
   background-color: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-white) !important;
   border: 1px solid var(--color-accent);
-  padding: 10px 20px;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .btn-accent:hover {
   background-color: #a67c38;
-  box-shadow: 0 4px 8px rgba(197, 157, 66, 0.3);
+  box-shadow: 0 4px 12px rgba(197, 157, 66, 0.4);
   transform: translateY(-2px);
+  color: var(--color-white) !important;
+  text-decoration: none;
 }
 
 .btn-outline-primary {

@@ -63,23 +63,22 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             📋 Procesos de Ingreso
                         </h2>
-                        <div class="flex gap-3 flex-wrap">
-                            @if (Auth::user()->hasRole(['Root', 'Admin']))
-                                <a href="{{ route('procesos-ingreso.create') }}"
-                                   class="btn-secondary text-white px-4 py-2 rounded shadow transition">
-                                    ➕ Crear Nuevo Proceso
+                        <div class="flex gap-4 flex-wrap items-start">
+                            <div class="flex gap-3 flex-wrap">
+                                @if (Auth::user()->hasRole(['Root', 'Admin']))
+                                    <a href="{{ route('procesos-ingreso.create') }}" class="btn-secondary">
+                                        ➕ Crear Nuevo Proceso
+                                    </a>
+                                @endif
+                                <a href="{{ route('procesos-ingreso.index') }}" class="btn-primary">
+                                    👁️ Ver Procesos
                                 </a>
-                            @endif
-                            <a href="{{ route('procesos-ingreso.index') }}"
-                               class="btn-primary text-white px-4 py-2 rounded shadow transition">
-                                👁️ Ver Procesos
-                            </a>
-                            @if (Auth::user()->hasRole(['Root', 'Admin']))
-                                <a href="{{ route('procesos-ingreso.historico') }}"
-                                   class="text-white px-4 py-2 rounded shadow transition" style="background-color: #1B365D;">
-                                    📜 Histórico
-                                </a>
-                            @endif
+                                @if (Auth::user()->hasRole(['Root', 'Admin']))
+                                    <a href="{{ route('procesos-ingreso.historico') }}" class="btn-accent">
+                                        📜 Histórico
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
@@ -88,20 +87,23 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #28A745;">
                             🎯 Solicitudes por Área
                         </h2>
-                        <div class="flex gap-3 flex-wrap">
-                            <a href="{{ route('solicitudes.index') }}"
-                               class="btn-primary text-white px-4 py-2 rounded shadow transition">
-                                📊 Ver Solicitudes
-                            </a>
-                            @if (Auth::user()->hasRole('Jefe'))
-                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
-                                    📝 Valida y especifica requerimientos técnicos de tu área
-                                </p>
-                            @elseif (Auth::user()->hasRole('Operador') || Auth::user()->getRoleNames()->contains('Operador'))
-                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
-                                    ✅ Completa las solicitudes de {{ Auth::user()->area->nombre ?? 'tu área' }}
-                                </p>
-                            @endif
+                        <div class="flex gap-4 flex-wrap items-start">
+                            <div class="flex gap-3 flex-wrap">
+                                <a href="{{ route('solicitudes.index') }}" class="btn-primary">
+                                    📊 Ver Solicitudes
+                                </a>
+                            </div>
+                            <div>
+                                @if (Auth::user()->hasRole('Jefe'))
+                                    <p style="color: #1B365D;" class="text-sm italic">
+                                        📝 Valida y especifica requerimientos técnicos de tu área
+                                    </p>
+                                @elseif (Auth::user()->hasRole('Operador') || Auth::user()->getRoleNames()->contains('Operador'))
+                                    <p style="color: #1B365D;" class="text-sm italic">
+                                        ✅ Completa las solicitudes de {{ Auth::user()->area->nombre ?? 'tu área' }}
+                                    </p>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
@@ -110,15 +112,18 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             ✅ Check-in de Activos
                         </h2>
-                        <div class="flex gap-3 flex-wrap">
-                            <a href="{{ route('checkins.index') }}"
-                               class="btn-secondary text-white px-4 py-2 rounded shadow transition">
-                                📦 Ver Check-ins
-                            </a>
+                        <div class="flex gap-4 flex-wrap items-start">
+                            <div class="flex gap-3 flex-wrap">
+                                <a href="{{ route('checkins.index') }}" class="btn-secondary">
+                                    📦 Ver Check-ins
+                                </a>
+                            </div>
                             @if (Auth::user()->hasRole(['Root', 'Admin']))
-                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
-                                    🔍 Monitorea la entrega de activos a empleados
-                                </p>
+                                <div>
+                                    <p style="color: #1B365D;" class="text-sm italic">
+                                        🔍 Monitorea la entrega de activos a empleados
+                                    </p>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -129,14 +134,17 @@
                             <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #1B365D;">
                                 ⚙️ Administración
                             </h2>
-                            <div class="flex gap-3 flex-wrap">
-                                <a href="{{ route('procesos-ingreso.index') }}"
-                                   class="text-white px-4 py-2 rounded shadow transition" style="background-color: #28A745;">
-                                    🗺️ Gestionar Procesos
-                                </a>
-                                <p style="color: #1B365D;" class="text-sm mt-2 italic">
-                                    🔧 Selecciona un proceso para asignar puestos de trabajo
-                                </p>
+                            <div class="flex gap-4 flex-wrap items-start">
+                                <div class="flex gap-3 flex-wrap">
+                                    <a href="{{ route('procesos-ingreso.index') }}" class="btn-accent">
+                                        🗺️ Gestionar Procesos
+                                    </a>
+                                </div>
+                                <div>
+                                    <p style="color: #1B365D;" class="text-sm italic">
+                                        🔧 Selecciona un proceso para asignar puestos de trabajo
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     @endif
