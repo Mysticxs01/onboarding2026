@@ -95,23 +95,6 @@
             </div>
         @endif
 
-        {{-- Puestos de trabajo --}}
-        <div class="bg-white p-6 rounded shadow mb-8">
-            <h3 class="text-lg font-bold mb-4">Puesto de Trabajo</h3>
-            @if ($proceso->puesto)
-                <p><strong>Puesto Asignado:</strong> {{ $proceso->puesto->numero }}</p>
-                <p><strong>Estado:</strong> {{ $proceso->puesto->estado }}</p>
-                <a href="{{ route('procesos-ingreso.plano-puestos', $proceso->id) }}" class="mt-3 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                    Cambiar Puesto
-                </a>
-            @else
-                <p class="text-gray-600 mb-3">No hay puesto asignado</p>
-                <a href="{{ route('procesos-ingreso.plano-puestos', $proceso->id) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                    🪑 Asignar Puesto de Trabajo
-                </a>
-            @endif
-        </div>
-
         {{-- Solicitudes por área --}}
         <div class="bg-white p-6 rounded shadow">
             <h3 class="text-lg font-bold mb-4">Solicitudes por Área</h3>
@@ -122,28 +105,27 @@
                         <th class="border p-3 text-left">Tipo de Solicitud</th>
                         <th class="border p-3 text-left">Fecha Límite</th>
                         <th class="border p-3 text-left">Estado</th>
-                        <th class="border p-3 text-left">Observaciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($proceso->solicitudes as $solicitud)
+                    @forelse ($proceso->solicitudes->where('estado', 'En Proceso') as $solicitud)
                         <tr class="border-b hover:bg-gray-50">
                             <td class="border p-3">{{ $solicitud->area->nombre }}</td>
                             <td class="border p-3">{{ $solicitud->tipo }}</td>
-                            <td class="border p-3">{{ $solicitud->fecha_limite }}</td>
+                            <td class="border p-3">{{ $solicitud->fecha_limite?->format('d/m/Y') ?? 'N/A' }}</td>
                             <td class="border p-3">
-                                <span class="px-3 py-1 rounded text-white text-sm
-                                    @if ($solicitud->estado === 'Pendiente') bg-yellow-500
-                                    @elseif ($solicitud->estado === 'En Proceso') bg-blue-500
-                                    @else bg-green-500 @endif">
-                                    {{ $solicitud->estado }}
+                                <span class="px-3 py-1 rounded text-white text-sm bg-blue-500">
+                                    En Proceso
                                 </span>
                             </td>
-                            <td class="border p-3">
-                                <a href="{{ route('solicitudes.show', $solicitud->id) }}" class="text-blue-600 hover:underline">Ver</a>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="border p-3 text-center text-gray-600">
+                                No hay solicitudes en proceso en este momento
                             </td>
                         </tr>
-                    @endforeach
+                    @endforelse
                 </tbody>
             </table>
         </div>
