@@ -16,6 +16,8 @@ class Cargo extends Model
         'nombre',
         'descripcion',
         'area_id',
+        'vacantes_disponibles',
+        'activo',
     ];
 
     /* =========================
@@ -32,5 +34,46 @@ class Cargo extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /* =========================
+       Scope Queries
+       ========================= */
+
+    /**
+     * Scope para obtener solo cargos activos
+     */
+    public function scopeActivos($query)
+    {
+        return $query->where('activo', true);
+    }
+
+    /**
+     * Scope para obtener cargos con vacantes disponibles
+     */
+    public function scopeConVacantes($query)
+    {
+        return $query->where('vacantes_disponibles', '>', 0)
+                     ->where('activo', true);
+    }
+
+    /* =========================
+       Métodos Útiles
+       ========================= */
+
+    /**
+     * Verificar si el cargo tiene vacantes disponibles
+     */
+    public function tieneVacantes(): bool
+    {
+        return $this->activo && $this->vacantes_disponibles > 0;
+    }
+
+    /**
+     * Obtener cantidad de usuarios con este cargo
+     */
+    public function obtenerCantidadEmpleados()
+    {
+        return $this->users()->count();
     }
 }
