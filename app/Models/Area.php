@@ -5,21 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Models\Cargo;
-use App\Models\User;
-
 class Area extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'gerencia_id',
         'nombre',
         'descripcion',
     ];
 
-    /* =========================
-       Relaciones
-       ========================= */
+    public function gerencia()
+    {
+        return $this->belongsTo(Gerencia::class);
+    }
 
     public function cargos()
     {
