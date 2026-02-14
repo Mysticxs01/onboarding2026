@@ -43,7 +43,7 @@
                         <div>
                             <p class="text-gray-600 text-sm">Jefe Inmediato</p>
                             <p class="text-lg font-semibold text-gray-900">
-                                {{ $checkin->procesoIngreso->jefe->name }}
+                                {{ $checkin->procesoIngreso->jefeCargo?->nombre ?? $checkin->procesoIngreso->cargo?->jefeInmediato?->nombre ?? '—' }}
                             </p>
                         </div>
                     </div>

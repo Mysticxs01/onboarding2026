@@ -34,7 +34,7 @@
                 <p><strong>Documento:</strong> {{ $proceso->tipo_documento }} - {{ $proceso->documento }}</p>
                 <p><strong>Cargo:</strong> {{ $proceso->cargo->nombre }}</p>
                 <p><strong>Área:</strong> {{ $proceso->area->nombre }}</p>
-                <p><strong>Jefe Inmediato:</strong> {{ $proceso->jefe->name }}</p>
+                <p><strong>Jefe Inmediato:</strong> {{ $proceso->jefeCargo?->nombre ?? $proceso->cargo?->jefeInmediato?->nombre ?? '—' }}</p>
                 <p><strong>Fecha de Ingreso:</strong> {{ $proceso->fecha_ingreso }}</p>
                 <p><strong>Estado:</strong> 
                     <span class="px-3 py-1 rounded text-white text-sm

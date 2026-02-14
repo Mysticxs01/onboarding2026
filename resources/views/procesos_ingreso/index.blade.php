@@ -45,7 +45,7 @@
                             <td class="px-4 py-3 font-bold text-sm">{{ $proceso->codigo }}</td>
                             <td class="px-4 py-3 text-sm">{{ $proceso->nombre_completo }}</td>
                             <td class="px-4 py-3 text-sm">{{ $proceso->cargo->nombre }}</td>
-                            <td class="px-4 py-3 text-sm">{{ $proceso->jefe->name }}</td>
+                            <td class="px-4 py-3 text-sm">{{ $proceso->jefeCargo?->nombre ?? $proceso->cargo?->jefeInmediato?->nombre ?? '—' }}</td>
                             <td class="px-4 py-3 text-sm">{{ $proceso->fecha_ingreso }}</td>
                             <td class="px-4 py-3">
                                 <div class="w-32 bg-gray-300 rounded-full h-6 flex items-center">
@@ -123,7 +123,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Jefe:</span>
-                            <span class="font-semibold">{{ $proceso->jefe->name }}</span>
+                            <span class="font-semibold">{{ $proceso->jefeCargo?->nombre ?? $proceso->cargo?->jefeInmediato?->nombre ?? '—' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Fecha Ingreso:</span>

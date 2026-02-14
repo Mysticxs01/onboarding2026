@@ -33,7 +33,7 @@
                 <p><strong>Código:</strong> {{ $solicitude->proceso->codigo }}</p>
                 <p><strong>Empleado:</strong> {{ $solicitude->proceso->nombre_completo }}</p>
                 <p><strong>Cargo:</strong> {{ optional($solicitude->proceso->cargo)->nombre ?? '—' }}</p>
-                <p><strong>Jefe Inmediato:</strong> {{ optional($solicitude->proceso->jefe)->name ?? '—' }}</p>
+                <p><strong>Jefe Inmediato:</strong> {{ $solicitude->proceso->jefeCargo?->nombre ?? $solicitude->proceso->cargo?->jefeInmediato?->nombre ?? '—' }}</p>
                 <p><strong>Área de Ingreso:</strong> {{ optional($solicitude->proceso->area)->nombre ?? '—' }}</p>
             </div>
             @else

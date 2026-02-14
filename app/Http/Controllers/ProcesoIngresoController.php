@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ProcesoIngreso;
 use App\Models\Cargo;
 use App\Models\User;
+use App\Models\Gerencia;
 use App\Models\PlantillaSolicitud;
 use App\Models\Solicitud;
 use Carbon\Carbon;
@@ -28,10 +29,18 @@ class ProcesoIngresoController extends Controller
             abort(403, 'Solo el Jefe de RRHH puede crear nuevos procesos de ingreso.');
         }
 
-        $cargos = Cargo::with('area')->get();
-        $jefes = User::all();
+        $gerencias = Gerencia::where('activo', true)
+            ->with([
+                'areas' => function ($query) {
+                    $query->where('activo', true)
+                        ->with(['cargos' => function ($cargoQuery) {
+                            $cargoQuery->with('jefeInmediato');
+                        }]);
+                },
+            ])
+            ->get();
 
-        return view('procesos_ingreso.create', compact('cargos', 'jefes'));
+        return view('procesos_ingreso.create', compact('gerencias'));
     }
 
 public function store(Request $request)
@@ -48,7 +57,6 @@ public function store(Request $request)
         'documento' => 'required|string|unique:procesos_ingresos',
         'cargo_id' => 'required|exists:cargos,id',
         'fecha_ingreso' => 'required|date|after_or_equal:today',
-        'jefe_id' => 'required|exists:users,id',
     ]);
 
     try {
@@ -56,17 +64,9 @@ public function store(Request $request)
         $codigo = 'ING-' . now()->format('YmdHis');
 
         // Verificar que el cargo existe
-        $cargo = Cargo::with('area')->findOrFail($request->cargo_id);
-
-        // Verificar que el jefe existe
-        $jefe = User::findOrFail($request->jefe_id);
-
-        // ⚠ Validación: jefe pertenece al área del cargo
-        if ($jefe->area_id !== $cargo->area_id) {
-            return back()
-                ->withErrors(['jefe_id' => 'El jefe seleccionado no pertenece al área del cargo.'])
-                ->withInput();
-        }
+        $cargo = Cargo::with(['area', 'jefeInmediato'])->findOrFail($request->cargo_id);
+        $jefeCargoId = $cargo->jefe_inmediato_cargo_id;
+        $jefeUsuario = $jefeCargoId ? User::where('cargo_id', $jefeCargoId)->first() : null;
 
         // Crear proceso de ingreso
         $proceso = ProcesoIngreso::create([
@@ -77,7 +77,8 @@ public function store(Request $request)
             'cargo_id' => $cargo->id,
             'area_id' => $cargo->area_id,
             'fecha_ingreso' => $request->fecha_ingreso,
-            'jefe_id' => $request->jefe_id,
+            'jefe_id' => $jefeUsuario?->id,
+            'jefe_cargo_id' => $jefeCargoId,
             'estado' => 'Pendiente',
         ]);
 
@@ -139,10 +140,19 @@ public function store(Request $request)
                 ->withErrors(['error' => 'No se puede editar un proceso con solicitudes finalizadas.']);
         }
 
-        $cargos = Cargo::with('area')->get();
-        $jefes = User::where('area_id', $proceso->area_id)->get();
+        $gerencias = Gerencia::where('activo', true)
+            ->with([
+                'areas' => function ($query) {
+                    $query->where('activo', true)
+                        ->with(['cargos' => function ($cargoQuery) {
+                            $cargoQuery->where('activo', true)
+                                ->with('jefeInmediato');
+                        }]);
+                },
+            ])
+            ->get();
 
-        return view('procesos_ingreso.edit', compact('proceso', 'cargos', 'jefes'));
+        return view('procesos_ingreso.edit', compact('proceso', 'gerencias'));
     }
 
     /**
@@ -161,25 +171,20 @@ public function store(Request $request)
             'nombre_completo' => 'required|string|max:255',
             'tipo_documento' => 'required|string|max:50',
             'cargo_id' => 'required|exists:cargos,id',
-            'jefe_id' => 'required|exists:users,id',
         ]);
 
         try {
-            $cargo = Cargo::findOrFail($request->cargo_id);
-            $jefe = User::findOrFail($request->jefe_id);
-
-            if ($jefe->area_id !== $cargo->area_id) {
-                return back()
-                    ->withErrors(['jefe_id' => 'El jefe no pertenece al área del cargo.'])
-                    ->withInput();
-            }
+            $cargo = Cargo::with(['area', 'jefeInmediato'])->findOrFail($request->cargo_id);
+            $jefeCargoId = $cargo->jefe_inmediato_cargo_id;
+            $jefeUsuario = $jefeCargoId ? User::where('cargo_id', $jefeCargoId)->first() : null;
 
             $proceso->update([
                 'nombre_completo' => $request->nombre_completo,
                 'tipo_documento' => $request->tipo_documento,
                 'cargo_id' => $request->cargo_id,
                 'area_id' => $cargo->area_id,
-                'jefe_id' => $request->jefe_id,
+                'jefe_id' => $jefeUsuario?->id,
+                'jefe_cargo_id' => $jefeCargoId,
             ]);
 
             return redirect()->route('procesos-ingreso.show', $id)

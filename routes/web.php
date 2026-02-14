@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProcesoIngresoController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\CheckinController;
+use App\Http\Controllers\CargoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,10 @@ Route::middleware('auth')->group(function () {
     // Histórico de ingresos
     Route::get('/procesos-ingreso-historico', [ProcesoIngresoController::class, 'historico'])->name('procesos-ingreso.historico');
 ;
+
+    // Gestion de cargos (Root)
+    Route::get('/cargos', [CargoController::class, 'index'])->name('cargos.index');
+    Route::patch('/cargos/{cargo}/estado', [CargoController::class, 'actualizarEstado'])->name('cargos.estado');
 
     // API para obtener puestos (deprecated)
 

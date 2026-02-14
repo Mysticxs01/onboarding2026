@@ -250,8 +250,17 @@ class SolicitudController extends Controller
             return back()->withErrors(['error' => 'Esta solicitud no es de Tecnología']);
         }
 
-        // Verificar que exista proceso y que el usuario sea jefe del proceso
-        if (! $solicitud->proceso || $solicitud->proceso->jefe_id !== auth()->id()) {
+        // Verificar que exista proceso y que el usuario sea jefe del proceso o del area
+        if (! $solicitud->proceso) {
+            return back()->withErrors(['error' => 'No tiene permiso para editar esta solicitud']);
+        }
+
+        $proceso = $solicitud->proceso;
+        $esJefeAsignado = $proceso->jefe_id && $proceso->jefe_id === auth()->id();
+        $esRolJefe = auth()->user()->getRoleNames()->contains(fn($role) => strpos($role, 'Jefe') !== false);
+        $esJefeArea = $esRolJefe && auth()->user()->area_id && $proceso->area_id === auth()->user()->area_id;
+
+        if (! $esJefeAsignado && ! $esJefeArea && ! auth()->user()->hasRole('Root')) {
             return back()->withErrors(['error' => 'No tiene permiso para editar esta solicitud']);
         }
 
@@ -309,8 +318,17 @@ class SolicitudController extends Controller
             return back()->withErrors(['error' => 'Esta solicitud no es de Dotación']);
         }
 
-        // Verificar que exista proceso y que el usuario sea jefe del proceso
-        if (! $solicitud->proceso || $solicitud->proceso->jefe_id !== auth()->id()) {
+        // Verificar que exista proceso y que el usuario sea jefe del proceso o del area
+        if (! $solicitud->proceso) {
+            return back()->withErrors(['error' => 'No tiene permiso para editar esta solicitud']);
+        }
+
+        $proceso = $solicitud->proceso;
+        $esJefeAsignado = $proceso->jefe_id && $proceso->jefe_id === auth()->id();
+        $esRolJefe = auth()->user()->getRoleNames()->contains(fn($role) => strpos($role, 'Jefe') !== false);
+        $esJefeArea = $esRolJefe && auth()->user()->area_id && $proceso->area_id === auth()->user()->area_id;
+
+        if (! $esJefeAsignado && ! $esJefeArea && ! auth()->user()->hasRole('Root')) {
             return back()->withErrors(['error' => 'No tiene permiso para editar esta solicitud']);
         }
 

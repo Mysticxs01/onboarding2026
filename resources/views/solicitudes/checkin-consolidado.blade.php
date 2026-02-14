@@ -47,7 +47,7 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-600 uppercase">Jefe Inmediato</p>
-                        <p class="font-semibold">{{ $proceso->jefe->name }}</p>
+                        <p class="font-semibold">{{ $proceso->jefeCargo?->nombre ?? $proceso->cargo?->jefeInmediato?->nombre ?? '—' }}</p>
                     </div>
                     <div>
                         <p class="text-xs text-gray-600 uppercase">Estado General</p>

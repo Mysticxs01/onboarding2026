@@ -139,6 +139,11 @@
                                     <a href="{{ route('procesos-ingreso.index') }}" class="btn-accent w-full sm:w-auto text-center">
                                         🗺️ Gestionar Procesos
                                     </a>
+                                    @if (Auth::user()->hasRole('Root'))
+                                        <a href="{{ route('cargos.index') }}" class="btn-secondary w-full sm:w-auto text-center">
+                                            🧭 Gestionar Cargos
+                                        </a>
+                                    @endif
                                 </div>
                                 <div>
                                     <p style="color: #1B365D;" class="text-sm italic">

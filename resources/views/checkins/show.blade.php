@@ -16,7 +16,7 @@
                 <p><strong>Nombre Completo:</strong> {{ $checkin->procesoIngreso->nombre_completo }}</p>
                 <p><strong>Cargo:</strong> {{ $checkin->procesoIngreso->cargo->nombre }}</p>
                 <p><strong>Área:</strong> {{ $checkin->procesoIngreso->area->nombre }}</p>
-                <p><strong>Jefe Inmediato:</strong> {{ $checkin->procesoIngreso->jefe->name }}</p>
+                <p><strong>Jefe Inmediato:</strong> {{ $checkin->procesoIngreso->jefeCargo?->nombre ?? $checkin->procesoIngreso->cargo?->jefeInmediato?->nombre ?? '—' }}</p>
                 <p><strong>Fecha de Ingreso:</strong> {{ $checkin->procesoIngreso->fecha_ingreso }}</p>
             </div>
         </div>

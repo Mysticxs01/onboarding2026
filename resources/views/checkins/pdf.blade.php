@@ -216,7 +216,7 @@
                 </tr>
                 <tr>
                     <td class="info-label">Jefe Inmediato:</td>
-                    <td>{{ $checkin->procesoIngreso->jefe->name }}</td>
+                    <td>{{ $checkin->procesoIngreso->jefeCargo?->nombre ?? $checkin->procesoIngreso->cargo?->jefeInmediato?->nombre ?? '—' }}</td>
                 </tr>
                 <tr>
                     <td class="info-label">Fecha de Ingreso:</td>
@@ -301,7 +301,7 @@
                 <div style="height: 80px;">
                 </div>
                 <div class="linea-firma">Firma Jefe Inmediato</div>
-                <p>{{ $checkin->procesoIngreso->jefe->name }}</p>
+                <p>{{ $checkin->procesoIngreso->jefeCargo?->nombre ?? $checkin->procesoIngreso->cargo?->jefeInmediato?->nombre ?? '—' }}</p>
             </div>
         </div>
         

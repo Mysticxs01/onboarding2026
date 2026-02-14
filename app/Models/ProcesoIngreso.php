@@ -20,6 +20,7 @@ class ProcesoIngreso extends Model
         'telefono',
         'fecha_esperada_finalizacion',
         'jefe_id',
+        'jefe_cargo_id',
         'estado',
         'observaciones',
         'fecha_cancelacion',
@@ -46,6 +47,11 @@ class ProcesoIngreso extends Model
     public function jefe()
     {
         return $this->belongsTo(User::class, 'jefe_id');
+    }
+
+    public function jefeCargo()
+    {
+        return $this->belongsTo(Cargo::class, 'jefe_cargo_id');
     }
 
     public function solicitudes()

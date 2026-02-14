@@ -39,27 +39,29 @@
             </div>
 
             <div class="mb-4">
-                <label class="block font-bold mb-2">Cargo</label>
-                <select name="cargo_id" id="cargo_id" class="w-full p-2 border rounded" required>
-                    <option value="">Seleccione cargo</option>
-                    @foreach ($cargos as $cargo)
-                        <option value="{{ $cargo->id }}" data-area="{{ $cargo->area_id }}" {{ old('cargo_id', $proceso->cargo_id) == $cargo->id ? 'selected' : '' }}>
-                            {{ $cargo->nombre }} - {{ $cargo->area->nombre }}
-                        </option>
-                    @endforeach
+                <label class="block font-bold mb-2">Gerencia</label>
+                <select id="gerencia_id" class="w-full p-2 border rounded" required>
+                    <option value="">Seleccione gerencia</option>
                 </select>
             </div>
 
             <div class="mb-4">
-                <label class="block font-bold mb-2">Jefe Inmediato</label>
-                <select name="jefe_id" id="jefe_id" class="w-full p-2 border rounded" required>
-                    <option value="">Seleccione jefe</option>
-                    @foreach ($jefes as $jefe)
-                        <option value="{{ $jefe->id }}" {{ old('jefe_id', $proceso->jefe_id) == $jefe->id ? 'selected' : '' }}>
-                            {{ $jefe->name }}
-                        </option>
-                    @endforeach
+                <label class="block font-bold mb-2">Area</label>
+                <select id="area_id" class="w-full p-2 border rounded" required>
+                    <option value="">Seleccione area</option>
                 </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-bold mb-2">Cargo</label>
+                <select name="cargo_id" id="cargo_id" class="w-full p-2 border rounded" required>
+                    <option value="">Seleccione cargo</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-bold mb-2">Jefe Inmediato (cargo)</label>
+                <input id="jefe_cargo" class="w-full p-2 border rounded bg-gray-100" readonly>
             </div>
 
             <div class="flex gap-2">
@@ -75,24 +77,108 @@
     </div>
 
     <script>
-        document.getElementById('cargo_id').addEventListener('change', function() {
-            const areaId = this.options[this.selectedIndex].dataset.area;
-            const jefeSelect = document.getElementById('jefe_id');
-            
-            jefeSelect.innerHTML = '<option value="">Seleccione jefe</option>';
+        const gerencias = @json($gerencias);
+        const oldGerenciaId = "{{ old('gerencia_id', optional(optional($proceso->cargo)->area)->gerencia_id) }}";
+        const oldAreaId = "{{ old('area_id', optional($proceso->cargo)->area_id) }}";
+        const oldCargoId = "{{ old('cargo_id', $proceso->cargo_id) }}";
 
-            if(areaId) {
-                fetch(`/areas/${areaId}/jefes`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(jefe => {
-                            const option = document.createElement('option');
-                            option.value = jefe.id;
-                            option.textContent = jefe.name;
-                            jefeSelect.appendChild(option);
-                        });
-                    });
+        const gerenciaSelect = document.getElementById('gerencia_id');
+        const areaSelect = document.getElementById('area_id');
+        const cargoSelect = document.getElementById('cargo_id');
+        const jefeCargoInput = document.getElementById('jefe_cargo');
+
+        const resetSelect = (select, placeholder) => {
+            select.innerHTML = '';
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = placeholder;
+            select.appendChild(option);
+        };
+
+        const populateGerencias = () => {
+            resetSelect(gerenciaSelect, 'Seleccione gerencia');
+            gerencias.forEach((gerencia) => {
+                const option = document.createElement('option');
+                option.value = gerencia.id;
+                option.textContent = gerencia.nombre;
+                if (oldGerenciaId && String(gerencia.id) === String(oldGerenciaId)) {
+                    option.selected = true;
+                }
+                gerenciaSelect.appendChild(option);
+            });
+        };
+
+        const populateAreas = (gerenciaId) => {
+            resetSelect(areaSelect, 'Seleccione area');
+            resetSelect(cargoSelect, 'Seleccione cargo');
+            jefeCargoInput.value = '';
+
+            const gerencia = gerencias.find((item) => String(item.id) === String(gerenciaId));
+            if (!gerencia) {
+                return;
+            }
+
+            gerencia.areas.forEach((area) => {
+                const option = document.createElement('option');
+                option.value = area.id;
+                option.textContent = area.nombre;
+                if (oldAreaId && String(area.id) === String(oldAreaId)) {
+                    option.selected = true;
+                }
+                areaSelect.appendChild(option);
+            });
+        };
+
+        const populateCargos = (gerenciaId, areaId) => {
+            resetSelect(cargoSelect, 'Seleccione cargo');
+            jefeCargoInput.value = '';
+
+            const gerencia = gerencias.find((item) => String(item.id) === String(gerenciaId));
+            const area = gerencia?.areas.find((item) => String(item.id) === String(areaId));
+            if (!area) {
+                return;
+            }
+
+            area.cargos.forEach((cargo) => {
+                const option = document.createElement('option');
+                option.value = cargo.id;
+                option.textContent = cargo.activo ? cargo.nombre : `${cargo.nombre} (Inactivo)`;
+                option.dataset.jefeNombre = cargo.jefe_inmediato ? cargo.jefe_inmediato.nombre : '';
+                if (oldCargoId && String(cargo.id) === String(oldCargoId)) {
+                    option.selected = true;
+                }
+                if (!cargo.activo && String(cargo.id) !== String(oldCargoId)) {
+                    option.disabled = true;
+                }
+                cargoSelect.appendChild(option);
+            });
+        };
+
+        const updateJefeCargo = () => {
+            const selected = cargoSelect.options[cargoSelect.selectedIndex];
+            jefeCargoInput.value = selected?.dataset?.jefeNombre || 'Sin jefe asignado';
+        };
+
+        gerenciaSelect.addEventListener('change', (event) => {
+            populateAreas(event.target.value);
+            if (event.target.value) {
+                populateCargos(event.target.value, areaSelect.value);
             }
         });
+
+        areaSelect.addEventListener('change', (event) => {
+            populateCargos(gerenciaSelect.value, event.target.value);
+        });
+
+        cargoSelect.addEventListener('change', updateJefeCargo);
+
+        populateGerencias();
+        if (gerenciaSelect.value) {
+            populateAreas(gerenciaSelect.value);
+        }
+        if (gerenciaSelect.value && areaSelect.value) {
+            populateCargos(gerenciaSelect.value, areaSelect.value);
+        }
+        updateJefeCargo();
     </script>
 </x-app-layout>

@@ -30,6 +30,21 @@ class Cargo extends Model
         return $this->belongsTo(Area::class);
     }
 
+    public function gerencia()
+    {
+        return $this->belongsTo(Gerencia::class);
+    }
+
+    public function jefeInmediato()
+    {
+        return $this->belongsTo(Cargo::class, 'jefe_inmediato_cargo_id');
+    }
+
+    public function subcargos()
+    {
+        return $this->hasMany(Cargo::class, 'jefe_inmediato_cargo_id');
+    }
+
     // Un cargo tiene muchos usuarios
     public function users()
     {
