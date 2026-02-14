@@ -26,7 +26,19 @@ class CheckinController extends Controller
      */
     public function generar($procesoId)
     {
-        $proceso = ProcesoIngreso::with(['solicitudes.puestoTrabajo', 'solicitudes.detalleTecnologia', 'solicitudes.detalleUniforme'])->findOrFail($procesoId);
+        $proceso = ProcesoIngreso::with([
+            'solicitudes.puestoTrabajo',
+            'solicitudes.detalleTecnologia',
+            'solicitudes.detalleUniforme',
+            'solicitudes.detalleBienes',
+            'solicitudes.cursos'
+        ])->findOrFail($procesoId);
+
+        $existente = Checkin::where('proceso_ingreso_id', $proceso->id)->first();
+        if ($existente) {
+            return redirect()->route('checkins.show', $existente->id)
+                ->with('success', 'El check-in ya estaba generado.');
+        }
 
         // Verificar que todas las solicitudes estén finalizadas
         if ($proceso->solicitudes()->where('estado', '!=', 'Finalizada')->exists()) {
@@ -40,22 +52,17 @@ class CheckinController extends Controller
             switch ($solicitud->tipo) {
                 case 'Tecnología':
                     if ($detalles = $solicitud->detalleTecnologia) {
-                        $activos[] = [
-                            'item' => "Computador {$detalles->tipo_computador} ({$detalles->marca_computador})",
-                            'especificaciones' => $detalles->especificaciones,
-                            'entregado' => false,
-                        ];
-                        if ($detalles->monitor_adicional) {
+                        if ($detalles->necesita_computador) {
                             $activos[] = [
-                                'item' => 'Monitor Adicional',
-                                'especificaciones' => null,
+                                'item' => 'Computador',
+                                'especificaciones' => "Gama: {$detalles->gama_computador}",
                                 'entregado' => false,
                             ];
                         }
-                        if ($detalles->mouse_teclado) {
+                        if (!empty($detalles->credenciales_plataformas)) {
                             $activos[] = [
-                                'item' => 'Mouse y Teclado',
-                                'especificaciones' => null,
+                                'item' => 'Credenciales y Plataformas',
+                                'especificaciones' => $detalles->credenciales_plataformas,
                                 'entregado' => false,
                             ];
                         }
@@ -64,11 +71,19 @@ class CheckinController extends Controller
 
                 case 'Dotación':
                     if ($detalles = $solicitud->detalleUniforme) {
-                        $activos[] = [
-                            'item' => "Uniforme {$detalles->cantidad_uniformes} piezas",
-                            'especificaciones' => "Tallas: Camisa {$detalles->talla_camisa}, Pantalón {$detalles->talla_pantalon}, Zapatos {$detalles->talla_zapatos}",
-                            'entregado' => false,
-                        ];
+                        if ($detalles->necesita_dotacion) {
+                            $activos[] = [
+                                'item' => 'Dotación',
+                                'especificaciones' => "Pantalón: {$detalles->talla_pantalon}, Camiseta: {$detalles->talla_camiseta}",
+                                'entregado' => false,
+                            ];
+                        } else {
+                            $activos[] = [
+                                'item' => 'Dotación (No requerida)',
+                                'especificaciones' => $detalles->justificacion_no_dotacion,
+                                'entregado' => false,
+                            ];
+                        }
                     }
                     break;
 
@@ -77,6 +92,41 @@ class CheckinController extends Controller
                         $activos[] = [
                             'item' => "Puesto de Trabajo ({$solicitud->puestoTrabajo->numero_puesto})",
                             'especificaciones' => "Sección: {$solicitud->puestoTrabajo->seccion}, Piso: {$solicitud->puestoTrabajo->piso}",
+                            'entregado' => false,
+                        ];
+                    }
+                    break;
+
+                case 'Formación':
+                    if ($solicitud->cursos && $solicitud->cursos->count() > 0) {
+                        $lista = $solicitud->cursos->pluck('nombre')->implode(', ');
+                        $activos[] = [
+                            'item' => 'Plan de Formación',
+                            'especificaciones' => $lista,
+                            'entregado' => false,
+                        ];
+                    }
+                    break;
+
+                case 'Bienes':
+                case 'Bienes y Servicios':
+                    if ($solicitud->detalleBienes && !empty($solicitud->detalleBienes->bienes_requeridos)) {
+                        $bienesRaw = $solicitud->detalleBienes->bienes_requeridos;
+                        if (is_string($bienesRaw)) {
+                            $bienesRaw = json_decode($bienesRaw, true);
+                        }
+                        $bienesLista = is_array($bienesRaw) ? $bienesRaw : [];
+                        $bienes = implode(', ', $bienesLista);
+                        $activos[] = [
+                            'item' => 'Bienes y Servicios',
+                            'especificaciones' => $bienes,
+                            'entregado' => false,
+                        ];
+                    }
+                    if ($solicitud->detalleBienes && !empty($solicitud->detalleBienes->observaciones)) {
+                        $activos[] = [
+                            'item' => 'Observaciones de Bienes',
+                            'especificaciones' => $solicitud->detalleBienes->observaciones,
                             'entregado' => false,
                         ];
                     }

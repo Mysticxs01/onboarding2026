@@ -48,6 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // MÓDULO DE REPORTES
     Route::prefix('reportes')->name('reportes.')->group(function () {
+
+        // Centro de Reportes
+        Route::get('/', [ReporteController::class, 'index'])
+            ->name('index');
         
         // Dashboard Ejecutivo
         Route::get('/dashboard', [ReporteController::class, 'dashboard'])
@@ -72,6 +76,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Costos de Formación
         Route::get('/costos-formacion', [ReporteController::class, 'costosFormacion'])
             ->name('costos-formacion');
+
+        // Reporte de Eficiencia
+        Route::get('/eficiencia', [ReporteController::class, 'eficiencia'])
+            ->name('eficiencia');
 
         // Exportar datos
         Route::post('/exportar', [ReporteController::class, 'exportarDatos'])

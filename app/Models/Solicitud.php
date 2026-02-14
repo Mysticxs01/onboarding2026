@@ -56,26 +56,6 @@ class Solicitud extends Model
         return $this->belongsToMany(Curso::class, 'solicitud_curso');
     }
 
-    public function solicitudServiciosGenerales()
-    {
-        return $this->hasOne(SolicitudServiciosGenerales::class);
-    }
-
-    public function planCapacitacion()
-    {
-        return $this->hasOne(PlanCapacitacion::class);
-    }
-
-    public function itemsInmobiliario()
-    {
-        return $this->hasMany(ItemInmobiliario::class);
-    }
-
-    public function elementosProteccion()
-    {
-        return $this->hasMany(ElementoProteccion::class);
-    }
-
     /**
      * Obtener los estados posibles para una solicitud
      */

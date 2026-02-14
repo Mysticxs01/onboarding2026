@@ -1,10 +1,11 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl leading-tight" style="color: #1B365D;">
+            Centro de Reportes
+        </h2>
+    </x-slot>
 
-@section('title', 'Reportes')
-
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-blue-900 mb-6">Centro de Reportes</h1>
+    <div class="container mx-auto px-4 py-8">
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {{-- Dashboard Ejecutivo --}}
@@ -82,6 +83,21 @@
             </div>
         </a>
 
+        {{-- Reporte de Eficiencia --}}
+        <a href="{{ route('reportes.eficiencia') }}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-6">
+            <div class="flex items-center gap-4">
+                <div class="bg-emerald-100 p-4 rounded-lg">
+                    <svg class="w-8 h-8 text-emerald-900" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3a1 1 0 011-1h2a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm6 4a1 1 0 011-1h2a1 1 0 011 1v10a1 1 0 01-1 1h-2a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v13a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-blue-900">Eficiencia</h3>
+                    <p class="text-sm text-gray-600">A tiempo vs retrasos</p>
+                </div>
+            </div>
+        </a>
+
         {{-- Costos --}}
         <a href="{{ route('reportes.costos-formacion') }}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-6">
             <div class="flex items-center gap-4">
@@ -97,5 +113,4 @@
             </div>
         </a>
     </div>
-</div>
-@endsection
+</x-app-layout>

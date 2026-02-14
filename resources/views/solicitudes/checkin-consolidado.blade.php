@@ -1,8 +1,3 @@
-@extends('layouts.app')
-
-@section('title', 'Check-in Consolidado - ' . $proceso->nombre_completo)
-
-@section('content')
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
@@ -70,37 +65,40 @@
                 @if($tecnologia)
                 <div class="bg-white rounded-lg shadow p-6" style="border-left: 4px solid #0066CC;">
                     <h3 class="text-lg font-bold mb-4" style="color: #1B365D;">💻 Solicitud de Tecnología</h3>
+                    @php
+                        $tecnologiaDetalle = $tecnologia->detalleTecnologia;
+                    @endphp
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-blue-50 p-4 rounded">
                         <div>
                             <p class="text-xs text-gray-600 uppercase font-semibold">¿Necesita Computador?</p>
                             <p class="text-lg font-bold">
-                                @if($tecnologia->necesita_computador)
+                                @if($tecnologiaDetalle?->necesita_computador)
                                     <span style="color: #28A745;">✅ SÍ</span>
                                 @else
                                     <span style="color: #C59D42;">❌ NO</span>
                                 @endif
                             </p>
                         </div>
-                        @if($tecnologia->necesita_computador)
+                        @if($tecnologiaDetalle?->necesita_computador)
                             <div>
                                 <p class="text-xs text-gray-600 uppercase font-semibold">Gama del Computador</p>
-                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $tecnologia->gama_computador }}</p>
+                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $tecnologiaDetalle->gama_computador }}</p>
                             </div>
                         @endif
                         <div>
                             <p class="text-xs text-gray-600 uppercase font-semibold">Estado</p>
                             <span class="inline-block px-3 py-1 rounded text-sm font-semibold" style="background-color: #E8F5E9; color: #28A745;">
-                                ✅ {{ $tecnologia->solicitud->estado }}
+                                ✅ {{ $tecnologia->estado }}
                             </span>
                         </div>
                     </div>
                     
-                    @if($tecnologia->credenciales_plataformas)
+                    @if($tecnologiaDetalle?->credenciales_plataformas)
                         <div class="mt-4">
                             <p class="text-xs text-gray-600 uppercase font-semibold mb-2">Credenciales y Plataformas</p>
                             <div class="bg-gray-50 p-4 rounded border border-gray-200 text-sm whitespace-pre-wrap">
-                                {{ $tecnologia->credenciales_plataformas }}
+                                {{ $tecnologiaDetalle->credenciales_plataformas }}
                             </div>
                         </div>
                     @endif
@@ -111,8 +109,11 @@
                 @if($dotacion)
                 <div class="bg-white rounded-lg shadow p-6" style="border-left: 4px solid #F76707;">
                     <h3 class="text-lg font-bold mb-4" style="color: #1B365D;">👔 Solicitud de Dotación</h3>
+                    @php
+                        $dotacionDetalle = $dotacion->detalleUniforme;
+                    @endphp
                     
-                    @if($dotacion->necesita_dotacion)
+                    @if($dotacionDetalle?->necesita_dotacion)
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-orange-50 p-4 rounded">
                             <div>
                                 <p class="text-xs text-gray-600 uppercase font-semibold">¿Necesita Dotación?</p>
@@ -120,24 +121,24 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-600 uppercase font-semibold">Género</p>
-                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacion->genero }}</p>
+                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacionDetalle->genero }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-600 uppercase font-semibold">Talla Pantalón</p>
-                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacion->talla_pantalon }}</p>
+                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacionDetalle->talla_pantalon }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-600 uppercase font-semibold">Talla Camiseta</p>
-                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacion->talla_camiseta }}</p>
+                                <p class="text-lg font-bold" style="color: #1B365D;">{{ $dotacionDetalle->talla_camiseta }}</p>
                             </div>
                         </div>
                     @else
                         <div class="bg-orange-50 p-4 rounded">
                             <p class="text-lg font-bold mb-2">❌ No Requiere Dotación</p>
-                            @if($dotacion->justificacion_no_dotacion)
+                            @if($dotacionDetalle?->justificacion_no_dotacion)
                                 <p class="text-sm text-gray-700 mt-2">
                                     <strong>Justificación:</strong><br>
-                                    {{ $dotacion->justificacion_no_dotacion }}
+                                    {{ $dotacionDetalle->justificacion_no_dotacion }}
                                 </p>
                             @endif
                         </div>
@@ -145,7 +146,7 @@
 
                     <div class="mt-4">
                         <span class="inline-block px-3 py-1 rounded text-sm font-semibold" style="background-color: #E8F5E9; color: #28A745;">
-                            ✅ {{ $dotacion->solicitud->estado }}
+                            ✅ {{ $dotacion->estado }}
                         </span>
                     </div>
                 </div>
@@ -185,7 +186,7 @@
 
                     <div class="mt-4">
                         <span class="inline-block px-3 py-1 rounded text-sm font-semibold" style="background-color: #E8F5E9; color: #28A745;">
-                            ✅ {{ $serviciosGenerales->estado }}
+                            ✅ {{ $serviciosGenerales->estado ?? 'Finalizada' }}
                         </span>
                     </div>
                 </div>
@@ -225,8 +226,18 @@
                 @if($bienes)
                 <div class="bg-white rounded-lg shadow p-6" style="border-left: 4px solid #FF9800;">
                     <h3 class="text-lg font-bold mb-4" style="color: #1B365D;">🛋️ Solicitud de Bienes y Servicios</h3>
+                    @php
+                        $bienesDetalle = $bienes->detalleBienes;
+                        $bienesLista = $bienesDetalle?->bienes_requeridos;
+                        if (is_string($bienesLista)) {
+                            $bienesLista = json_decode($bienesLista, true);
+                        }
+                        if (!is_array($bienesLista)) {
+                            $bienesLista = [];
+                        }
+                    @endphp
                     
-                    @if($bienes->bienes_requeridos && count($bienes->bienes_requeridos) > 0)
+                    @if(count($bienesLista) > 0)
                         <div class="bg-amber-50 p-4 rounded">
                             <p class="font-semibold mb-4">Bienes Requeridos:</p>
                             
@@ -246,7 +257,7 @@
                                     ];
                                 @endphp
                                 
-                                @foreach($bienes->bienes_requeridos as $bien)
+                                @foreach($bienesLista as $bien)
                                     <div class="bg-white p-3 rounded border border-amber-200 text-center">
                                         <p class="text-2xl">{{ $iconos[$bien] ?? '📦' }}</p>
                                         <p class="text-sm font-semibold capitalize">{{ str_replace('_', ' ', $bien) }}</p>
@@ -260,18 +271,18 @@
                         </div>
                     @endif
 
-                    @if($bienes->observaciones)
+                    @if($bienesDetalle?->observaciones)
                         <div class="mt-4">
                             <p class="text-xs text-gray-600 uppercase font-semibold mb-2">Observaciones</p>
                             <div class="bg-gray-50 p-3 rounded border border-gray-200 text-sm">
-                                {{ $bienes->observaciones }}
+                                {{ $bienesDetalle->observaciones }}
                             </div>
                         </div>
                     @endif
 
                     <div class="mt-4">
                         <span class="inline-block px-3 py-1 rounded text-sm font-semibold" style="background-color: #E8F5E9; color: #28A745;">
-                            ✅ {{ $bienes->estado }}
+                            ✅ {{ $bienes->estado ?? 'Finalizada' }}
                         </span>
                     </div>
                 </div>
@@ -325,4 +336,3 @@
         </div>
     </div>
 </x-app-layout>
-@endsection

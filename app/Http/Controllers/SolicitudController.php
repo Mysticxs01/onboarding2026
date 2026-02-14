@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Solicitud;
 use App\Models\DetalleTecnologia;
 use App\Models\DetalleUniforme;
+use App\Models\Checkin;
 use App\Models\ProcesoIngreso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -51,9 +52,9 @@ class SolicitudController extends Controller
                 ->latest()
                 ->paginate(15);
         }
-        // Jefe Bienes y Servicios ve SOLO solicitudes de Bienes
+        // Jefe Bienes y Servicios ve SOLO solicitudes de Bienes y Servicios
         elseif ($user->hasRole('Jefe Bienes y Servicios')) {
-            $solicitudes = Solicitud::where('tipo', 'Bienes')
+            $solicitudes = Solicitud::where('tipo', 'Bienes y Servicios')
                 ->with(['proceso', 'area', 'detalleBienes'])
                 ->latest()
                 ->paginate(15);
@@ -95,6 +96,7 @@ class SolicitudController extends Controller
             'Servicios Generales' => 'tipo-servicios-generales',
             'Formación' => 'tipo-formacion',
             'Bienes' => 'tipo-bienes',
+            'Bienes y Servicios' => 'tipo-bienes',
             default => 'show',
         };
 
@@ -228,7 +230,7 @@ class SolicitudController extends Controller
         );
 
         $detalleBienes->update([
-            'bienes_requeridos' => json_encode($request->bienes ?? []),
+            'bienes_requeridos' => $request->bienes ?? [],
             'observaciones' => $request->observaciones_bienes,
         ]);
 
@@ -373,6 +375,7 @@ class SolicitudController extends Controller
                 'Servicios Generales' => 'Jefe Servicios Generales',
                 'Formación' => 'Jefe RRHH', // Formación la maneja Jefe RRHH
                 'Bienes' => 'Jefe Bienes y Servicios',
+                'Bienes y Servicios' => 'Jefe Bienes y Servicios',
             ];
 
             $rolRequerido = $tipoRolMap[$solicitud->tipo] ?? null;
@@ -420,8 +423,17 @@ class SolicitudController extends Controller
             // Verificar si TODAS las solicitudes están en Finalizada
             $todasFinalizadas = $proceso->solicitudes()->where('estado', '!=', 'Finalizada')->doesntExist();
             if ($todasFinalizadas) {
-                $proceso->update(['estado' => 'Finalizado']);
-                session()->flash('success', "¡Proceso de onboarding completado! Ahora puede generar el check-in consolidado.");
+                $proceso->update([
+                    'estado' => 'Finalizado',
+                    'fecha_finalizacion' => now(),
+                ]);
+
+                $checkin = $this->generarCheckinAutomatico($proceso);
+                if ($checkin) {
+                    session()->flash('success', 'Proceso finalizado y check-in generado automaticamente.');
+                } else {
+                    session()->flash('success', 'Proceso finalizado. El check-in ya estaba generado.');
+                }
             }
         }
 
@@ -459,7 +471,8 @@ class SolicitudController extends Controller
         $dotacion = $solicitudes->firstWhere('tipo', 'Dotación');
         $serviciosGenerales = $solicitudes->firstWhere('tipo', 'Servicios Generales');
         $formacion = $solicitudes->firstWhere('tipo', 'Formación');
-        $bienes = $solicitudes->firstWhere('tipo', 'Bienes');
+        $bienes = $solicitudes->firstWhere('tipo', 'Bienes')
+            ?? $solicitudes->firstWhere('tipo', 'Bienes y Servicios');
 
         return view('solicitudes.checkin-consolidado', compact(
             'proceso',
@@ -475,6 +488,126 @@ class SolicitudController extends Controller
     {
         $notificationService = new \App\Services\NotificationService();
         $notificationService->notificarCambioEstado($solicitud, $estadoAnterior, $estadoNuevo);
+    }
+
+    private function generarCheckinAutomatico(ProcesoIngreso $proceso): ?Checkin
+    {
+        $proceso->load([
+            'solicitudes.puestoTrabajo',
+            'solicitudes.detalleTecnologia',
+            'solicitudes.detalleUniforme',
+            'solicitudes.detalleBienes',
+            'solicitudes.cursos',
+            'jefe',
+        ]);
+
+        if (Checkin::where('proceso_ingreso_id', $proceso->id)->exists()) {
+            return null;
+        }
+
+        $activos = [];
+
+        foreach ($proceso->solicitudes as $solicitud) {
+            switch ($solicitud->tipo) {
+                case 'Tecnología':
+                    if ($detalles = $solicitud->detalleTecnologia) {
+                        if ($detalles->necesita_computador) {
+                            $activos[] = [
+                                'item' => 'Computador',
+                                'especificaciones' => "Gama: {$detalles->gama_computador}",
+                                'entregado' => false,
+                            ];
+                        }
+                        if (!empty($detalles->credenciales_plataformas)) {
+                            $activos[] = [
+                                'item' => 'Credenciales y Plataformas',
+                                'especificaciones' => $detalles->credenciales_plataformas,
+                                'entregado' => false,
+                            ];
+                        }
+                    }
+                    break;
+
+                case 'Dotación':
+                    if ($detalles = $solicitud->detalleUniforme) {
+                        if ($detalles->necesita_dotacion) {
+                            $activos[] = [
+                                'item' => 'Dotación',
+                                'especificaciones' => "Pantalon: {$detalles->talla_pantalon}, Camiseta: {$detalles->talla_camiseta}",
+                                'entregado' => false,
+                            ];
+                        } else {
+                            $activos[] = [
+                                'item' => 'Dotación (No requerida)',
+                                'especificaciones' => $detalles->justificacion_no_dotacion,
+                                'entregado' => false,
+                            ];
+                        }
+                    }
+                    break;
+
+                case 'Servicios Generales':
+                    if ($solicitud->puestoTrabajo) {
+                        $activos[] = [
+                            'item' => "Puesto de Trabajo ({$solicitud->puestoTrabajo->numero_puesto})",
+                            'especificaciones' => "Seccion: {$solicitud->puestoTrabajo->seccion}, Piso: {$solicitud->puestoTrabajo->piso}",
+                            'entregado' => false,
+                        ];
+                    }
+                    break;
+
+                case 'Formación':
+                    if ($solicitud->cursos && $solicitud->cursos->count() > 0) {
+                        $lista = $solicitud->cursos->pluck('nombre')->implode(', ');
+                        $activos[] = [
+                            'item' => 'Plan de Formacion',
+                            'especificaciones' => $lista,
+                            'entregado' => false,
+                        ];
+                    }
+                    break;
+
+                case 'Bienes':
+                case 'Bienes y Servicios':
+                    if ($solicitud->detalleBienes && !empty($solicitud->detalleBienes->bienes_requeridos)) {
+                        $bienesRaw = $solicitud->detalleBienes->bienes_requeridos;
+                        if (is_string($bienesRaw)) {
+                            $bienesRaw = json_decode($bienesRaw, true);
+                        }
+                        $bienesLista = is_array($bienesRaw) ? $bienesRaw : [];
+                        $bienes = implode(', ', $bienesLista);
+                        $activos[] = [
+                            'item' => 'Bienes y Servicios',
+                            'especificaciones' => $bienes,
+                            'entregado' => false,
+                        ];
+                    }
+                    if ($solicitud->detalleBienes && !empty($solicitud->detalleBienes->observaciones)) {
+                        $activos[] = [
+                            'item' => 'Observaciones de Bienes',
+                            'especificaciones' => $solicitud->detalleBienes->observaciones,
+                            'entregado' => false,
+                        ];
+                    }
+                    break;
+
+                default:
+                    $activos[] = [
+                        'item' => ucfirst($solicitud->tipo),
+                        'especificaciones' => $solicitud->observaciones,
+                        'entregado' => false,
+                    ];
+            }
+        }
+
+        return Checkin::create([
+            'proceso_ingreso_id' => $proceso->id,
+            'codigo_verificacion' => Checkin::generarCodigoVerificacion(),
+            'activos_entregados' => $activos,
+            'estado_checkin' => 'Pendiente',
+            'fecha_generacion' => now(),
+            'email_empleado' => $proceso->jefe?->email,
+        ]);
     }
 
     /**
@@ -541,9 +674,9 @@ class SolicitudController extends Controller
             }
         }
 
-        // Jefe Bienes y Servicios puede ver SOLO solicitudes de Bienes
+        // Jefe Bienes y Servicios puede ver SOLO solicitudes de Bienes y Servicios
         if ($user->hasRole('Jefe Bienes y Servicios')) {
-            if ($solicitud->tipo === 'Bienes') {
+            if (in_array($solicitud->tipo, ['Bienes', 'Bienes y Servicios'], true)) {
                 return true;
             }
         }

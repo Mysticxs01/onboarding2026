@@ -12,6 +12,13 @@ use Illuminate\Http\Request;
 
 class ReporteController extends Controller
 {
+    public function index()
+    {
+        $this->authorize('view', ReporteCumplimiento::class);
+
+        return view('reportes.index');
+    }
+
     public function dashboard()
     {
         $this->authorize('view', ReporteCumplimiento::class);
@@ -150,6 +157,79 @@ class ReporteController extends Controller
         return view('reportes.costos-formacion', [
             'cursos' => $cursos,
             'costoTotal' => $costoTotal,
+        ]);
+    }
+
+    public function eficiencia()
+    {
+        $this->authorize('view', ReporteCumplimiento::class);
+
+        $solicitudes = Solicitud::with(['proceso:id,fecha_ingreso', 'area:id,nombre'])
+            ->whereNotNull('area_id')
+            ->get();
+
+        $hoy = now()->startOfDay();
+
+        $porArea = $solicitudes->groupBy('area_id')->map(function ($grupo) use ($hoy) {
+            $areaNombre = optional($grupo->first()->area)->nombre ?? 'Sin Area';
+            $total = $grupo->count();
+            $finalizadas = $grupo->where('estado', 'Finalizada');
+
+            $onTime = $finalizadas->filter(function ($solicitud) {
+                $fechaIngreso = optional($solicitud->proceso)->fecha_ingreso;
+                if (!$fechaIngreso || !$solicitud->updated_at) {
+                    return false;
+                }
+                return $solicitud->updated_at->startOfDay()->lte($fechaIngreso);
+            })->count();
+
+            $lateFinalizadas = $finalizadas->filter(function ($solicitud) {
+                $fechaIngreso = optional($solicitud->proceso)->fecha_ingreso;
+                if (!$fechaIngreso || !$solicitud->updated_at) {
+                    return false;
+                }
+                return $solicitud->updated_at->startOfDay()->gt($fechaIngreso);
+            })->count();
+
+            $latePendientes = $grupo->filter(function ($solicitud) use ($hoy) {
+                if ($solicitud->estado === 'Finalizada') {
+                    return false;
+                }
+                $fechaIngreso = optional($solicitud->proceso)->fecha_ingreso;
+                if (!$fechaIngreso) {
+                    return false;
+                }
+                return $hoy->gt($fechaIngreso);
+            })->count();
+
+            $late = $lateFinalizadas + $latePendientes;
+
+            return [
+                'area' => $areaNombre,
+                'total' => $total,
+                'on_time' => $onTime,
+                'late' => $late,
+                'on_time_pct' => $total > 0 ? round(($onTime / $total) * 100, 1) : 0,
+                'late_pct' => $total > 0 ? round(($late / $total) * 100, 1) : 0,
+            ];
+        })->sortByDesc('late_pct')->values();
+
+        $totals = [
+            'total' => $solicitudes->count(),
+            'on_time' => $porArea->sum('on_time'),
+            'late' => $porArea->sum('late'),
+        ];
+
+        $totals['on_time_pct'] = $totals['total'] > 0
+            ? round(($totals['on_time'] / $totals['total']) * 100, 1)
+            : 0;
+        $totals['late_pct'] = $totals['total'] > 0
+            ? round(($totals['late'] / $totals['total']) * 100, 1)
+            : 0;
+
+        return view('reportes.eficiencia', [
+            'porArea' => $porArea,
+            'totals' => $totals,
         ]);
     }
 

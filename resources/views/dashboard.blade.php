@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <h2 class="font-semibold text-xl leading-tight" style="color: #1B365D;">
                 {{ __('Dashboard') }} - Bienvenido {{ Auth::user()->name }}
             </h2>
-            <span class="text-white px-3 py-1 rounded text-sm font-semibold" style="background-color: #1B365D;">
+            <span class="text-white px-3 py-1 rounded text-sm font-semibold self-start sm:self-auto" style="background-color: #1B365D;">
                 {{ Auth::user()->getRoleNames()->first() ?? 'Usuario' }}
             </span>
         </div>
@@ -15,7 +15,7 @@
 
             <!-- Estadísticas Rápidas -->
             @if (Auth::user()->hasRole(['Root', 'Admin']))
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <div class="p-6 rounded-lg shadow" style="background-color: #F8F9FA; border-left: 4px solid #1B365D;">
                         <p style="color: #1B365D;" class="text-sm font-semibold">Procesos de Ingreso</p>
                         <p class="text-3xl font-bold mt-2" style="color: #1B365D;">
@@ -63,18 +63,18 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             📋 Procesos de Ingreso
                         </h2>
-                        <div class="flex gap-4 flex-wrap items-start">
-                            <div class="flex gap-3 flex-wrap">
+                        <div class="flex flex-col sm:flex-row gap-4 sm:items-start">
+                            <div class="flex flex-col sm:flex-row gap-3">
                                 @if (Auth::user()->hasRole(['Root', 'Jefe RRHH']))
-                                    <a href="{{ route('procesos-ingreso.create') }}" class="btn-secondary">
+                                    <a href="{{ route('procesos-ingreso.create') }}" class="btn-secondary w-full sm:w-auto text-center">
                                         ➕ Crear Nuevo Proceso
                                     </a>
                                 @endif
-                                <a href="{{ route('procesos-ingreso.index') }}" class="btn-primary">
+                                <a href="{{ route('procesos-ingreso.index') }}" class="btn-primary w-full sm:w-auto text-center">
                                     👁️ Ver Procesos
                                 </a>
                                 @if (Auth::user()->hasRole(['Root', 'Admin']))
-                                    <a href="{{ route('procesos-ingreso.historico') }}" class="btn-accent">
+                                    <a href="{{ route('procesos-ingreso.historico') }}" class="btn-accent w-full sm:w-auto text-center">
                                         📜 Histórico
                                     </a>
                                 @endif
@@ -87,9 +87,9 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #28A745;">
                             🎯 Solicitudes por Área
                         </h2>
-                        <div class="flex gap-4 flex-wrap items-start">
-                            <div class="flex gap-3 flex-wrap">
-                                <a href="{{ route('solicitudes.index') }}" class="btn-primary">
+                        <div class="flex flex-col sm:flex-row gap-4 sm:items-start">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a href="{{ route('solicitudes.index') }}" class="btn-primary w-full sm:w-auto text-center">
                                     📊 Ver Solicitudes
                                 </a>
                             </div>
@@ -112,9 +112,9 @@
                         <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #C59D42;">
                             ✅ Check-in de Activos
                         </h2>
-                        <div class="flex gap-4 flex-wrap items-start">
-                            <div class="flex gap-3 flex-wrap">
-                                <a href="{{ route('checkins.index') }}" class="btn-secondary">
+                        <div class="flex flex-col sm:flex-row gap-4 sm:items-start">
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a href="{{ route('checkins.index') }}" class="btn-secondary w-full sm:w-auto text-center">
                                     📦 Ver Check-ins
                                 </a>
                             </div>
@@ -134,9 +134,9 @@
                             <h2 class="text-lg font-bold mb-4 pb-2" style="color: #1B365D; border-bottom: 2px solid #1B365D;">
                                 ⚙️ Administración
                             </h2>
-                            <div class="flex gap-4 flex-wrap items-start">
-                                <div class="flex gap-3 flex-wrap">
-                                    <a href="{{ route('procesos-ingreso.index') }}" class="btn-accent">
+                            <div class="flex flex-col sm:flex-row gap-4 sm:items-start">
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="{{ route('procesos-ingreso.index') }}" class="btn-accent w-full sm:w-auto text-center">
                                         🗺️ Gestionar Procesos
                                     </a>
                                 </div>

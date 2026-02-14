@@ -68,10 +68,28 @@
                     {{ $proceso->solicitudes()->where('estado', 'Finalizada')->count() }} de {{ $proceso->solicitudes()->count() }} solicitudes completadas
                 </p>
 
-                @if($progreso === 100 && $proceso->solicitudes()->count() > 0)
-                    <a href="{{ route('solicitudes.checkin-consolidado', $proceso->id) }}" class="inline-block w-full text-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        ✅ Ver Check-in Consolidado
-                    </a>
+                @if($progreso >= 100 && $proceso->solicitudes()->count() > 0)
+                    <div class="space-y-2">
+                        <a href="{{ route('solicitudes.checkin-consolidado', $proceso->id) }}" class="inline-block w-full text-center bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            ✅ Ver Check-in Consolidado
+                        </a>
+
+                        @if($proceso->checkin)
+                            <a href="{{ route('checkins.show', $proceso->checkin->id) }}" class="inline-block w-full text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                📋 Ver Acta de Entrega
+                            </a>
+                            <a href="{{ route('checkins.pdf', $proceso->checkin->id) }}" class="inline-block w-full text-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                                📄 Descargar Acta PDF
+                            </a>
+                        @else
+                            <form method="POST" action="{{ route('checkins.generar', $proceso->id) }}">
+                                @csrf
+                                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                    📄 Generar Acta de Entrega
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 @endif
             </div>
         </div>
