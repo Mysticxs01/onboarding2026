@@ -18,50 +18,53 @@ class SolicitudController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $baseQuery = Solicitud::whereHas('proceso', function ($query) {
+            $query->where('estado', '!=', 'Cancelado');
+        });
         
         // Root ve todas las solicitudes
         if ($user->hasRole('Root')) {
-            $solicitudes = Solicitud::with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
+            $solicitudes = $baseQuery->with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
                 ->latest()
                 ->paginate(15);
         }
         // Jefe RRHH ve todas las solicitudes (gestiona todo el onboarding)
         elseif ($user->hasRole('Jefe RRHH')) {
-            $solicitudes = Solicitud::with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
+            $solicitudes = $baseQuery->with(['proceso', 'area', 'detalleTecnologia', 'detalleUniforme', 'detalleBienes', 'puestoTrabajo', 'cursos'])
                 ->latest()
                 ->paginate(15);
         }
         // Jefe Tecnología ve SOLO solicitudes de Tecnología
         elseif ($user->hasRole('Jefe Tecnología')) {
-            $solicitudes = Solicitud::where('tipo', 'Tecnología')
+            $solicitudes = $baseQuery->where('tipo', 'Tecnología')
                 ->with(['proceso', 'area', 'detalleTecnologia'])
                 ->latest()
                 ->paginate(15);
         }
         // Jefe Dotación ve SOLO solicitudes de Dotación
         elseif ($user->hasRole('Jefe Dotación')) {
-            $solicitudes = Solicitud::where('tipo', 'Dotación')
+            $solicitudes = $baseQuery->where('tipo', 'Dotación')
                 ->with(['proceso', 'area', 'detalleUniforme'])
                 ->latest()
                 ->paginate(15);
         }
         // Jefe Servicios Generales ve SOLO solicitudes de Servicios Generales
         elseif ($user->hasRole('Jefe Servicios Generales')) {
-            $solicitudes = Solicitud::where('tipo', 'Servicios Generales')
+            $solicitudes = $baseQuery->where('tipo', 'Servicios Generales')
                 ->with(['proceso', 'area', 'puestoTrabajo'])
                 ->latest()
                 ->paginate(15);
         }
         // Jefe Bienes y Servicios ve SOLO solicitudes de Bienes y Servicios
         elseif ($user->hasRole('Jefe Bienes y Servicios')) {
-            $solicitudes = Solicitud::where('tipo', 'Bienes y Servicios')
+            $solicitudes = $baseQuery->where('tipo', 'Bienes y Servicios')
                 ->with(['proceso', 'area', 'detalleBienes'])
                 ->latest()
                 ->paginate(15);
         }
         // Otros usuarios ven sus propias solicitudes
         else {
-            $solicitudes = Solicitud::where('proceso_ingreso_id', auth()->id())
+            $solicitudes = $baseQuery->where('proceso_ingreso_id', auth()->id())
                 ->with(['proceso', 'area'])
                 ->latest()
                 ->paginate(15);
@@ -118,10 +121,15 @@ class SolicitudController extends Controller
 
         $detalleTecnologia = DetalleTecnologia::firstOrCreate(
             ['solicitud_id' => $solicitud->id],
-            []
+            ['proceso_ingreso_id' => $solicitud->proceso_ingreso_id]
         );
 
+        if (! $detalleTecnologia->proceso_ingreso_id) {
+            $detalleTecnologia->proceso_ingreso_id = $solicitud->proceso_ingreso_id;
+        }
+
         $detalleTecnologia->update([
+            'proceso_ingreso_id' => $solicitud->proceso_ingreso_id,
             'necesita_computador' => (bool) $request->necesita_computador,
             'gama_computador' => $request->gama_computador,
             'credenciales_plataformas' => $request->credenciales_plataformas,
@@ -148,10 +156,15 @@ class SolicitudController extends Controller
 
         $detalleUniforme = DetalleUniforme::firstOrCreate(
             ['solicitud_id' => $solicitud->id],
-            []
+            ['proceso_ingreso_id' => $solicitud->proceso_ingreso_id]
         );
 
+        if (! $detalleUniforme->proceso_ingreso_id) {
+            $detalleUniforme->proceso_ingreso_id = $solicitud->proceso_ingreso_id;
+        }
+
         $detalleUniforme->update([
+            'proceso_ingreso_id' => $solicitud->proceso_ingreso_id,
             'necesita_dotacion' => (bool) $request->necesita_dotacion,
             'genero' => $request->genero,
             'talla_pantalon' => $request->talla_pantalon,
@@ -618,13 +631,19 @@ class SolicitudController extends Controller
             }
         }
 
+        $emailEmpleado = $proceso->email
+            ?? $proceso->jefe?->email
+            ?? auth()->user()?->email
+            ?? config('mail.from.address')
+            ?? 'no-reply@sinergia.com';
+
         return Checkin::create([
             'proceso_ingreso_id' => $proceso->id,
             'codigo_verificacion' => Checkin::generarCodigoVerificacion(),
             'activos_entregados' => $activos,
             'estado_checkin' => 'Pendiente',
             'fecha_generacion' => now(),
-            'email_empleado' => $proceso->jefe?->email,
+            'email_empleado' => $emailEmpleado,
         ]);
     }
 

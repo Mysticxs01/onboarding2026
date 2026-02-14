@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-02-2026 a las 02:20:49
+-- Tiempo de generación: 14-02-2026 a las 15:36:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -66,7 +66,8 @@ INSERT INTO `areas` (`id`, `nombre`, `gerencia_id`, `jefe_area_cargo_id`, `descr
 (21, 'Selección y Reclutamiento', 6, NULL, NULL, 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
 (22, 'Formación y Capacitación', 6, NULL, NULL, 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
 (23, 'Nómina', 6, NULL, NULL, 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
-(24, 'Clima Organizacional', 6, NULL, NULL, 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12');
+(24, 'Clima Organizacional', 6, NULL, NULL, 1, '2026-02-13 20:38:12', '2026-02-13 20:38:12'),
+(25, 'Gerencia General', 7, NULL, 'Direccion General', 1, '2026-02-14 19:27:39', '2026-02-14 19:27:39');
 
 -- --------------------------------------------------------
 
@@ -163,63 +164,61 @@ CREATE TABLE `cargos` (
 --
 
 INSERT INTO `cargos` (`id`, `nombre`, `area_id`, `jefe_inmediato_cargo_id`, `gerencia_id`, `salario_minimo`, `salario_maximo`, `requerimientos_minimos`, `vacantes_disponibles`, `activo`, `descripcion`, `created_at`, `updated_at`) VALUES
-(1, 'Gerente Administrativo', 1, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(2, 'Coordinador de Servicios Corporativos', 2, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(3, 'Auxiliar de Servicios Generales y Cafetería', 2, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(4, 'Asistente de Compras e Inventario', 2, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(5, 'Jefe de Infraestructura y Mantenimiento', 3, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(6, 'Técnico de Mantenimiento Locativo', 3, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(7, 'Técnico en Climatización y Electricidad', 3, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(8, 'Gerente Comercial', 4, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(9, 'Coordinador de Ventas y Captación', 5, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(10, 'Ejecutivo de Captación y Colocación', 5, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(11, 'Asesor de Crédito Externo', 5, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(12, 'Jefe de Canales', 6, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(13, 'Coordinador de Sucursales', 6, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(14, 'Administrador de Canales Digitales', 6, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(15, 'Coordinador de Marketing y Producto', 7, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(16, 'Analista de Producto', 7, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(17, 'Especialista en Comunicación y Marca', 7, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(18, 'Coordinador de Servicio al Cliente', 8, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(19, 'Oficial de Experiencia al Asociado', 8, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(20, 'Analista de Fidelización y Retención', 8, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(21, 'Gerente de Riesgos', 9, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(22, 'Coordinador de Análisis y Crédito', 10, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(23, 'Analista de Crédito Senior', 10, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(24, 'Asistente de Verificación y Garantías', 10, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(25, 'Analista de Microcrédito y Terreno', 10, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(26, 'Coordinador de Riesgo Operativo', 11, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(27, 'Oficial de Cumplimiento (SARLAFT)', 11, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(28, 'Analista de Riesgo Operacional', 11, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(29, 'Auditor de Procesos Crediticios', 11, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(30, 'Gerente Financiero', 12, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(31, 'Coordinador de Tesorería', 13, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(32, 'Analista de Tesorería y Pagos', 13, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(33, 'Coordinador de Contabilidad', 14, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(34, 'Analista de Impuestos y Costos', 14, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(35, 'Asistente Contable', 14, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(36, 'Coordinador de Planeación', 15, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(37, 'Analista de Estudios Económicos', 15, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(38, 'Gerente de TI', 16, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(39, 'Coordinador de Infraestructura y Redes', 17, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(40, 'Administrador de Servidores y Nube', 17, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(41, 'Coordinador de Desarrollo de Software', 18, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(42, 'Desarrollador Full Stack', 18, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(43, 'Analista de QA (Aseguramiento de Calidad)', 18, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(44, 'Coordinador de Soporte Técnico', 19, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(45, 'Técnico de Soporte Nivel 1', 19, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(46, 'Gerente Talento Humano', 20, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(47, 'Coordinador de Selección y Reclutamiento', 21, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(48, 'Analista de Atracción de Talento', 21, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(49, 'Coordinador de Formación y Capacitación', 22, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(50, 'Facilitador de Aprendizaje Interno', 22, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(51, 'Coordinador de Nómina y Compensación', 23, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(52, 'Analista de Prestaciones y Seguridad Social', 23, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(53, 'Coordinador de Clima Organizacional', 24, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(54, 'Especialista en Bienestar y Cultura', 24, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-13 23:35:40'),
-(55, 'Asistente Administrativo', 1, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 23:35:40', '2026-02-13 23:35:40'),
-(56, 'Supervisor de Servicios Generales', 2, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 23:35:40', '2026-02-13 23:35:40'),
-(57, 'Asistente de Inventario', 1, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 23:35:40', '2026-02-13 23:35:40');
+(1, 'Gerente Administrativo', 1, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(2, 'Coordinador de Servicios Corporativos', 2, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(3, 'Auxiliar de Servicios Generales y Cafetería', 2, 2, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(4, 'Asistente de Compras e Inventario', 2, 2, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(5, 'Jefe de Infraestructura y Mantenimiento', 3, 1, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(6, 'Técnico de Mantenimiento Locativo', 3, 5, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(7, 'Técnico en Climatización y Electricidad', 3, 5, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(8, 'Gerente Comercial', 4, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(9, 'Coordinador de Ventas y Captación', 5, 8, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(10, 'Ejecutivo de Captación y Colocación', 5, 9, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(11, 'Asesor de Crédito Externo', 5, 9, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(12, 'Jefe de Canales', 6, 8, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(13, 'Coordinador de Sucursales', 6, 12, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(14, 'Administrador de Canales Digitales', 6, 12, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(15, 'Coordinador de Marketing y Producto', 7, 8, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(16, 'Analista de Producto', 7, 15, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(17, 'Especialista en Comunicación y Marca', 7, 15, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(18, 'Coordinador de Servicio al Cliente', 8, 8, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(19, 'Oficial de Experiencia al Asociado', 8, 18, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(20, 'Analista de Fidelización y Retención', 8, 18, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(21, 'Gerente de Riesgos', 9, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(22, 'Coordinador de Análisis y Crédito', 10, 21, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(23, 'Analista de Crédito Senior', 10, 22, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(24, 'Asistente de Verificación y Garantías', 10, 22, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:28'),
+(25, 'Analista de Microcrédito y Terreno', 10, 22, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(26, 'Coordinador de Riesgo Operativo', 11, 21, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(27, 'Oficial de Cumplimiento (SARLAFT)', 11, 26, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(28, 'Analista de Riesgo Operacional', 11, 26, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(29, 'Auditor de Procesos Crediticios', 11, 26, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(30, 'Gerente Financiero', 12, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(31, 'Coordinador de Tesorería', 13, 30, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(32, 'Analista de Tesorería y Pagos', 13, 31, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(33, 'Coordinador de Contabilidad', 14, 30, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(34, 'Analista de Impuestos y Costos', 14, 33, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(35, 'Asistente Contable', 14, 33, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(36, 'Coordinador de Planeación', 15, 30, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(37, 'Analista de Estudios Económicos', 15, 36, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(38, 'Gerente de TI', 16, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(39, 'Coordinador de Infraestructura y Redes', 17, 38, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(40, 'Administrador de Servidores y Nube', 17, 39, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(41, 'Coordinador de Desarrollo de Software', 18, 38, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(42, 'Desarrollador Full Stack', 18, 41, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(43, 'Analista de QA (Aseguramiento de Calidad)', 18, 41, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(44, 'Coordinador de Soporte Técnico', 19, 38, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(45, 'Técnico de Soporte Nivel 1', 19, 44, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(46, 'Gerente Talento Humano', 20, 58, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:27:39'),
+(47, 'Coordinador de Selección y Reclutamiento', 21, 46, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(48, 'Analista de Atracción de Talento', 21, 47, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(49, 'Coordinador de Formación y Capacitación', 22, 46, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(50, 'Facilitador de Aprendizaje Interno', 22, 49, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(51, 'Coordinador de Nómina y Compensación', 23, 46, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(52, 'Analista de Prestaciones y Seguridad Social', 23, 51, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(53, 'Coordinador de Clima Organizacional', 24, 46, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(54, 'Especialista en Bienestar y Cultura', 24, 53, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-02-13 20:38:12', '2026-02-14 19:12:29'),
+(58, 'Gerente General', 25, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, '2026-02-14 19:27:39', '2026-02-14 19:27:39');
 
 -- --------------------------------------------------------
 
@@ -244,6 +243,13 @@ CREATE TABLE `checkins` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `checkins`
+--
+
+INSERT INTO `checkins` (`id`, `proceso_ingreso_id`, `codigo_verificacion`, `activos_entregados`, `estado_checkin`, `fecha_generacion`, `fecha_confirmacion`, `email_empleado`, `email_enviado`, `email_enviado_at`, `firma_digital`, `dispositivo_confirmacion`, `ip_confirmacion`, `created_at`, `updated_at`) VALUES
+(1, 2, '0036801BB8', '[{\"item\":\"Puesto de Trabajo (1-AAC-2)\",\"especificaciones\":\"Secci\\u00f3n: Atenci\\u00f3n al Cliente, Piso: 1\",\"entregado\":false},{\"item\":\"Plan de Formaci\\u00f3n\",\"especificaciones\":\"Brigadas de Primeros Auxilios, Ciberseguridad para No T\\u00e9cnicos, Comunicaci\\u00f3n Asertiva, Excel Avanzado para Finanzas, Gesti\\u00f3n de Compras y Proveedores\",\"entregado\":false},{\"item\":\"Bienes y Servicios\",\"especificaciones\":\"silla, organizador, cuadernos\",\"entregado\":false}]', 'Pendiente', '2026-02-14 02:17:55', NULL, 'jefe.servicios@sinergia.com', 0, NULL, NULL, NULL, NULL, '2026-02-14 07:17:55', '2026-02-14 07:17:55');
 
 -- --------------------------------------------------------
 
@@ -311,24 +317,6 @@ INSERT INTO `cursos` (`id`, `codigo`, `nombre`, `descripcion`, `categoria`, `mod
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `curso_x_cargo`
---
-
-CREATE TABLE `curso_x_cargo` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `curso_id` bigint(20) UNSIGNED NOT NULL,
-  `cargo_id` bigint(20) UNSIGNED NOT NULL,
-  `es_obligatorio` tinyint(1) NOT NULL DEFAULT 0,
-  `orden_secuencia` int(11) NOT NULL DEFAULT 0,
-  `fecha_desde` date DEFAULT NULL,
-  `fecha_hasta` date DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `detalles_bienes`
 --
 
@@ -341,89 +329,12 @@ CREATE TABLE `detalles_bienes` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `detalles_tecnologia`
+-- Volcado de datos para la tabla `detalles_bienes`
 --
 
-CREATE TABLE `detalles_tecnologia` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
-  `necesita_computador` tinyint(1) NOT NULL DEFAULT 0,
-  `gama_computador` enum('Básica','Media','Premium') DEFAULT NULL,
-  `credenciales_plataformas` text DEFAULT NULL,
-  `proceso_ingreso_id` bigint(20) UNSIGNED NOT NULL,
-  `tipo_computador` enum('Portátil','Escritorio') DEFAULT NULL,
-  `marca_computador` varchar(255) DEFAULT NULL,
-  `especificaciones` varchar(255) DEFAULT NULL,
-  `software_requerido` text DEFAULT NULL,
-  `monitor_adicional` tinyint(1) NOT NULL DEFAULT 0,
-  `mouse_teclado` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalles_uniformes`
---
-
-CREATE TABLE `detalles_uniformes` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
-  `necesita_dotacion` tinyint(1) NOT NULL DEFAULT 0,
-  `justificacion_no_dotacion` text DEFAULT NULL,
-  `proceso_ingreso_id` bigint(20) UNSIGNED NOT NULL,
-  `talla_camisa` varchar(255) DEFAULT NULL,
-  `talla_camiseta` varchar(255) DEFAULT NULL,
-  `talla_pantalon` varchar(255) DEFAULT NULL,
-  `talla_zapatos` varchar(255) DEFAULT NULL,
-  `genero` varchar(255) DEFAULT NULL,
-  `cantidad_uniformes` int(11) NOT NULL DEFAULT 2,
-  `observaciones` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `elementos_proteccion`
---
-
-CREATE TABLE `elementos_proteccion` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
-  `tipo_elemento` varchar(255) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT 1,
-  `talla` varchar(255) DEFAULT NULL,
-  `color` varchar(255) DEFAULT NULL,
-  `estado` enum('Pendiente de Entrega','Disponible para Entregar','Entregado','Sin Talla Disponible','Artículo Descontinuado') NOT NULL DEFAULT 'Pendiente de Entrega',
-  `entregado` tinyint(1) NOT NULL DEFAULT 0,
-  `fecha_entrega` datetime DEFAULT NULL,
-  `observaciones` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `detalles_bienes` (`id`, `solicitud_id`, `bienes_requeridos`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 10, '\"[\\\"silla\\\",\\\"organizador\\\",\\\"cuadernos\\\"]\"', NULL, '2026-02-14 06:58:54', '2026-02-14 06:58:54');
 
 -- --------------------------------------------------------
 
@@ -452,62 +363,8 @@ INSERT INTO `gerencias` (`id`, `nombre`, `codigo`, `descripcion`, `activo`, `cre
 (3, 'Gerencia Riesgo y Crédito', 'GRC', 'Análisis de capacidad de pago y prevención de riesgo', 1, '2026-02-14 00:14:13', '2026-02-14 00:14:13', NULL),
 (4, 'Gerencia Financiera', 'GF', 'Gestión de liquidez y reportes regulatorios', 1, '2026-02-14 00:14:13', '2026-02-14 00:14:13', NULL),
 (5, 'Gerencia TI', 'GTI', 'Mantenimiento de software y seguridad de datos', 1, '2026-02-14 00:14:13', '2026-02-14 00:14:13', NULL),
-(6, 'Gerencia Talento Humano', 'GTH', 'Atracción, retención y desarrollo del personal', 1, '2026-02-14 00:14:13', '2026-02-14 00:14:13', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `items_inmobiliario`
---
-
-CREATE TABLE `items_inmobiliario` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
-  `tipo_item` varchar(255) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT 1,
-  `estado` enum('Pendiente','Disponible','Asignado','Entregado','No Disponible') NOT NULL DEFAULT 'Pendiente',
-  `observaciones` text DEFAULT NULL,
-  `entregado_por` varchar(255) DEFAULT NULL,
-  `fecha_entrega` datetime DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
-  `attempts` tinyint(3) UNSIGNED NOT NULL,
-  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
-  `available_at` int(10) UNSIGNED NOT NULL,
-  `created_at` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `job_batches`
---
-
-CREATE TABLE `job_batches` (
-  `id` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `total_jobs` int(11) NOT NULL,
-  `pending_jobs` int(11) NOT NULL,
-  `failed_jobs` int(11) NOT NULL,
-  `failed_job_ids` longtext NOT NULL,
-  `options` mediumtext DEFAULT NULL,
-  `cancelled_at` int(11) DEFAULT NULL,
-  `created_at` int(11) NOT NULL,
-  `finished_at` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(6, 'Gerencia Talento Humano', 'GTH', 'Atracción, retención y desarrollo del personal', 1, '2026-02-14 00:14:13', '2026-02-14 00:14:13', NULL),
+(7, 'Gerencia General', 'GG', 'Direccion General', 1, '2026-02-14 19:27:39', '2026-02-14 19:27:39', NULL);
 
 -- --------------------------------------------------------
 
@@ -556,19 +413,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (28, '2026_02_13_000013_add_posicion_to_users_table', 2),
 (29, '2026_02_13_100000_delete_deprecated_tables', 3),
 (31, '2026_02_14_000000_create_gerencias_table', 4),
-(32, '2026_02_14_create_missing_solicitudes_tables', 5);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `model_has_permissions`
---
-
-CREATE TABLE `model_has_permissions` (
-  `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(255) NOT NULL,
-  `model_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(32, '2026_02_14_create_missing_solicitudes_tables', 5),
+(33, '2026_02_13_225000_fix_puesto_trabajo_fk', 6),
+(34, '2026_02_13_230000_drop_puestos_table', 6),
+(35, '2026_02_13_240000_drop_unused_area_specific_tables', 7),
+(36, '2026_02_14_120000_update_procesos_ingresos_jefe_fields', 8);
 
 -- --------------------------------------------------------
 
@@ -669,30 +518,6 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (32, 'export-reportes', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
 (33, 'view-auditoria', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16'),
 (34, 'export-auditoria', 'web', '2026-02-13 20:38:16', '2026-02-13 20:38:16');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `planes_capacitacion`
---
-
-CREATE TABLE `planes_capacitacion` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
-  `cargo_id` bigint(20) UNSIGNED NOT NULL,
-  `titulo_plan` varchar(255) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `duracion_horas` int(11) NOT NULL DEFAULT 40,
-  `fecha_inicio_estimada` datetime DEFAULT NULL,
-  `fecha_fin_estimada` datetime DEFAULT NULL,
-  `modulos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`modulos`)),
-  `responsable_capacitacion` varchar(255) DEFAULT NULL,
-  `estado` enum('Diseño','Programado','En Ejecución','Completado','Cancelado') NOT NULL DEFAULT 'Diseño',
-  `email_enviado` tinyint(1) NOT NULL DEFAULT 0,
-  `fecha_email_enviado` datetime DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1004,7 +829,8 @@ CREATE TABLE `procesos_ingresos` (
   `area_id` bigint(20) UNSIGNED NOT NULL,
   `fecha_ingreso` date NOT NULL,
   `fecha_esperada_finalizacion` date DEFAULT NULL,
-  `jefe_id` bigint(20) UNSIGNED NOT NULL,
+  `jefe_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `jefe_cargo_id` bigint(20) UNSIGNED DEFAULT NULL,
   `estado` enum('Pendiente','En Proceso','Finalizado','Cancelado') NOT NULL DEFAULT 'Pendiente',
   `observaciones` text DEFAULT NULL,
   `fecha_cancelacion` datetime DEFAULT NULL,
@@ -1017,25 +843,9 @@ CREATE TABLE `procesos_ingresos` (
 -- Volcado de datos para la tabla `procesos_ingresos`
 --
 
-INSERT INTO `procesos_ingresos` (`id`, `codigo`, `nombre_completo`, `tipo_documento`, `documento`, `email`, `telefono`, `cargo_id`, `area_id`, `fecha_ingreso`, `fecha_esperada_finalizacion`, `jefe_id`, `estado`, `observaciones`, `fecha_cancelacion`, `fecha_finalizacion`, `created_at`, `updated_at`) VALUES
-(2, 'ING-20260213211318', 'sebastian bello', 'CC', '18520425', NULL, NULL, 3, 2, '2026-03-05', NULL, 19, 'Pendiente', NULL, NULL, NULL, '2026-02-14 02:13:18', '2026-02-14 02:13:18');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `puestos`
---
-
-CREATE TABLE `puestos` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `numero` varchar(255) NOT NULL,
-  `fila` int(11) NOT NULL,
-  `columna` int(11) NOT NULL,
-  `estado` enum('Disponible','Ocupado') NOT NULL DEFAULT 'Disponible',
-  `proceso_ingreso_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `procesos_ingresos` (`id`, `codigo`, `nombre_completo`, `tipo_documento`, `documento`, `email`, `telefono`, `cargo_id`, `area_id`, `fecha_ingreso`, `fecha_esperada_finalizacion`, `jefe_id`, `jefe_cargo_id`, `estado`, `observaciones`, `fecha_cancelacion`, `fecha_finalizacion`, `created_at`, `updated_at`) VALUES
+(2, 'ING-20260213211318', 'sebastian bello', 'CC', '18520425', NULL, NULL, 3, 2, '2026-03-05', NULL, 19, 2, 'Finalizado', NULL, NULL, NULL, '2026-02-14 02:13:18', '2026-02-14 06:58:59'),
+(3, 'ING-20260214135105', 'alan', 'cc', '12312', NULL, NULL, 25, 10, '2026-02-28', NULL, NULL, 22, 'Pendiente', NULL, NULL, NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05');
 
 -- --------------------------------------------------------
 
@@ -1075,7 +885,7 @@ INSERT INTO `puestos_trabajo` (`id`, `numero_puesto`, `piso`, `seccion`, `capaci
 (9, '1-ADM-3', 1, 'Administrativo', 1, 'Disponible', 280, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (10, '1-ADM-4', 1, 'Administrativo', 1, 'Disponible', 340, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (11, '1-AAC-1', 1, 'Atención al Cliente', 1, 'Disponible', 160, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
-(12, '1-AAC-2', 1, 'Atención al Cliente', 1, 'Disponible', 220, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(12, '1-AAC-2', 1, 'Atención al Cliente', 1, 'Asignado', 220, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-14 06:46:54'),
 (13, '1-AAC-3', 1, 'Atención al Cliente', 1, 'Disponible', 280, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (14, '2-GER-1', 2, 'Gerencia', 1, 'Disponible', 200, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono IP\\\",\\\"Impresora L\\\\u00e1ser\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (15, '2-GER-2', 2, 'Gerencia', 1, 'Disponible', 300, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor Dual\\\",\\\"Tel\\\\u00e9fono IP\\\",\\\"Impresora L\\\\u00e1ser\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
@@ -1100,7 +910,7 @@ INSERT INTO `puestos_trabajo` (`id`, `numero_puesto`, `piso`, `seccion`, `capaci
 (34, '4-SALA-2', 4, 'Salas', 1, 'Disponible', 260, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (35, '4-SALA-3', 4, 'Salas', 1, 'Disponible', 340, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (36, '4-SALA-4', 4, 'Salas', 1, 'Disponible', 420, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
-(37, '4-SALA-5', 4, 'Salas', 1, 'Disponible', 500, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(37, '4-SALA-5', 4, 'Salas', 1, 'Asignado', 500, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-14 06:45:04'),
 (38, '4-SALA-6', 4, 'Salas', 1, 'Disponible', 580, 100, NULL, '\"[\\\"Proyector\\\",\\\"Pantalla\\\",\\\"Tel\\\\u00e9fono Conferencia\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (39, '4-COLABO-1', 4, 'Colaboración', 1, 'Disponible', 140, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (40, '4-COLABO-2', 4, 'Colaboración', 1, 'Disponible', 180, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
@@ -1112,26 +922,6 @@ INSERT INTO `puestos_trabajo` (`id`, `numero_puesto`, `piso`, `seccion`, `capaci
 (46, '4-COLABO-8', 4, 'Colaboración', 1, 'Disponible', 420, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (47, '4-COLABO-9', 4, 'Colaboración', 1, 'Disponible', 460, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (48, '4-COLABO-10', 4, 'Colaboración', 1, 'Disponible', 500, 250, NULL, '\"[\\\"Computadora Port\\\\u00e1til\\\",\\\"Monitor Port\\\\u00e1til\\\",\\\"Conexi\\\\u00f3n WiFi\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `reporte_cumplimiento`
---
-
-CREATE TABLE `reporte_cumplimiento` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `fecha_reporte` date NOT NULL,
-  `area_id` bigint(20) UNSIGNED NOT NULL,
-  `total_procesos` int(11) NOT NULL DEFAULT 0,
-  `procesos_completados` int(11) NOT NULL DEFAULT 0,
-  `procesos_retrasados` int(11) NOT NULL DEFAULT 0,
-  `procesos_pendientes` int(11) NOT NULL DEFAULT 0,
-  `porcentaje_cumplimiento` double NOT NULL DEFAULT 0,
-  `dias_promedio_completacion` double NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1247,45 +1037,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `rutas_formacion`
---
-
-CREATE TABLE `rutas_formacion` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `cargo_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `area_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `version` varchar(255) NOT NULL DEFAULT '1.0',
-  `activa` tinyint(1) NOT NULL DEFAULT 1,
-  `duracion_total_horas` int(11) NOT NULL DEFAULT 0,
-  `fecha_vigencia` date DEFAULT NULL,
-  `responsable_rrhh_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ruta_x_curso`
---
-
-CREATE TABLE `ruta_x_curso` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `ruta_id` bigint(20) UNSIGNED NOT NULL,
-  `curso_id` bigint(20) UNSIGNED NOT NULL,
-  `numero_secuencia` int(11) NOT NULL DEFAULT 0,
-  `es_obligatorio` tinyint(1) NOT NULL DEFAULT 1,
-  `es_requisito_previo` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `sessions`
 --
 
@@ -1303,8 +1054,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('GlsZpxUn6mePdx8Szs9hxYOrgooplg8Ta3vbGQOr', 19, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibGlFUkJnOVU5eHE0dDlpYVB4OVRqWWRrZTZwVU5rNmxCN2k1WVNraCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTk7fQ==', 1771018941),
-('xCaaJjDsSuXcU36ZzYccpYSo3BEP2qJLvDRtJixE', 19, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRHdER3lsN3c0REFBSjJZNnhjMVJxM3dmUHk4cWRET0cza21ad1ZpMyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9zb2xpY2l0dWRlcy84IjtzOjU6InJvdXRlIjtzOjE2OiJzb2xpY2l0dWRlcy5zaG93Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTk7fQ==', 1771028927);
+('EdM0sRm4nlsmCeXDFFeSUEPWCgq4ZZQMUbctEmms', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSTBuVm1vMFNNbUNQWHdreGRaV0dyR2F5U3dBdklmVjhTbk9oR3VHUiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTU7fQ==', 1771036473),
+('VzskZ3phG4EwEfmiBZhHRJMwVA2bYtKWE1pHTQaX', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnZ1cUZqRENVVnZFMmZpZ2lZaFllaHVyMUo5T2N4RTRTTGpZZkJxaCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTU7fQ==', 1771079640);
 
 -- --------------------------------------------------------
 
@@ -1330,11 +1081,16 @@ CREATE TABLE `solicitudes` (
 --
 
 INSERT INTO `solicitudes` (`id`, `proceso_ingreso_id`, `area_id`, `puesto_trabajo_id`, `tipo`, `fecha_limite`, `estado`, `observaciones`, `created_at`, `updated_at`) VALUES
-(6, 2, 16, NULL, 'Tecnología', '2026-02-28', 'En Proceso', NULL, '2026-02-14 02:13:18', '2026-02-14 02:24:41'),
-(7, 2, 20, NULL, 'Dotación', '2026-02-23', 'En Proceso', NULL, '2026-02-14 02:13:18', '2026-02-14 02:24:44'),
-(8, 2, 2, NULL, 'Servicios Generales', '2026-02-26', 'En Proceso', NULL, '2026-02-14 02:13:18', '2026-02-14 02:24:46'),
+(6, 2, 16, NULL, 'Tecnología', '2026-02-28', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:52:10'),
+(7, 2, 20, NULL, 'Dotación', '2026-02-23', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:51:04'),
+(8, 2, 2, 12, 'Servicios Generales', '2026-02-26', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:47:01'),
 (9, 2, 22, NULL, 'Formación', '2026-03-02', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 02:20:50'),
-(10, 2, 2, NULL, 'Bienes y Servicios', '2026-02-23', 'En Proceso', NULL, '2026-02-14 02:13:18', '2026-02-14 02:24:48');
+(10, 2, 2, NULL, 'Bienes y Servicios', '2026-02-23', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:58:59'),
+(11, 3, 16, NULL, 'Tecnología', '2026-02-23', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
+(12, 3, 20, NULL, 'Dotación', '2026-02-18', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
+(13, 3, 2, NULL, 'Servicios Generales', '2026-02-21', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
+(14, 3, 22, NULL, 'Formación', '2026-02-25', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
+(15, 3, 2, NULL, 'Bienes y Servicios', '2026-02-18', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05');
 
 -- --------------------------------------------------------
 
@@ -1359,7 +1115,9 @@ INSERT INTO `solicitud_curso` (`id`, `solicitud_id`, `curso_id`, `created_at`, `
 (2, 9, 19, NULL, NULL),
 (3, 9, 24, NULL, NULL),
 (4, 9, 25, NULL, NULL),
-(5, 9, 31, NULL, NULL);
+(5, 9, 31, NULL, NULL),
+(6, 14, 5, NULL, NULL),
+(7, 14, 23, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1480,49 +1238,11 @@ ALTER TABLE `cursos`
   ADD KEY `cursos_activo_categoria_index` (`activo`,`categoria`);
 
 --
--- Indices de la tabla `curso_x_cargo`
---
-ALTER TABLE `curso_x_cargo`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `curso_x_cargo_curso_id_cargo_id_unique` (`curso_id`,`cargo_id`),
-  ADD KEY `curso_x_cargo_cargo_id_es_obligatorio_index` (`cargo_id`,`es_obligatorio`);
-
---
 -- Indices de la tabla `detalles_bienes`
 --
 ALTER TABLE `detalles_bienes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `detalles_bienes_solicitud_id_foreign` (`solicitud_id`);
-
---
--- Indices de la tabla `detalles_tecnologia`
---
-ALTER TABLE `detalles_tecnologia`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `detalles_tecnologia_solicitud_id_foreign` (`solicitud_id`),
-  ADD KEY `detalles_tecnologia_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
-
---
--- Indices de la tabla `detalles_uniformes`
---
-ALTER TABLE `detalles_uniformes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `detalles_uniformes_solicitud_id_foreign` (`solicitud_id`),
-  ADD KEY `detalles_uniformes_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
-
---
--- Indices de la tabla `elementos_proteccion`
---
-ALTER TABLE `elementos_proteccion`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `elementos_proteccion_solicitud_id_foreign` (`solicitud_id`);
-
---
--- Indices de la tabla `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
 -- Indices de la tabla `gerencias`
@@ -1534,37 +1254,10 @@ ALTER TABLE `gerencias`
   ADD KEY `gerencias_activo_codigo_index` (`activo`,`codigo`);
 
 --
--- Indices de la tabla `items_inmobiliario`
---
-ALTER TABLE `items_inmobiliario`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `items_inmobiliario_solicitud_id_foreign` (`solicitud_id`);
-
---
--- Indices de la tabla `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Indices de la tabla `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `model_has_permissions`
---
-ALTER TABLE `model_has_permissions`
-  ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
-  ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
 -- Indices de la tabla `model_has_roles`
@@ -1587,14 +1280,6 @@ ALTER TABLE `permissions`
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Indices de la tabla `planes_capacitacion`
---
-ALTER TABLE `planes_capacitacion`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `planes_capacitacion_solicitud_id_foreign` (`solicitud_id`),
-  ADD KEY `planes_capacitacion_cargo_id_foreign` (`cargo_id`);
-
---
 -- Indices de la tabla `plantilla_solicitudes`
 --
 ALTER TABLE `plantilla_solicitudes`
@@ -1611,15 +1296,8 @@ ALTER TABLE `procesos_ingresos`
   ADD UNIQUE KEY `procesos_ingresos_documento_unique` (`documento`),
   ADD KEY `procesos_ingresos_cargo_id_foreign` (`cargo_id`),
   ADD KEY `procesos_ingresos_area_id_foreign` (`area_id`),
-  ADD KEY `procesos_ingresos_jefe_id_foreign` (`jefe_id`);
-
---
--- Indices de la tabla `puestos`
---
-ALTER TABLE `puestos`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `puestos_numero_unique` (`numero`),
-  ADD KEY `puestos_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
+  ADD KEY `procesos_ingresos_jefe_id_foreign` (`jefe_id`),
+  ADD KEY `procesos_ingresos_jefe_cargo_id_foreign` (`jefe_cargo_id`);
 
 --
 -- Indices de la tabla `puestos_trabajo`
@@ -1627,13 +1305,6 @@ ALTER TABLE `puestos`
 ALTER TABLE `puestos_trabajo`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `puestos_trabajo_numero_puesto_unique` (`numero_puesto`);
-
---
--- Indices de la tabla `reporte_cumplimiento`
---
-ALTER TABLE `reporte_cumplimiento`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `reporte_cumplimiento_area_id_fecha_reporte_index` (`area_id`,`fecha_reporte`);
 
 --
 -- Indices de la tabla `roles`
@@ -1648,24 +1319,6 @@ ALTER TABLE `roles`
 ALTER TABLE `role_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`role_id`),
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
-
---
--- Indices de la tabla `rutas_formacion`
---
-ALTER TABLE `rutas_formacion`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `rutas_formacion_responsable_rrhh_id_foreign` (`responsable_rrhh_id`),
-  ADD KEY `rutas_formacion_cargo_id_activa_index` (`cargo_id`,`activa`),
-  ADD KEY `rutas_formacion_area_id_activa_index` (`area_id`,`activa`);
-
---
--- Indices de la tabla `ruta_x_curso`
---
-ALTER TABLE `ruta_x_curso`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ruta_x_curso_ruta_id_curso_id_unique` (`ruta_id`,`curso_id`),
-  ADD KEY `ruta_x_curso_curso_id_foreign` (`curso_id`),
-  ADD KEY `ruta_x_curso_ruta_id_numero_secuencia_index` (`ruta_id`,`numero_secuencia`);
 
 --
 -- Indices de la tabla `sessions`
@@ -1712,7 +1365,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `areas`
 --
 ALTER TABLE `areas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `asignacion_cursos`
@@ -1730,13 +1383,13 @@ ALTER TABLE `auditoria_onboarding`
 -- AUTO_INCREMENT de la tabla `cargos`
 --
 ALTER TABLE `cargos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `checkins`
 --
 ALTER TABLE `checkins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
@@ -1745,76 +1398,28 @@ ALTER TABLE `cursos`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
--- AUTO_INCREMENT de la tabla `curso_x_cargo`
---
-ALTER TABLE `curso_x_cargo`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `detalles_bienes`
 --
 ALTER TABLE `detalles_bienes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `detalles_tecnologia`
---
-ALTER TABLE `detalles_tecnologia`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `detalles_uniformes`
---
-ALTER TABLE `detalles_uniformes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `elementos_proteccion`
---
-ALTER TABLE `elementos_proteccion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `gerencias`
 --
 ALTER TABLE `gerencias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de la tabla `items_inmobiliario`
---
-ALTER TABLE `items_inmobiliario`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
 --
 ALTER TABLE `permissions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
-
---
--- AUTO_INCREMENT de la tabla `planes_capacitacion`
---
-ALTER TABLE `planes_capacitacion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `plantilla_solicitudes`
@@ -1826,13 +1431,7 @@ ALTER TABLE `plantilla_solicitudes`
 -- AUTO_INCREMENT de la tabla `procesos_ingresos`
 --
 ALTER TABLE `procesos_ingresos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `puestos`
---
-ALTER TABLE `puestos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `puestos_trabajo`
@@ -1841,40 +1440,22 @@ ALTER TABLE `puestos_trabajo`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
--- AUTO_INCREMENT de la tabla `reporte_cumplimiento`
---
-ALTER TABLE `reporte_cumplimiento`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT de la tabla `rutas_formacion`
---
-ALTER TABLE `rutas_formacion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `ruta_x_curso`
---
-ALTER TABLE `ruta_x_curso`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `solicitudes`
 --
 ALTER TABLE `solicitudes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_curso`
 --
 ALTER TABLE `solicitud_curso`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -1929,62 +1510,16 @@ ALTER TABLE `cursos`
   ADD CONSTRAINT `cursos_area_responsable_id_foreign` FOREIGN KEY (`area_responsable_id`) REFERENCES `areas` (`id`) ON DELETE SET NULL;
 
 --
--- Filtros para la tabla `curso_x_cargo`
---
-ALTER TABLE `curso_x_cargo`
-  ADD CONSTRAINT `curso_x_cargo_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `curso_x_cargo_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
-
---
 -- Filtros para la tabla `detalles_bienes`
 --
 ALTER TABLE `detalles_bienes`
   ADD CONSTRAINT `detalles_bienes_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `detalles_tecnologia`
---
-ALTER TABLE `detalles_tecnologia`
-  ADD CONSTRAINT `detalles_tecnologia_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `detalles_tecnologia_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `detalles_uniformes`
---
-ALTER TABLE `detalles_uniformes`
-  ADD CONSTRAINT `detalles_uniformes_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `detalles_uniformes_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `elementos_proteccion`
---
-ALTER TABLE `elementos_proteccion`
-  ADD CONSTRAINT `elementos_proteccion_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `items_inmobiliario`
---
-ALTER TABLE `items_inmobiliario`
-  ADD CONSTRAINT `items_inmobiliario_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `model_has_permissions`
---
-ALTER TABLE `model_has_permissions`
-  ADD CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE;
-
---
 -- Filtros para la tabla `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `planes_capacitacion`
---
-ALTER TABLE `planes_capacitacion`
-  ADD CONSTRAINT `planes_capacitacion_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `planes_capacitacion_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `plantilla_solicitudes`
@@ -1999,19 +1534,8 @@ ALTER TABLE `plantilla_solicitudes`
 ALTER TABLE `procesos_ingresos`
   ADD CONSTRAINT `procesos_ingresos_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`),
   ADD CONSTRAINT `procesos_ingresos_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`),
-  ADD CONSTRAINT `procesos_ingresos_jefe_id_foreign` FOREIGN KEY (`jefe_id`) REFERENCES `users` (`id`);
-
---
--- Filtros para la tabla `puestos`
---
-ALTER TABLE `puestos`
-  ADD CONSTRAINT `puestos_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE SET NULL;
-
---
--- Filtros para la tabla `reporte_cumplimiento`
---
-ALTER TABLE `reporte_cumplimiento`
-  ADD CONSTRAINT `reporte_cumplimiento_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `procesos_ingresos_jefe_cargo_id_foreign` FOREIGN KEY (`jefe_cargo_id`) REFERENCES `cargos` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `procesos_ingresos_jefe_id_foreign` FOREIGN KEY (`jefe_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `role_has_permissions`
@@ -2021,27 +1545,12 @@ ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `rutas_formacion`
---
-ALTER TABLE `rutas_formacion`
-  ADD CONSTRAINT `rutas_formacion_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `rutas_formacion_cargo_id_foreign` FOREIGN KEY (`cargo_id`) REFERENCES `cargos` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `rutas_formacion_responsable_rrhh_id_foreign` FOREIGN KEY (`responsable_rrhh_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
-
---
--- Filtros para la tabla `ruta_x_curso`
---
-ALTER TABLE `ruta_x_curso`
-  ADD CONSTRAINT `ruta_x_curso_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `ruta_x_curso_ruta_id_foreign` FOREIGN KEY (`ruta_id`) REFERENCES `rutas_formacion` (`id`) ON DELETE CASCADE;
-
---
 -- Filtros para la tabla `solicitudes`
 --
 ALTER TABLE `solicitudes`
   ADD CONSTRAINT `solicitudes_area_id_foreign` FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`),
   ADD CONSTRAINT `solicitudes_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `solicitudes_puesto_trabajo_id_foreign` FOREIGN KEY (`puesto_trabajo_id`) REFERENCES `puestos` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `solicitudes_puesto_trabajo_id_foreign` FOREIGN KEY (`puesto_trabajo_id`) REFERENCES `puestos_trabajo` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `solicitud_curso`

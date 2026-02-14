@@ -77,8 +77,14 @@
                                 'cable_cargador' => ['nombre' => 'Cables y Cargadores', 'icon' => '🔌'],
                             ];
 
-                            $bienesSeleccionados = $solicitude->detalleBienes ? 
-                                json_decode($solicitude->detalleBienes->bienes_requeridos, true) : [];
+                            $bienesRaw = $solicitude->detalleBienes?->bienes_requeridos;
+                            if (is_array($bienesRaw)) {
+                                $bienesSeleccionados = $bienesRaw;
+                            } elseif (is_string($bienesRaw)) {
+                                $bienesSeleccionados = json_decode($bienesRaw, true) ?: [];
+                            } else {
+                                $bienesSeleccionados = [];
+                            }
                         @endphp
 
                         @if(!empty($bienesSeleccionados))

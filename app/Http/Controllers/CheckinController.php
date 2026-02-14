@@ -141,6 +141,12 @@ class CheckinController extends Controller
             }
         }
 
+        $emailEmpleado = $proceso->email
+            ?? $proceso->jefe?->email
+            ?? auth()->user()?->email
+            ?? config('mail.from.address')
+            ?? 'no-reply@sinergia.com';
+
         // Crear check-in
         $checkin = Checkin::create([
             'proceso_ingreso_id' => $proceso->id,
@@ -148,7 +154,7 @@ class CheckinController extends Controller
             'activos_entregados' => $activos,
             'estado_checkin' => 'Pendiente',
             'fecha_generacion' => now(),
-            'email_empleado' => $proceso->jefe->email, // Usar email del jefe como contacto
+            'email_empleado' => $emailEmpleado,
         ]);
 
         return redirect()->route('checkins.show', $checkin->id)

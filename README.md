@@ -12,34 +12,35 @@ Sistema integral de gestión de procesos de ingreso de nuevos empleados para Sin
 ## 🏗️ Estructura Organizacional
 
 ```
-Sinergia (Cooperativa Financiera)
-├─ Gerencia Administración (GA)
-│  ├─ Servicios Generales
-│  └─ Mantenimiento
-├─ Gerencia Comercial (GC)
-│  ├─ Ventas y Captación
-│  ├─ Gestión de Canales
-│  ├─ Marketing y Producto
-│  └─ Servicio al Cliente
-├─ Gerencia Riesgo y Crédito (GRC)
-│  ├─ Análisis de Crédito
-│  └─ Riesgo Operativo
-├─ Gerencia Financiera (GF)
-│  ├─ Tesorería
-│  ├─ Contabilidad
-│  └─ Planeación
-├─ Gerencia TI (GTI)
-│  ├─ Infraestructura y Redes
-│  ├─ Desarrollo de Software
-│  └─ Soporte Técnico
-└─ Gerencia Talento Humano (GTH)
-   ├─ Selección y Reclutamiento
-   ├─ Formación y Capacitación
-   ├─ Nómina
-   └─ Clima Organizacional
+Asamblea de Socios (fuera del sistema)
+└─ Gerencia General (GG)
+   ├─ Gerencia Administración (GA)
+   │  ├─ Servicios Generales
+   │  └─ Mantenimiento
+   ├─ Gerencia Comercial (GC)
+   │  ├─ Ventas y Captación
+   │  ├─ Gestión de Canales
+   │  ├─ Marketing y Producto
+   │  └─ Servicio al Cliente
+   ├─ Gerencia Riesgo y Crédito (GRC)
+   │  ├─ Análisis de Crédito
+   │  └─ Riesgo Operativo
+   ├─ Gerencia Financiera (GF)
+   │  ├─ Tesorería
+   │  ├─ Contabilidad
+   │  └─ Planeación
+   ├─ Gerencia TI (GTI)
+   │  ├─ Infraestructura y Redes
+   │  ├─ Desarrollo de Software
+   │  └─ Soporte Técnico
+   └─ Gerencia Talento Humano (GTH)
+      ├─ Selección y Reclutamiento
+      ├─ Formación y Capacitación
+      ├─ Nómina
+      └─ Clima Organizacional
 ```
 
-**Estructura:** 6 Gerencias → 18 Áreas → 54 Cargos → ~50+ Empleados
+**Estructura:** 7 Gerencias (incluye Gerencia General) → areas y cargos segun BD
 
 ## 🗄️ Base de Datos
 
@@ -75,10 +76,13 @@ Gerencia (1:N)
 
 | Rol | Acceso | Responsabilidades |
 |-----|--------|-------------------|
-| **root** | Sistema completo | Crear admin, configurar |
-| **admin_rrhh** | Procesos ingreso | Crear/editar/cancelar procesos |
-| **jefe_inmediato** | Su área | Detalles técnicos (SW, tallas) |
-| **operador_area** | Su departamento | Marcar tareas completadas |
+| **Root** | Sistema completo | Configuracion general y auditoria |
+| **Jefe RRHH** | Procesos de ingreso | Crear/editar/cancelar procesos |
+| **Jefe Tecnologia** | Solicitudes TI | Requerimientos tecnicos |
+| **Jefe Dotacion** | Solicitudes Dotacion | Tallas y dotacion |
+| **Jefe Servicios Generales** | Solicitudes SG | Puestos de trabajo |
+| **Jefe Bienes y Servicios** | Solicitudes Bienes | Insumos y mobiliario |
+| **Operador** | Su area | Completar solicitudes |
 
 ## 📦 31 Cursos Disponibles
 
@@ -106,10 +110,10 @@ Técnico:
 ## 🚀 5 Módulos Principales
 
 ### 1️⃣ Administración de Procesos de Ingreso
-- Crear registro (código autogenera do)
-- Generar solicitudes automáticas
+- Crear registro (codigo autogenerado)
+- Generar solicitudes automaticas
 - Editar/cancelar (condiciones)
-- Histórico de ingresos
+- Historico de ingresos
 
 **Campos obligatorios:**
 - Nombre completo
@@ -117,7 +121,7 @@ Técnico:
 - Cargo a ocupar
 - Área asignada
 - Fecha ingreso
-- Jefe inmediato
+- Jefe inmediato (derivado del cargo)
 
 ### 2️⃣ Solicitudes por Área
 Panel para cada área (TI, Uniformes, Mantenimiento, etc.)
@@ -129,7 +133,7 @@ Panel para cada área (TI, Uniformes, Mantenimiento, etc.)
 - **Formación:** Inducción + Plan capacitación
 - **Bienes:** Inmobiliario + Insumos
 
-**Estados:** Pendiente → En Proceso → Entregado
+**Estados:** Pendiente → En Proceso → Finalizada
 
 ### 3️⃣ Asignación de Cursos
 Jefe RRHH selecciona cursos disponibles (31 opciones)
@@ -137,7 +141,7 @@ Jefe RRHH selecciona cursos disponibles (31 opciones)
 - Por cargo (ej: "Analista Programador" → sugiere kit estándar)
 - Envía notificaciones vía email
 
-### 4️⃣ Check-in de Activos (similar a aerolínea)
+### 4️⃣ Check-in de Activos (similar a aerolinea)
 - Genera Acta de Entrega PDF
 - Firma digital del empleado
 - Confirmación de recepción
@@ -149,10 +153,10 @@ Jefe RRHH selecciona cursos disponibles (31 opciones)
 
 ## 🛠️ Stack Técnico
 
-- **Framework:** Laravel 11
+- **Framework:** Laravel 12.50.0
 - **BD:** MariaDB 10.4.32
 - **PHP:** 8.2.12
-- **Autenticación:** Spatie\Permission (RBAC)
+- **Autenticacion:** Spatie\Permission (RBAC)
 - **Frontend:** Blade + Tailwind CSS
 - **Email:** Mailable + Notifications
 
@@ -184,20 +188,16 @@ onboarding/
 
 ## ✅ Estado Actual
 
-✅ **Base de datos limpia y normalizada**
-- Gerencias → Areas → Cargos → Users
-- Sin duplicidades semánticas
-- Estructura jerárquica correcta
+✅ **Base de datos alineada a la estructura**
+- Gerencia General → Gerencias → Areas → Cargos
+- Jefe inmediato derivado por cargo
 
-✅ **Modelos coherentes y limpios**
-- 20 modelos (eliminadas duplicidades)
-- Relaciones bien definidas
-- RBAC separado de estructura org
+✅ **Solicitudes por area unificadas**
+- 5 tipos con vistas especificas
+- Check-in consolidado y PDF
 
-✅ **Arquitectura DDD aplicada**
-- Dominio empresarial bien délimited
-- Agregados correctamente diseñados
-- Invariantes de negocio protegidas
+✅ **Gestion de cargos**
+- Root puede habilitar/deshabilitar cargos
 
 ✅ **Listo para implementación**
 - Migraciones ejecutadas
