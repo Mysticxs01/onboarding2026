@@ -36,15 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/procesos-ingreso/{id}/actualizar-fecha', [ProcesoIngresoController::class, 'actualizarFecha'])->name('procesos-ingreso.actualizar-fecha');
     Route::get('/procesos-ingreso/{id}/cancelar', [ProcesoIngresoController::class, 'mostrarCancelacion'])->name('procesos-ingreso.mostrar-cancelacion');
     Route::post('/procesos-ingreso/{id}/cancelar', [ProcesoIngresoController::class, 'cancelar'])->name('procesos-ingreso.cancelar');
-    Route::get('/procesos-ingreso/{id}/plano-puestos', [ProcesoIngresoController::class, 'mostrarPlano'])->name('procesos-ingreso.plano-puestos');
-    Route::post('/procesos-ingreso/{id}/asignar-puesto', [ProcesoIngresoController::class, 'asignarPuesto'])->name('procesos-ingreso.asignar-puesto');
     
     // Histórico de ingresos
     Route::get('/procesos-ingreso-historico', [ProcesoIngresoController::class, 'historico'])->name('procesos-ingreso.historico');
 ;
 
-    // API para obtener puestos
-    Route::get('/api/puestos', [ProcesoIngresoController::class, 'obtenerPuestos']);
+    // API para obtener puestos (deprecated)
 
     // SOLICITUDES - Módulo completo de solicitudes por área
     Route::resource('solicitudes', SolicitudController::class);

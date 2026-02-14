@@ -53,11 +53,6 @@ class ProcesoIngreso extends Model
         return $this->hasMany(Solicitud::class, 'proceso_ingreso_id');
     }
 
-    public function puesto()
-    {
-        return $this->hasOne(Puesto::class, 'proceso_ingreso_id');
-    }
-
     public function checkin()
     {
         return $this->hasOne(Checkin::class, 'proceso_ingreso_id');

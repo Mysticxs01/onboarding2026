@@ -72,10 +72,10 @@ return new class extends Migration
         if (Schema::hasTable('solicitudes')) {
             Schema::table('solicitudes', function (Blueprint $table) {
                 if (!Schema::hasColumn('solicitudes', 'puesto_trabajo_id')) {
-                    $table->foreignId('puesto_trabajo_id')
+                      $table->foreignId('puesto_trabajo_id')
                           ->nullable()
                           ->after('area_id')
-                          ->constrained('puestos')
+                          ->constrained('puestos_trabajo')
                           ->onDelete('set null');
                 }
             });

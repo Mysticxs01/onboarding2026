@@ -19,7 +19,7 @@
                         <th class="px-4 py-3 text-left">Área</th>
                         <th class="px-4 py-3 text-left">Fecha Ingreso</th>
                         <th class="px-4 py-3 text-left">Fecha Finalización</th>
-                        <th class="px-4 py-3 text-left">Puesto Asignado</th>
+                        <th class="px-4 py-3 text-left">Puesto (Servicios Generales)</th>
                         <th class="px-4 py-3 text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -32,7 +32,12 @@
                             <td class="px-4 py-3">{{ $proceso->area->nombre }}</td>
                             <td class="px-4 py-3">{{ $proceso->fecha_ingreso }}</td>
                             <td class="px-4 py-3">{{ $proceso->fecha_finalizacion?->format('d/m/Y') ?? '-' }}</td>
-                            <td class="px-4 py-3">{{ $proceso->puesto?->numero ?? 'No asignado' }}</td>
+                            <td class="px-4 py-3">
+                                {{ $proceso->solicitudes
+                                    ->firstWhere('tipo', 'Servicios Generales')
+                                    ?->puestoTrabajo
+                                    ?->numero_puesto ?? 'No asignado' }}
+                            </td>
                             <td class="px-4 py-3 text-center">
                                 <a href="{{ route('procesos-ingreso.show', $proceso->id) }}" 
                                    class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"

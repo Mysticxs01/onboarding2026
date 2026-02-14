@@ -266,83 +266,11 @@ public function store(Request $request)
     }
 
     /**
-     * Mostrar plano de puestos para asignar
-     */
-    public function mostrarPlano($id)
-    {
-        $proceso = ProcesoIngreso::findOrFail($id);        $user = auth()->user();
-
-        // Validar permisos: solo Jefe del proceso o Admin
-        if (!$user->hasRole('Admin') && $proceso->jefe_id !== $user->id) {
-            abort(403, 'No tiene permiso para asignar puestos a este proceso');
-        }
-        $puestos = \App\Models\Puesto::orderBy('fila')->orderBy('columna')->get();
-
-        return view('procesos_ingreso.plano_puestos', compact('proceso', 'puestos'));
-    }
-
-    /**
-     * Asignar puesto de trabajo
-     */
-    public function asignarPuesto(Request $request, $id)
-    {
-        $proceso = ProcesoIngreso::findOrFail($id);
-        $user = auth()->user();
-
-        // Validar permisos: solo Jefe del proceso o Admin
-        if (!$user->hasRole('Admin') && $proceso->jefe_id !== $user->id) {
-            return response()->json(['error' => 'No tiene permiso para asignar puestos a este proceso'], 403);
-        }
-
-        // Validar que el proceso no esté finalizado o cancelado
-        if (in_array($proceso->estado, ['Finalizado', 'Cancelado'])) {
-            return response()->json(['error' => 'No se puede asignar puestos a un proceso finalizado o cancelado'], 400);
-        }
-
-        $request->validate([
-            'puesto_id' => 'required|exists:puestos,id'
-        ]);
-
-        try {
-            $puesto = \App\Models\Puesto::findOrFail($request->puesto_id);
-
-            if ($puesto->estado !== 'Disponible') {
-                return response()->json(['error' => 'Puesto no disponible'], 400);
-            }
-
-            // Liberar puesto anterior si existe
-            if ($proceso->puesto) {
-                $proceso->puesto()->update(['estado' => 'Disponible', 'proceso_ingreso_id' => null]);
-            }
-
-            // Asignar nuevo puesto
-            $puesto->update([
-                'estado' => 'Ocupado',
-                'proceso_ingreso_id' => $proceso->id
-            ]);
-
-            return response()->json(['success' => 'Puesto asignado correctamente.']);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    /**
-     * API: Obtener puestos en formato JSON
-     */
-    public function obtenerPuestos()
-    {
-        $puestos = \App\Models\Puesto::select('id', 'numero', 'fila', 'columna', 'estado', 'proceso_ingreso_id')->get();
-        return response()->json($puestos);
-    }
-
-    /**
      * Mostrar histórico de ingresos exitosos y cancelados
      */
     public function historico()
     {
-        $ingresosFinal = ProcesoIngreso::with(['cargo', 'area', 'puesto'])
+        $ingresosFinal = ProcesoIngreso::with(['cargo', 'area', 'solicitudes.puestoTrabajo'])
             ->where('estado', 'Finalizado')
             ->latest('fecha_finalizacion')
             ->get();
