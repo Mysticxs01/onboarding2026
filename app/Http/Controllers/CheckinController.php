@@ -26,7 +26,7 @@ class CheckinController extends Controller
      */
     public function generar($procesoId)
     {
-        $proceso = ProcesoIngreso::with(['solicitudes', 'puesto'])->findOrFail($procesoId);
+        $proceso = ProcesoIngreso::with(['solicitudes.puestoTrabajo', 'solicitudes.detalleTecnologia', 'solicitudes.detalleUniforme'])->findOrFail($procesoId);
 
         // Verificar que todas las solicitudes estén finalizadas
         if ($proceso->solicitudes()->where('estado', '!=', 'Finalizada')->exists()) {
@@ -73,10 +73,10 @@ class CheckinController extends Controller
                     break;
 
                 case 'Servicios Generales':
-                    if ($proceso->puesto) {
+                    if ($solicitud->puestoTrabajo) {
                         $activos[] = [
-                            'item' => "Puesto de Trabajo ({$proceso->puesto->numero})",
-                            'especificaciones' => null,
+                            'item' => "Puesto de Trabajo ({$solicitud->puestoTrabajo->numero_puesto})",
+                            'especificaciones' => "Sección: {$solicitud->puestoTrabajo->seccion}, Piso: {$solicitud->puestoTrabajo->piso}",
                             'entregado' => false,
                         ];
                     }

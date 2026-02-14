@@ -120,16 +120,28 @@
                                     @endphp
 
                                     @if($puestosDisponibles->count() > 0)
-                                        <select name="puesto_trabajo_id" class="w-full border rounded px-4 py-2" 
-                                                style="border-color: #1B365D;" required>
-                                            <option value="">Selecciona un puesto...</option>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             @foreach($puestosDisponibles as $puesto)
-                                                <option value="{{ $puesto->id }}"
-                                                        {{ $solicitude->puestoTrabajo?->id === $puesto->id ? 'selected' : '' }}>
-                                                    {{ $puesto->numero_puesto }} - {{ $puesto->seccion ?? 'General' }} (Piso {{ $puesto->piso }})
-                                                </option>
+                                                <label class="block border rounded-lg p-4 cursor-pointer hover:border-blue-500 transition
+                                                    {{ $solicitude->puestoTrabajo?->id === $puesto->id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white' }}">
+                                                    <input type="radio" name="puesto_trabajo_id" value="{{ $puesto->id }}" class="sr-only"
+                                                           {{ $solicitude->puestoTrabajo?->id === $puesto->id ? 'checked' : '' }}
+                                                           {{ $loop->first ? 'required' : '' }}>
+                                                    <div class="flex items-start justify-between">
+                                                        <div>
+                                                            <p class="text-xs text-gray-600 uppercase">Puesto</p>
+                                                            <p class="text-lg font-bold" style="color: #1B365D;">{{ $puesto->numero_puesto }}</p>
+                                                            <p class="text-xs text-gray-600 mt-1">Sección: {{ $puesto->seccion ?? 'General' }}</p>
+                                                            <p class="text-xs text-gray-600">Piso: {{ $puesto->piso }}</p>
+                                                        </div>
+                                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded"
+                                                              style="background-color: #E8F5E9; color: #28A745;">
+                                                            Disponible
+                                                        </span>
+                                                    </div>
+                                                </label>
                                             @endforeach
-                                        </select>
+                                        </div>
                                     @else
                                         <div class="p-4 bg-red-50 border border-red-200 rounded">
                                             <p class="text-red-700">
@@ -175,8 +187,6 @@
                                     <select name="estado" class="w-full border rounded px-4 py-2" style="border-color: #1B365D;">
                                         <option value="Pendiente" {{ $solicitude->estado === 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
                                         <option value="En Proceso" {{ $solicitude->estado === 'En Proceso' ? 'selected' : '' }}>En Proceso</option>
-                                        <option value="Entregado" {{ $solicitude->estado === 'Entregado' ? 'selected' : '' }}>Entregado</option>
-                                        <option value="Completado" {{ $solicitude->estado === 'Completado' ? 'selected' : '' }}>Completado</option>
                                         <option value="Finalizada" {{ $solicitude->estado === 'Finalizada' ? 'selected' : '' }}>Finalizada</option>
                                     </select>
                                 </div>

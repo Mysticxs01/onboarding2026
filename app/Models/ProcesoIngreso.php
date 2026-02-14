@@ -129,10 +129,17 @@ class ProcesoIngreso extends Model
         $this->fecha_cancelacion = now();
         $this->save();
 
-        // Liberar el puesto si está asignado
-        if ($this->puesto) {
-            $this->puesto()->update(['estado' => 'Disponible', 'proceso_ingreso_id' => null]);
-        }
+        // Liberar puestos de trabajo asignados en Servicios Generales
+        $this->solicitudes()
+            ->whereNotNull('puesto_trabajo_id')
+            ->with('puestoTrabajo')
+            ->get()
+            ->each(function ($solicitud) {
+                if ($solicitud->puestoTrabajo) {
+                    $solicitud->puestoTrabajo->update(['estado' => 'Disponible']);
+                }
+                $solicitud->update(['puesto_trabajo_id' => null]);
+            });
 
         return true;
     }

@@ -121,7 +121,7 @@ public function store(Request $request)
      */
     public function show($id)
     {
-        $proceso = ProcesoIngreso::with(['cargo', 'area', 'jefe', 'solicitudes', 'puesto'])->findOrFail($id);
+        $proceso = ProcesoIngreso::with(['cargo', 'area', 'jefe', 'solicitudes'])->findOrFail($id);
         $progreso = $proceso->obtenerProgreso();
 
         return view('procesos_ingreso.show', compact('proceso', 'progreso'));

@@ -386,7 +386,7 @@ class SolicitudController extends Controller
         }
 
         $request->validate([
-            'estado' => 'required|in:Pendiente,En Proceso,Entregado,Completado,Finalizada',
+            'estado' => 'required|in:Pendiente,En Proceso,Finalizada',
             'observaciones' => 'nullable|string',
         ]);
 

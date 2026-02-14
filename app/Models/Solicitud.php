@@ -84,8 +84,7 @@ class Solicitud extends Model
         return [
             'Pendiente' => 'Pendiente',
             'En Proceso' => 'En Proceso',
-            'Entregado' => 'Entregado',
-            'Completado' => 'Completado',
+            'Finalizada' => 'Finalizada',
         ];
     }
 

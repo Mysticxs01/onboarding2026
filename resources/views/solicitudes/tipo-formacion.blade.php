@@ -188,8 +188,6 @@
                                     <select name="estado" class="w-full border rounded px-4 py-2" style="border-color: #1B365D;">
                                         <option value="Pendiente" {{ $solicitude->estado === 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
                                         <option value="En Proceso" {{ $solicitude->estado === 'En Proceso' ? 'selected' : '' }}>En Proceso</option>
-                                        <option value="Entregado" {{ $solicitude->estado === 'Entregado' ? 'selected' : '' }}>Entregado</option>
-                                        <option value="Completado" {{ $solicitude->estado === 'Completado' ? 'selected' : '' }}>Completado</option>
                                         <option value="Finalizada" {{ $solicitude->estado === 'Finalizada' ? 'selected' : '' }}>Finalizada</option>
                                     </select>
                                 </div>
