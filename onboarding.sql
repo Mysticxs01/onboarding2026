@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-02-2026 a las 15:36:23
+-- Tiempo de generación: 14-02-2026 a las 16:07:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -249,7 +249,8 @@ CREATE TABLE `checkins` (
 --
 
 INSERT INTO `checkins` (`id`, `proceso_ingreso_id`, `codigo_verificacion`, `activos_entregados`, `estado_checkin`, `fecha_generacion`, `fecha_confirmacion`, `email_empleado`, `email_enviado`, `email_enviado_at`, `firma_digital`, `dispositivo_confirmacion`, `ip_confirmacion`, `created_at`, `updated_at`) VALUES
-(1, 2, '0036801BB8', '[{\"item\":\"Puesto de Trabajo (1-AAC-2)\",\"especificaciones\":\"Secci\\u00f3n: Atenci\\u00f3n al Cliente, Piso: 1\",\"entregado\":false},{\"item\":\"Plan de Formaci\\u00f3n\",\"especificaciones\":\"Brigadas de Primeros Auxilios, Ciberseguridad para No T\\u00e9cnicos, Comunicaci\\u00f3n Asertiva, Excel Avanzado para Finanzas, Gesti\\u00f3n de Compras y Proveedores\",\"entregado\":false},{\"item\":\"Bienes y Servicios\",\"especificaciones\":\"silla, organizador, cuadernos\",\"entregado\":false}]', 'Pendiente', '2026-02-14 02:17:55', NULL, 'jefe.servicios@sinergia.com', 0, NULL, NULL, NULL, NULL, '2026-02-14 07:17:55', '2026-02-14 07:17:55');
+(1, 2, '0036801BB8', '[{\"item\":\"Puesto de Trabajo (1-AAC-2)\",\"especificaciones\":\"Secci\\u00f3n: Atenci\\u00f3n al Cliente, Piso: 1\",\"entregado\":false},{\"item\":\"Plan de Formaci\\u00f3n\",\"especificaciones\":\"Brigadas de Primeros Auxilios, Ciberseguridad para No T\\u00e9cnicos, Comunicaci\\u00f3n Asertiva, Excel Avanzado para Finanzas, Gesti\\u00f3n de Compras y Proveedores\",\"entregado\":false},{\"item\":\"Bienes y Servicios\",\"especificaciones\":\"silla, organizador, cuadernos\",\"entregado\":false}]', 'Pendiente', '2026-02-14 02:17:55', NULL, 'jefe.servicios@sinergia.com', 0, NULL, NULL, NULL, NULL, '2026-02-14 07:17:55', '2026-02-14 07:17:55'),
+(2, 3, 'CDB3D022C8', '[{\"item\":\"Dotaci\\u00f3n\",\"especificaciones\":\"Pantalon: M, Camiseta: \",\"entregado\":false},{\"item\":\"Puesto de Trabajo (1-ADM-2)\",\"especificaciones\":\"Seccion: Administrativo, Piso: 1\",\"entregado\":false},{\"item\":\"Plan de Formacion\",\"especificaciones\":\"Seguridad y Salud en el Trabajo (SST), Brigadas de Primeros Auxilios, An\\u00e1lisis de Capacidad de Pago, Actualizaci\\u00f3n en Normas NIIF, Inteligencia Emocional en el Trabajo\",\"entregado\":false},{\"item\":\"Bienes y Servicios\",\"especificaciones\":\"cuadernos, post_it, mouse_pad\",\"entregado\":false}]', 'Pendiente', '2026-02-14 14:57:12', NULL, 'root@sinergia.com', 0, NULL, NULL, NULL, NULL, '2026-02-14 19:57:12', '2026-02-14 19:57:12');
 
 -- --------------------------------------------------------
 
@@ -334,7 +335,68 @@ CREATE TABLE `detalles_bienes` (
 --
 
 INSERT INTO `detalles_bienes` (`id`, `solicitud_id`, `bienes_requeridos`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 10, '\"[\\\"silla\\\",\\\"organizador\\\",\\\"cuadernos\\\"]\"', NULL, '2026-02-14 06:58:54', '2026-02-14 06:58:54');
+(1, 10, '\"[\\\"silla\\\",\\\"organizador\\\",\\\"cuadernos\\\"]\"', NULL, '2026-02-14 06:58:54', '2026-02-14 06:58:54'),
+(2, 15, '[\"cuadernos\",\"post_it\",\"mouse_pad\"]', NULL, '2026-02-14 19:49:39', '2026-02-14 19:49:39');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalles_tecnologia`
+--
+
+CREATE TABLE `detalles_tecnologia` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `proceso_ingreso_id` bigint(20) UNSIGNED NOT NULL,
+  `necesita_computador` tinyint(1) NOT NULL DEFAULT 0,
+  `gama_computador` varchar(255) DEFAULT NULL,
+  `credenciales_plataformas` text DEFAULT NULL,
+  `tipo_computador` enum('Portatil','Escritorio') DEFAULT NULL,
+  `marca_computador` varchar(255) DEFAULT NULL,
+  `especificaciones` varchar(255) DEFAULT NULL,
+  `software_requerido` text DEFAULT NULL,
+  `monitor_adicional` tinyint(1) NOT NULL DEFAULT 0,
+  `mouse_teclado` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_tecnologia`
+--
+
+INSERT INTO `detalles_tecnologia` (`id`, `solicitud_id`, `proceso_ingreso_id`, `necesita_computador`, `gama_computador`, `credenciales_plataformas`, `tipo_computador`, `marca_computador`, `especificaciones`, `software_requerido`, `monitor_adicional`, `mouse_teclado`, `created_at`, `updated_at`) VALUES
+(1, 11, 3, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, '2026-02-14 19:54:49', '2026-02-14 19:54:49');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalles_uniformes`
+--
+
+CREATE TABLE `detalles_uniformes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `solicitud_id` bigint(20) UNSIGNED NOT NULL,
+  `proceso_ingreso_id` bigint(20) UNSIGNED NOT NULL,
+  `necesita_dotacion` tinyint(1) NOT NULL DEFAULT 1,
+  `talla_camisa` varchar(255) DEFAULT NULL,
+  `talla_pantalon` varchar(255) DEFAULT NULL,
+  `talla_camiseta` varchar(255) DEFAULT NULL,
+  `justificacion_no_dotacion` text DEFAULT NULL,
+  `talla_zapatos` varchar(255) DEFAULT NULL,
+  `genero` varchar(255) DEFAULT NULL,
+  `cantidad_uniformes` int(11) NOT NULL DEFAULT 2,
+  `observaciones` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `detalles_uniformes`
+--
+
+INSERT INTO `detalles_uniformes` (`id`, `solicitud_id`, `proceso_ingreso_id`, `necesita_dotacion`, `talla_camisa`, `talla_pantalon`, `talla_camiseta`, `justificacion_no_dotacion`, `talla_zapatos`, `genero`, `cantidad_uniformes`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 12, 3, 1, NULL, 'M', NULL, NULL, NULL, 'Masculino', 2, NULL, '2026-02-14 19:54:13', '2026-02-14 19:54:13');
 
 -- --------------------------------------------------------
 
@@ -417,7 +479,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (33, '2026_02_13_225000_fix_puesto_trabajo_fk', 6),
 (34, '2026_02_13_230000_drop_puestos_table', 6),
 (35, '2026_02_13_240000_drop_unused_area_specific_tables', 7),
-(36, '2026_02_14_120000_update_procesos_ingresos_jefe_fields', 8);
+(36, '2026_02_14_120000_update_procesos_ingresos_jefe_fields', 8),
+(37, '2026_02_14_130000_create_missing_detalles_tables_if_needed', 9),
+(38, '2026_02_14_140000_add_missing_columns_to_detalles_tables', 10);
 
 -- --------------------------------------------------------
 
@@ -845,7 +909,8 @@ CREATE TABLE `procesos_ingresos` (
 
 INSERT INTO `procesos_ingresos` (`id`, `codigo`, `nombre_completo`, `tipo_documento`, `documento`, `email`, `telefono`, `cargo_id`, `area_id`, `fecha_ingreso`, `fecha_esperada_finalizacion`, `jefe_id`, `jefe_cargo_id`, `estado`, `observaciones`, `fecha_cancelacion`, `fecha_finalizacion`, `created_at`, `updated_at`) VALUES
 (2, 'ING-20260213211318', 'sebastian bello', 'CC', '18520425', NULL, NULL, 3, 2, '2026-03-05', NULL, 19, 2, 'Finalizado', NULL, NULL, NULL, '2026-02-14 02:13:18', '2026-02-14 06:58:59'),
-(3, 'ING-20260214135105', 'alan', 'cc', '12312', NULL, NULL, 25, 10, '2026-02-28', NULL, NULL, 22, 'Pendiente', NULL, NULL, NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05');
+(3, 'ING-20260214135105', 'alan', 'cc', '12312', NULL, NULL, 25, 10, '2026-02-28', NULL, NULL, 22, 'Finalizado', NULL, NULL, '2026-02-14 14:57:15', '2026-02-14 18:51:05', '2026-02-14 19:57:15'),
+(4, 'ING-20260214144552', 'juan cepeda', 'CC', '18464720', NULL, NULL, 14, 6, '2026-03-24', NULL, NULL, 12, 'Cancelado', 'no se contrato la persona', '2026-02-14 14:46:34', NULL, '2026-02-14 19:45:52', '2026-02-14 19:46:34');
 
 -- --------------------------------------------------------
 
@@ -881,7 +946,7 @@ INSERT INTO `puestos_trabajo` (`id`, `numero_puesto`, `piso`, `seccion`, `capaci
 (5, '1-OPS-5', 1, 'Operaciones', 1, 'Disponible', 400, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (6, '1-OPS-6', 1, 'Operaciones', 1, 'Disponible', 460, 100, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (7, '1-ADM-1', 1, 'Administrativo', 1, 'Disponible', 160, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
-(8, '1-ADM-2', 1, 'Administrativo', 1, 'Disponible', 220, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
+(8, '1-ADM-2', 1, 'Administrativo', 1, 'Asignado', 220, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-14 19:51:20'),
 (9, '1-ADM-3', 1, 'Administrativo', 1, 'Disponible', 280, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (10, '1-ADM-4', 1, 'Administrativo', 1, 'Disponible', 340, 200, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Impresora\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
 (11, '1-AAC-1', 1, 'Atención al Cliente', 1, 'Disponible', 160, 300, NULL, '\"[\\\"Computadora\\\",\\\"Monitor\\\",\\\"Tel\\\\u00e9fono\\\",\\\"Headset\\\"]\"', NULL, '2026-02-13 20:38:15', '2026-02-13 20:38:15'),
@@ -1054,8 +1119,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('EdM0sRm4nlsmCeXDFFeSUEPWCgq4ZZQMUbctEmms', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSTBuVm1vMFNNbUNQWHdreGRaV0dyR2F5U3dBdklmVjhTbk9oR3VHUiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTU7fQ==', 1771036473),
-('VzskZ3phG4EwEfmiBZhHRJMwVA2bYtKWE1pHTQaX', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnZ1cUZqRENVVnZFMmZpZ2lZaFllaHVyMUo5T2N4RTRTTGpZZkJxaCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTU7fQ==', 1771079640);
+('VzskZ3phG4EwEfmiBZhHRJMwVA2bYtKWE1pHTQaX', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoidnZ1cUZqRENVVnZFMmZpZ2lZaFllaHVyMUo5T2N4RTRTTGpZZkJxaCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9jYXJnb3MiO3M6NToicm91dGUiO3M6MTI6ImNhcmdvcy5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE1O30=', 1771081372);
 
 -- --------------------------------------------------------
 
@@ -1086,11 +1150,16 @@ INSERT INTO `solicitudes` (`id`, `proceso_ingreso_id`, `area_id`, `puesto_trabaj
 (8, 2, 2, 12, 'Servicios Generales', '2026-02-26', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:47:01'),
 (9, 2, 22, NULL, 'Formación', '2026-03-02', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 02:20:50'),
 (10, 2, 2, NULL, 'Bienes y Servicios', '2026-02-23', 'Finalizada', NULL, '2026-02-14 02:13:18', '2026-02-14 06:58:59'),
-(11, 3, 16, NULL, 'Tecnología', '2026-02-23', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
-(12, 3, 20, NULL, 'Dotación', '2026-02-18', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
-(13, 3, 2, NULL, 'Servicios Generales', '2026-02-21', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
-(14, 3, 22, NULL, 'Formación', '2026-02-25', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05'),
-(15, 3, 2, NULL, 'Bienes y Servicios', '2026-02-18', 'Pendiente', NULL, '2026-02-14 18:51:05', '2026-02-14 18:51:05');
+(11, 3, 16, NULL, 'Tecnología', '2026-02-23', 'Finalizada', NULL, '2026-02-14 18:51:05', '2026-02-14 19:54:55'),
+(12, 3, 20, NULL, 'Dotación', '2026-02-18', 'Finalizada', NULL, '2026-02-14 18:51:05', '2026-02-14 19:54:31'),
+(13, 3, 2, 8, 'Servicios Generales', '2026-02-21', 'Finalizada', NULL, '2026-02-14 18:51:05', '2026-02-14 19:51:25'),
+(14, 3, 22, NULL, 'Formación', '2026-02-25', 'Finalizada', NULL, '2026-02-14 18:51:05', '2026-02-14 19:51:02'),
+(15, 3, 2, NULL, 'Bienes y Servicios', '2026-02-18', 'Finalizada', NULL, '2026-02-14 18:51:05', '2026-02-14 19:50:37'),
+(16, 4, 16, NULL, 'Tecnología', '2026-03-19', 'Pendiente', NULL, '2026-02-14 19:45:52', '2026-02-14 19:45:52'),
+(17, 4, 20, NULL, 'Dotación', '2026-03-14', 'Pendiente', NULL, '2026-02-14 19:45:52', '2026-02-14 19:45:52'),
+(18, 4, 2, NULL, 'Servicios Generales', '2026-03-17', 'Pendiente', NULL, '2026-02-14 19:45:52', '2026-02-14 19:45:52'),
+(19, 4, 22, NULL, 'Formación', '2026-03-21', 'Pendiente', NULL, '2026-02-14 19:45:52', '2026-02-14 19:45:52'),
+(20, 4, 2, NULL, 'Bienes y Servicios', '2026-03-14', 'Pendiente', NULL, '2026-02-14 19:45:52', '2026-02-14 19:45:52');
 
 -- --------------------------------------------------------
 
@@ -1116,8 +1185,11 @@ INSERT INTO `solicitud_curso` (`id`, `solicitud_id`, `curso_id`, `created_at`, `
 (3, 9, 24, NULL, NULL),
 (4, 9, 25, NULL, NULL),
 (5, 9, 31, NULL, NULL),
-(6, 14, 5, NULL, NULL),
-(7, 14, 23, NULL, NULL);
+(8, 14, 16, NULL, NULL),
+(9, 14, 11, NULL, NULL),
+(10, 14, 5, NULL, NULL),
+(11, 14, 23, NULL, NULL),
+(12, 14, 4, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1243,6 +1315,22 @@ ALTER TABLE `cursos`
 ALTER TABLE `detalles_bienes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `detalles_bienes_solicitud_id_foreign` (`solicitud_id`);
+
+--
+-- Indices de la tabla `detalles_tecnologia`
+--
+ALTER TABLE `detalles_tecnologia`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `detalles_tecnologia_solicitud_id_foreign` (`solicitud_id`),
+  ADD KEY `detalles_tecnologia_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
+
+--
+-- Indices de la tabla `detalles_uniformes`
+--
+ALTER TABLE `detalles_uniformes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `detalles_uniformes_solicitud_id_foreign` (`solicitud_id`),
+  ADD KEY `detalles_uniformes_proceso_ingreso_id_foreign` (`proceso_ingreso_id`);
 
 --
 -- Indices de la tabla `gerencias`
@@ -1389,7 +1477,7 @@ ALTER TABLE `cargos`
 -- AUTO_INCREMENT de la tabla `checkins`
 --
 ALTER TABLE `checkins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
@@ -1401,6 +1489,18 @@ ALTER TABLE `cursos`
 -- AUTO_INCREMENT de la tabla `detalles_bienes`
 --
 ALTER TABLE `detalles_bienes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `detalles_tecnologia`
+--
+ALTER TABLE `detalles_tecnologia`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `detalles_uniformes`
+--
+ALTER TABLE `detalles_uniformes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -1413,7 +1513,7 @@ ALTER TABLE `gerencias`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `permissions`
@@ -1431,7 +1531,7 @@ ALTER TABLE `plantilla_solicitudes`
 -- AUTO_INCREMENT de la tabla `procesos_ingresos`
 --
 ALTER TABLE `procesos_ingresos`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `puestos_trabajo`
@@ -1449,13 +1549,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `solicitudes`
 --
 ALTER TABLE `solicitudes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitud_curso`
 --
 ALTER TABLE `solicitud_curso`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -1514,6 +1614,20 @@ ALTER TABLE `cursos`
 --
 ALTER TABLE `detalles_bienes`
   ADD CONSTRAINT `detalles_bienes_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `detalles_tecnologia`
+--
+ALTER TABLE `detalles_tecnologia`
+  ADD CONSTRAINT `detalles_tecnologia_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalles_tecnologia_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `detalles_uniformes`
+--
+ALTER TABLE `detalles_uniformes`
+  ADD CONSTRAINT `detalles_uniformes_proceso_ingreso_id_foreign` FOREIGN KEY (`proceso_ingreso_id`) REFERENCES `procesos_ingresos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalles_uniformes_solicitud_id_foreign` FOREIGN KEY (`solicitud_id`) REFERENCES `solicitudes` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `model_has_roles`

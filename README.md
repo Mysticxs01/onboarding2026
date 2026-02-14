@@ -59,6 +59,25 @@ Tablas principales organizadas en layers:
 | | `ruta_formacion` | Planes de desarrollo | Variable |
 | **Control** | `checkins` | Confirmación de entrega | Variable |
 
+## 🧩 Modelo E-R
+
+```mermaid
+erDiagram
+   GERENCIAS ||--o{ AREAS : contiene
+   AREAS ||--o{ CARGOS : agrupa
+   AREAS ||--o{ USERS : asigna
+   CARGOS ||--o{ USERS : ocupa
+   PROCESOS_INGRESOS }o--|| CARGOS : cargo
+   PROCESOS_INGRESOS }o--|| AREAS : area
+   PROCESOS_INGRESOS ||--o{ SOLICITUDES : genera
+   SOLICITUDES ||--o| DETALLES_TECNOLOGIA : tecnologia
+   SOLICITUDES ||--o| DETALLES_UNIFORMES : dotacion
+   SOLICITUDES ||--o| DETALLES_BIENES : bienes
+   SOLICITUDES }o--|| PUESTOS_TRABAJO : puesto
+   PROCESOS_INGRESOS ||--o| CHECKINS : checkin
+   SOLICITUDES }o--o{ CURSOS : formacion
+```
+
 ## 👥 Modelos Eloquent
 
 **Estructura de Herencia:**
