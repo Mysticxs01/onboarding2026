@@ -42,40 +42,72 @@ Asamblea de Socios (fuera del sistema)
 
 **Estructura:** 7 Gerencias (incluye Gerencia General) → areas y cargos segun BD
 
-## 🗄️ Base de Datos
+## 🗄️ Base de Datos (29 tablas)
 
 Tablas principales organizadas en layers:
 
 | Layer | Tabla | Propósito | Registros |
 |-------|-------|-----------|-----------|
-| **Organizacional** | `gerencias` | Niveles ejecutivos | 6 |
-| | `areas` | Departamentos | 18 |
-| | `cargos` | Posiciones corporativas | 54 |
-| | `users` | Personas reales | ~50+ |
+| **Organizacional** | `gerencias` | Niveles ejecutivos | 7 |
+| | `areas` | Departamentos | 25 |
+| | `cargos` | Posiciones corporativas | 58 |
+| | `users` | Personas reales | Variable |
 | **Onboarding** | `procesos_ingresos` | Flujo de ingreso | Variable |
 | | `solicitudes` | Solicitudes por área | Variable |
+| | `plantilla_solicitudes` | Plantillas por cargo | 270 |
+| | `detalles_tecnologia` | Equipos TI | Variable |
+| | `detalles_uniformes` | Dotación | Variable |
+| | `detalles_bienes` | Materiales | Variable |
+| **Infraestructura** | `puestos_trabajo` | Puestos físicos | 48 |
 | **Formación** | `cursos` | Catálogo de cursos | 31 |
 | | `asignacion_cursos` | Cursos asignados | Variable |
-| | `ruta_formacion` | Planes de desarrollo | Variable |
+| | `rutas_formacion` | Planes de desarrollo | Variable |
+| | `ruta_x_curso` | Cursos por ruta | Variable |
 | **Control** | `checkins` | Confirmación de entrega | Variable |
+| | `auditoria_onboarding` | Registro de acciones | Variable |
+| | `reporte_cumplimiento` | Métricas | Variable |
+| **Seguridad** | `roles` | Roles del sistema | 6 |
+| | `permissions` | Permisos | 34 |
 
 ## 🧩 Modelo E-R
 
 ```mermaid
 erDiagram
+   %% Estructura Organizacional
    GERENCIAS ||--o{ AREAS : contiene
    AREAS ||--o{ CARGOS : agrupa
-   AREAS ||--o{ USERS : asigna
    CARGOS ||--o{ USERS : ocupa
-   PROCESOS_INGRESOS }o--|| CARGOS : cargo
-   PROCESOS_INGRESOS }o--|| AREAS : area
+   CARGOS ||--o{ PLANTILLA_SOLICITUDES : define
+   
+   %% Proceso de Ingreso
+   PROCESOS_INGRESOS }o--|| CARGOS : "para cargo"
+   PROCESOS_INGRESOS }o--|| AREAS : "para area"
+   PROCESOS_INGRESOS }o--|| USERS : "jefe responsable"
    PROCESOS_INGRESOS ||--o{ SOLICITUDES : genera
-   SOLICITUDES ||--o| DETALLES_TECNOLOGIA : tecnologia
-   SOLICITUDES ||--o| DETALLES_UNIFORMES : dotacion
-   SOLICITUDES ||--o| DETALLES_BIENES : bienes
-   SOLICITUDES }o--|| PUESTOS_TRABAJO : puesto
-   PROCESOS_INGRESOS ||--o| CHECKINS : checkin
-   SOLICITUDES }o--o{ CURSOS : formacion
+   PROCESOS_INGRESOS ||--o| CHECKINS : confirma
+   
+   %% Solicitudes y Detalles
+   SOLICITUDES }o--|| AREAS : "responsable"
+   SOLICITUDES ||--o| DETALLES_TECNOLOGIA : "TI"
+   SOLICITUDES ||--o| DETALLES_UNIFORMES : "dotacion"
+   SOLICITUDES ||--o| DETALLES_BIENES : "bienes"
+   SOLICITUDES }o--o| PUESTOS_TRABAJO : "asigna puesto"
+   SOLICITUDES }o--o{ CURSOS : "formacion"
+   
+   %% Formación
+   AREAS ||--o{ CURSOS : "responsable"
+   PROCESOS_INGRESOS ||--o{ ASIGNACION_CURSOS : "recibe cursos"
+   CURSOS ||--o{ ASIGNACION_CURSOS : "asignado"
+   CARGOS ||--o{ RUTAS_FORMACION : "ruta"
+   RUTAS_FORMACION }o--o{ CURSOS : "incluye"
+   
+   %% Auditoría y Reportes
+   USERS ||--o{ AUDITORIA_ONBOARDING : "registra"
+   PROCESOS_INGRESOS ||--o{ REPORTE_CUMPLIMIENTO : "medido en"
+   
+   %% Seguridad
+   USERS }o--o{ ROLES : "tiene"
+   ROLES }o--o{ PERMISSIONS : "otorga"
 ```
 
 ## 👥 Modelos Eloquent
@@ -273,11 +305,15 @@ php artisan tinker
 
 - **Cooperativa:** Sinergia
 - **Tipo:** Intermediación financiera solidaria
-- **Gerencias:** 6
-- **Áreas:** 18
-- **Cargos:** 54
+- **Gerencias:** 7 (incluye Gerencia General)
+- **Áreas:** 25
+- **Cargos:** 58
+- **Puestos de trabajo:** 48
 - **Cursos de formación:** 31
-- **Modalidades:** Presencial + Virtual
+- **Plantillas de solicitudes:** 270
+- **Roles de sistema:** 6
+- **Permisos:** 34
+- **Modalidades:** Presencial + Virtual + Híbrida
 
 ## 📞 Información
 

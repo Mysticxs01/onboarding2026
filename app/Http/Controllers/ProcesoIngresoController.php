@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Gerencia;
 use App\Models\PlantillaSolicitud;
 use App\Models\Solicitud;
+use App\Models\DetalleTecnologia;
+use App\Models\DetalleUniforme;
 use Carbon\Carbon;
 
 class ProcesoIngresoController extends Controller
@@ -29,13 +31,15 @@ class ProcesoIngresoController extends Controller
             abort(403, 'Solo el Jefe de RRHH puede crear nuevos procesos de ingreso.');
         }
 
+        // Cargar gerencias con todas sus áreas y cargos activos
         $gerencias = Gerencia::where('activo', true)
             ->with([
                 'areas' => function ($query) {
-                    $query->where('activo', true)
-                        ->with(['cargos' => function ($cargoQuery) {
-                            $cargoQuery->with('jefeInmediato');
-                        }]);
+                    // Cargar TODAS las áreas para debug
+                    $query->with(['cargos' => function ($cargoQuery) {
+                        $cargoQuery->where('activo', true)
+                                   ->with('jefeInmediato');
+                    }]);
                 },
             ])
             ->get();
@@ -57,6 +61,16 @@ public function store(Request $request)
         'documento' => 'required|string|unique:procesos_ingresos',
         'cargo_id' => 'required|exists:cargos,id',
         'fecha_ingreso' => 'required|date|after_or_equal:today',
+        // Validaciones de dotación
+        'necesita_dotacion' => 'nullable|in:0,1',
+        'genero' => 'nullable|required_if:necesita_dotacion,1|in:Masculino,Femenino,Otro',
+        'talla_pantalon' => 'nullable|required_if:necesita_dotacion,1|string|max:50',
+        'talla_camiseta' => 'nullable|required_if:necesita_dotacion,1|string|max:50',
+        'justificacion_no_dotacion' => 'nullable|required_if:necesita_dotacion,0|string|max:500',
+        // Validaciones de tecnología
+        'necesita_computador' => 'nullable|in:0,1',
+        'gama_computador' => 'nullable|required_if:necesita_computador,1|in:Básica,Media,Premium',
+        'credenciales_plataformas' => 'nullable|string|max:2000',
     ]);
 
     try {
@@ -86,7 +100,7 @@ public function store(Request $request)
         $plantillas = PlantillaSolicitud::where('cargo_id', $cargo->id)->get();
 
         foreach ($plantillas as $plantilla) {
-            Solicitud::create([
+            $solicitud = Solicitud::create([
                 'proceso_ingreso_id' => $proceso->id,
                 'area_id' => $plantilla->area_id,
                 'tipo' => $plantilla->tipo_solicitud,
@@ -94,11 +108,35 @@ public function store(Request $request)
                     ->subDays($plantilla->dias_maximos),
                 'estado' => 'Pendiente',
             ]);
+
+            // Crear detalle de Dotación si es una solicitud de Dotación y se proporcionó información
+            if ($plantilla->tipo_solicitud === 'Dotación' && $request->filled('necesita_dotacion')) {
+                DetalleUniforme::create([
+                    'solicitud_id' => $solicitud->id,
+                    'proceso_ingreso_id' => $proceso->id,
+                    'necesita_dotacion' => (bool) $request->necesita_dotacion,
+                    'genero' => $request->genero,
+                    'talla_pantalon' => $request->talla_pantalon,
+                    'talla_camiseta' => $request->talla_camiseta,
+                    'justificacion_no_dotacion' => $request->justificacion_no_dotacion,
+                ]);
+            }
+
+            // Crear detalle de Tecnología si es una solicitud de Tecnología y se proporcionó información
+            if ($plantilla->tipo_solicitud === 'Tecnología' && $request->filled('necesita_computador')) {
+                DetalleTecnologia::create([
+                    'solicitud_id' => $solicitud->id,
+                    'proceso_ingreso_id' => $proceso->id,
+                    'necesita_computador' => (bool) $request->necesita_computador,
+                    'gama_computador' => $request->gama_computador,
+                    'credenciales_plataformas' => $request->credenciales_plataformas,
+                ]);
+            }
         }
 
         return redirect()
             ->route('procesos-ingreso.index')
-            ->with('success', 'Proceso de ingreso creado correctamente');
+            ->with('success', 'Proceso de ingreso creado correctamente con especificaciones de dotación y tecnología');
 
     } catch (\Exception $e) {
         // Capturar error y regresar al formulario con mensaje

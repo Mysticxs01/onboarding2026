@@ -13,6 +13,8 @@ class Area extends Model
         'gerencia_id',
         'nombre',
         'descripcion',
+        'activo',
+        'jefe_area_cargo_id',
     ];
 
     public function gerencia()
