@@ -1,0 +1,375 @@
+Historia de Usuario
+
+Número: 1 Nombre: Crear registro de ingreso con campos obligatorios
+Prioridad en Negocios: Alta Responsable: Equipo de Desarrollo
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 1
+Descripción: El Administrador de RH, desea crear un registro de ingreso con los campos obligatorios (código autogenerado, nombre, tipo y número de identificación, cargo, área, fecha de ingreso y jefe inmediato) para iniciar el proceso de onboarding del nuevo empleado
+Observaciones: El jefe inmediato debe seleccionarse desde la estructura organizacional.
+Criterio de Aceptación: El jefe inmediato debe seleccionarse desde la estructura organizacional.
+Mockup: Pantalla “Nuevo Registro de Ingreso”.
+
+Historia de Usuario
+
+Número: 2 Nombre: Generar solicitudes automáticas al crear un ingreso
+Prioridad en Negocios: Alta Responsable: Equipo de Desarrollo
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 1
+Descripción: El Administrador de RH, desea que al crear un registro de ingreso el sistema genere automáticamente las solicitudes base a las áreas correspondientes para garantizar que todas las tareas se asignen desde el inicio.
+Observaciones: Cada solicitud debe tener fecha máxima de cumplimiento y depender del cargo
+Criterio de Aceptación: Se crean solicitudes para: Dotación, Tecnología, Servicios Generales, Formación y Capacitación, Bienes y Servicios.
+Cada solicitud queda asociada al proceso y con fecha máxima definida.
+Mockup: Confirmación + listado de solicitudes generadas.
+
+Historia de Usuario
+
+Número: 3 Nombre: Gestionar fecha máxima de cumplimiento por solicitud
+Prioridad en Negocios: Media Responsable: Equipo de Desarrollo
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 1
+Descripción: Administrador de RH, quiero que cada solicitud generada tenga una fecha máxima de cumplimiento para controlar el avance antes del día de ingreso
+Observaciones: La fecha debe quedar visible para las áreas responsables.
+Criterio de Aceptación: Cada solicitud muestra: área responsable, estado y fecha máxima.
+La fecha máxima se almacena y se usa en reportes
+Mockup: Tabla de solicitudes del proceso.
+
+Historia de Usuario
+
+Número: 4 Nombre: Editar proceso de ingreso antes de finalizaciones
+Prioridad en Negocios: Alta Responsable: Equipo de Desarrollo
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 1
+Descripción: Como Administrador de RH, quiero editar un proceso de ingreso siempre que ninguna área haya marcado tareas como “Finalizadas”, para corregir datos sin romper el flujo.
+Observaciones: Debe existir validación de bloqueo si ya hay tareas finalizadas.
+Criterio de Aceptación: Si existen tareas “Finalizadas”, el sistema bloquea la edición y muestra motivo
+Mockup: Botón “Editar” + mensaje de bloqueo.
+
+Historia de Usuario
+
+Número: 5 Nombre: Cancelar proceso de ingreso antes de finalizaciones
+Prioridad en Negocios: Alta Responsable: Equipo de Desarrollo
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 2
+Descripción: Como Administrador de Recursos Humanos
+Quiero cancelar un proceso de ingreso siempre que ninguna área haya finalizado sus tareas
+Para detener ingresos que ya no se realizarán y evitar inconsistencias en el sistema.
+Observaciones: Al cancelar, todas las solicitudes asociadas deben quedar en estado cancelado/inactivo y no deben poder modificarse posteriormente.
+El sistema debe registrar la fecha, hora y usuario que realizó la cancelación.
+Criterio de Aceptación: Si existe al menos una tarea en estado “Finalizada”, el sistema no permite cancelar el proceso.
+Si todas las tareas están en estado “Pendiente” o “En proceso”, el sistema permite cancelar.
+Al cancelar, el estado del proceso cambia a “Cancelado”.
+Todas las solicitudes relacionadas cambian automáticamente a “Canceladas”.
+No se permite editar solicitudes asociadas a un proceso cancelado.
+El sistema registra la acción en el log de auditoría.
+Mockup: Pantalla de detalle del proceso de ingreso con:
+Estado del proceso (Activo / Cancelado).
+Lista de tareas por área con su estado.
+Botón “Cancelar Proceso” (visible solo si no hay tareas finalizadas).
+Mensaje de confirmación:
+“¿Está seguro de cancelar el proceso? Esta acción no se puede deshacer.”
+
+Historia de Usuario
+
+Número: 6 Nombre: Gestión de usuarios y roles
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Administrador del Sistema Iteración Asignada: 1
+Descripción: Como Administrador del Sistema:
+-Quiero crear, editar y asignar roles a los usuarios del sistema
+-Para controlar los permisos y accesos según el cargo dentro de la cooperativa.
+Observaciones: Los roles deben corresponder a las áreas definidas en el organigrama (Crédito, Tesorería, Comercial, TI, Talento Humano, etc.).
+El sistema debe permitir activar o desactivar usuarios sin eliminarlos.
+Criterio de Aceptación: Permite crear un nuevo usuario con datos básicos (nombre, correo, cargo, área).
+Permite editar información del usuario,
+Permite asignar uno o más roles.
+Restringe el acceso a módulos según el rol asignado.
+Permite desactivar usuarios.
+Solo el Administrador puede gestionar usuarios y roles.
+Mockup: Pantalla con:
+-Botón “Crear Usuario”
+-Lista de usuarios con estado (Activo/Inactivo)
+-Selector desplegable de roles
+Opciones: Editar / Desactivar
+
+Historia de Usuario
+
+Número: 7 Nombre: Autenticación segura de usuarios
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Usuario del Sistema Iteración Asignada: 1
+Descripción: Como usuario del sistema:
+Quiero iniciar sesión con credenciales seguras
+Para acceder únicamente a los módulos autorizados según mi rol.
+Observaciones: Debe cumplir con políticas de seguridad (contraseña segura).
+Criterio de Aceptación: El sistema solicita usuario y contraseña.
+Valida credenciales contra base de datos.
+Bloquear usuario después de 3 intentos fallidos.
+Redirige al dashboard correspondiente según rol.
+Cierra sesión automáticamente por inactividad.
+Mockup: Pantalla de login con campos Usuario y Contraseña.
+
+Historia de Usuario
+
+Número: 8 Nombre: Control de permisos por módulo
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Sistema Iteración Asignada: 1
+Descripción: Como sistema
+-Quiero restringir el acceso a módulos según el rol asignado
+-Para garantizar la seguridad y confidencialidad de la información.
+Observaciones: Debe aplicarse a todos los módulos: Crédito, Tesorería, Comercial, TI, etc.
+Criterio de Aceptación: El sistema valida el rol antes de permitir acceso.
+-Oculta módulos no autorizados.
+-Registra intento de acceso no permitido.
+-Permite configuración de permisos desde panel administrador.
+Mockup: Panel de administración de roles con checkboxes por módulo.
+
+Historia de Usuario
+
+Número: 9 Nombre: Registro automático de auditoría
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Sistema Iteración Asignada: 2
+Descripción: Como sistema :
+
+Quiero registrar automáticamente todas las acciones críticas
+
+Para mantener trazabilidad y control interno.
+Observaciones: Debe guardar usuario, fecha, hora y acción realizada.
+Criterio de Aceptación: Registra creación, modificación y eliminación de datos.
+Guarda ID del usuario que realizó la acción.
+Permite consultar historial por rango de fechas.
+Solo usuarios autorizados pueden consultar la auditoría.
+Mockup: Tabla con columnas: Usuario, Acción, Fecha, Módulo.
+
+Historia de Usuario
+
+Número: 10 Nombre: Gestión global del sistema (Usuario Root)
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Usuario Root Iteración Asignada: 1
+Descripción: Como Usuario Root
+Quiero tener acceso total a la configuración del sistema
+Para administrar parámetros globales, roles, permisos y seguridad de la plataforma.
+Observaciones: El usuario Root es único y tiene privilegios superiores al Administrador del Sistema.
+Criterio de Aceptación: Puede crear, modificar o eliminar roles del sistema.
+Puede asignar o revocar permisos a cualquier usuario.
+Puede activar o desactivar módulos del sistema.
+Puede restablecer contraseñas de cualquier usuario.
+Tiene acceso al log completo de auditoría.
+No puede ser eliminado por otros usuarios.
+Mockup: Panel avanzado de configuración con secciones:
+Usuarios | Roles | Permisos | Parámetros del Sistema | Auditoría Global
+
+Historia de Usuario
+
+Número: 11 Nombre: Check-in seguro al sistema
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Usuario del Sistema Iteración Asignada: 1
+Descripción: Como usuario del sistema
+Quiero realizar un check-in al ingresar al sistema
+Para que quede registrado mi acceso según el área a la que pertenezco.
+Observaciones: El sistema debe asociar el ingreso al área del usuario (Crédito, Comercial, TI, Talento Humano, etc.).
+Criterio de Aceptación: El sistema registra fecha, hora y área del usuario.
+Muestra el dashboard correspondiente según el área.
+Guarda el registro en historial de accesos.
+Solo permite el acceso a módulos del área correspondiente.
+Mockup: Pantalla de bienvenida con nombre del área y botón “Ingresar al área”.
+
+Historia de Usuario
+
+Número: 12 Nombre: Vista personalizada por área
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Sistema Iteración Asignada: 2
+Descripción: Como sistema
+Quiero mostrar una vista personalizada según el área del usuario
+Para que cada funcionario vea únicamente la información relevante a su función.
+Observaciones: La vista debe adaptarse automáticamente según el rol y área.
+Criterio de Aceptación: El sistema detecta el área del usuario al iniciar sesión.
+Muestra módulos y estadísticas relacionadas con su área.
+Oculta información de otras áreas.
+Permite navegación interna solo en su módulo autorizado.
+Mockup: Dashboard con indicadores específicos por área (ejemplo: Créditos en análisis para Riesgo).
+
+Historia de Usuario
+
+Número: 13 Nombre: Visualización de lista de concursos en solicitud nueva
+Prioridad en Negocios: Media Responsable: TI/Talento Humano
+Rol: Jefe de Recursos Humanos Iteración Asignada: 2
+Descripción: Como jefe de Recursos Humanos
+Quiero que al ingresar a una nueva solicitud de vinculación
+Se muestre automáticamente la lista de concursos disponibles
+Para asignar correctamente el proceso de selección.
+Observaciones: Debe listar concursos activos y permitir seleccionar uno.
+Criterio de Aceptación: Al abrir una nueva solicitud, el sistema muestra lista de concursos activos.
+Permite filtrar por área o cargo.
+Permite seleccionar el concurso correspondiente.
+Guarda la relación solicitud–concurso en base de datos.
+Solo el Jefe de Recursos puede modificar esta asignación.
+Mockup: Pantalla de solicitud con sección “Concursos disponibles” en lista desplegable.
+
+(Nuevas) Historias 14–19
+Historia de Usuario
+
+Número: 14 Nombre: Asignación de puesto físico en plano interactivo
+Prioridad en Negocios: Alta Responsable: TI/Servicios Generales
+Rol: Operador de Área (Servicios Generales) Iteración Asignada: 2
+Descripción: Como Operador de Servicios Generales
+Quiero asignar un puesto físico desde un plano interactivo de la oficina
+Para marcar puestos disponibles/ocupados y evitar doble asignación al nuevo empleado.
+Observaciones: El plano debe funcionar como “mapa de sillas”, mostrando estado (Disponible/Ocupado/Reservado). 
+
+Enunciado del proyecto
+
+
+Criterio de Aceptación: Al abrir la solicitud de Servicios Generales, el sistema muestra el plano interactivo.
+Permite seleccionar un puesto disponible y “reservarlo” para el proceso de ingreso.
+Evita seleccionar puestos ocupados o reservados por otro proceso activo.
+Guarda la asignación puesto–proceso en base de datos con fecha/hora/usuario.
+Permite liberar el puesto si el proceso se cancela (relacionado con HU5).
+Mockup: Vista tipo “mapa” con sillas (cuadros) en colores/estado + panel lateral con datos del empleado y botón “Asignar Puesto”.
+
+Historia de Usuario
+
+Número: 15 Nombre: Notificaciones automáticas por correo a responsables por área
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Sistema Iteración Asignada: 2
+Descripción: Como sistema
+Quiero enviar correos automáticos a los responsables de cada área cuando se cree un nuevo proceso de ingreso
+Para que inicien oportunamente la gestión de sus solicitudes antes de la fecha de ingreso. 
+
+Enunciado del proyecto
+
+
+Observaciones: Debe integrarse con un servicio externo de correo (ej. SendGrid) y permitir parametrizar destinatarios por área/rol. 
+
+Enunciado del proyecto
+
+
+Criterio de Aceptación: Al crear un registro de ingreso (HU1) y disparar solicitudes (HU2), el sistema envía un correo por cada área responsable.
+El correo incluye: código de proceso, nombre del empleado, fecha de ingreso, fecha límite de cada solicitud y enlace al panel del área.
+Se registra en auditoría el envío (HU9) con estado (Enviado/Fallido) y timestamp.
+Permite reintento manual por un usuario Root o Administrador de RH si falló el envío.
+Mockup: Pantalla “Detalle del proceso” con sección “Notificaciones” (lista de áreas + estado envío + botón “Reintentar”).
+
+Historia de Usuario
+
+Número: 16 Nombre: Generar Acta de Entrega en PDF (Check-in de Activos)
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 2
+Descripción: Como Administrador de Recursos Humanos
+Quiero generar un Acta de Entrega en PDF el día del ingreso con el listado de elementos suministrados
+Para tener evidencia formal de que el empleado recibió todos los activos. 
+
+Enunciado del proyecto
+
+
+Observaciones: Debe consolidar ítems entregados desde todas las áreas (TI, Dotación, Bienes y Servicios, etc.) y permitir serialización (ej. serial del computador). 
+
+Enunciado del proyecto
+
+
+Criterio de Aceptación: Permite generar el PDF solo cuando el proceso está en estado “Listo para check-in” (definido por reglas del sistema).
+El PDF incluye: datos del empleado, código del proceso, fecha, lista de ítems por área, seriales (si aplica) y responsable que entrega.
+El PDF queda almacenado y asociado al proceso (descargable desde el detalle).
+Registra en auditoría (HU9) la generación del acta.
+Mockup: Botón “Generar Acta PDF” en la pantalla del proceso + vista previa/descarga.
+
+Historia de Usuario
+
+Número: 17 Nombre: Firma digital / aceptación por código para confirmar entrega
+Prioridad en Negocios: Alta Responsable: TI
+Rol: Nuevo Empleado Iteración Asignada: 2
+Descripción: Como nuevo empleado
+Quiero ingresar mediante un código enviado a mi correo personal y confirmar la recepción de los activos
+Para dejar constancia de aceptación de la entrega realizada por la empresa. 
+
+Enunciado del proyecto
+
+
+Observaciones: El código debe tener expiración y solo habilitar acceso al acta del proceso correspondiente. Debe usar servicio externo de correo. 
+
+Enunciado del proyecto
+
+
+Criterio de Aceptación: El sistema genera un código de un solo uso asociado al proceso y lo envía al correo personal del empleado.
+El empleado ingresa el código en una pantalla pública (sin credenciales internas).
+El sistema muestra el Acta PDF (HU16) y permite confirmar “Acepto/Recibí”.
+Al confirmar, se registra fecha/hora/IP y el proceso queda marcado como “Check-in completado”.
+Registra la acción en auditoría (HU9).
+Mockup: Pantalla “Confirmación de Entrega” con campo “Código”, botón “Validar”, vista del acta y botón “Confirmar recepción”.
+
+Historia de Usuario
+
+Número: 18 Nombre: Reportes de eficiencia por área (cumplimiento vs fecha límite)
+Prioridad en Negocios: Media Responsable: TI
+Rol: Usuario Root Iteración Asignada: 2
+Descripción: Como Usuario Root
+Quiero visualizar reportes con gráficas de cumplimiento por área antes de la fecha de ingreso
+Para identificar retrasos y tomar acciones correctivas a tiempo. 
+
+Enunciado del proyecto
+
+
+Observaciones: Debe apoyarse en las fechas límite por solicitud (HU3) y estados por área. 
+
+Historias de Usuario-2026
+
+
+Criterio de Aceptación: Permite filtrar por rango de fechas, área y cargo.
+Muestra % de cumplimiento a tiempo vs retrasado por área.
+Permite ver listado “Top retrasos” (procesos y solicitudes vencidas).
+Exporta reporte (PDF o Excel) para seguimiento interno.
+Mockup: Dashboard de reportes con filtros + gráfica por área + tabla de pendientes críticos.
+
+Historia de Usuario
+
+Número: 19 Nombre: Recomendación inteligente de kit estándar por cargo (IA + histórico)
+Prioridad en Negocios: Media Responsable: TI
+Rol: Jefe Inmediato Iteración Asignada: 2
+Descripción: Como Jefe Inmediato
+Quiero que el sistema me sugiera automáticamente un “kit estándar” (hardware/software/capacitación) basado en el cargo y datos históricos
+Para completar rápidamente detalles técnicos y estandarizar el onboarding del nuevo empleado. 
+
+Enunciado del proyecto
+
+
+Observaciones: La recomendación debe alimentarse de ingresos anteriores y permitir ajustes manuales por el Jefe Inmediato (perfil tecnológico, licencias, tallas/medidas si aplica). 
+
+Enunciado del proyecto
+
+
+Criterio de Aceptación: Al abrir el proceso del nuevo empleado, el Jefe Inmediato ve recomendaciones según cargo.
+Permite ajustar: tipo de computador (portátil/escritorio), licencias requeridas y necesidades específicas. 
+
+Enunciado del proyecto
+
+
+Guarda los ajustes y actualiza/parametriza las solicitudes relacionadas sin romper reglas (HU4/HU5).
+Registra en auditoría la recomendación aplicada y los cambios manuales.
+Mockup: Sección “Recomendación Inteligente” con tarjetas (Hardware/Software/Capacitación) + botón “Aplicar” y opción “Editar”.
+
+Historia de Usuario
+
+Número: 20 Nombre: Actualizar cargo de colaborador interno y liberar vacante anterior
+Prioridad en Negocios: Alta Responsable: Talento Humano/TI
+Rol: Administrador (Recursos Humanos) Iteración Asignada: 2
+Descripción: Como Administrador de Recursos Humanos
+Quiero que al vincular a una persona que ya trabaja en la empresa el sistema actualice su cargo actual
+Para reflejar el movimiento interno correctamente y dejar libre la vacante del cargo anterior.
+Observaciones: El sistema debe identificar al colaborador por su tipo y número de identificación para evitar crear un registro duplicado.
+Al confirmar el cambio, el cargo anterior debe pasar a estado “Vacante” y el nuevo cargo a estado “Ocupado”.
+Criterio de Aceptación: Si la identificación ya existe en el sistema, se muestra opción “Movimiento interno” en lugar de crear nuevo empleado.
+Al guardar el movimiento, se actualiza el cargo, área y jefe inmediato del colaborador según la nueva asignación.
+La vacante del cargo anterior se libera automáticamente y queda disponible para nuevos procesos.
+El sistema registra en auditoría (HU9) el cambio de cargo, usuario que ejecuta la acción y fecha/hora.
+No se permite dejar al colaborador con dos cargos activos al mismo tiempo.
+Mockup: Pantalla “Movimiento Interno” con:
+Datos del colaborador encontrado.
+Cargo actual (solo lectura) y nuevo cargo (selector).
+Indicador de estado de vacante anterior (“Se liberará al confirmar”).
+Botón “Confirmar cambio de cargo”.
+
+Tarea Técnica
+
+Número: TT-01 Nombre: Investigación simple para recomendación con IA en solicitud y cursos
+Prioridad: Media Responsable: TI
+Objetivo: Investigar una implementación básica de IA para laboratorio que ayude a recomendar dotación y cursos a partir de texto libre.
+Alcance: En la solicitud, permitir un texto como: “Mujer de X años, tallas X, Y, Z, para el cargo de X” y obtener una recomendación sugerida.
+También en la sección de cursos, recomendar primero los cursos disponibles y, cuando un curso sugerido no esté disponible, proponer alternativas similares.
+Entregables: Documento corto (1 a 2 páginas) con opción técnica recomendada, costo estimado, tiempo de implementación y riesgos.
+Criterio de Aceptación: Presenta al menos 2 alternativas simples (por reglas y por IA generativa/API).
+Incluye ejemplo de entrada y salida para solicitud (perfil + tallas + cargo).
+Incluye ejemplo de entrada y salida para cursos (disponibles y no disponibles con alternativa).
+Define una propuesta MVP de laboratorio que pueda implementarse rápido.
+Resultado esperado: Decisión de enfoque para continuar con una implementación mínima en el proyecto.
