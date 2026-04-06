@@ -13,7 +13,7 @@ class RutaFormacionController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('view', RutaFormacion::class);
+        $this->authorize('viewAny', RutaFormacion::class);
 
         $query = RutaFormacion::query();
 

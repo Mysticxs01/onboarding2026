@@ -10,6 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 use App\Models\Area;
 use App\Models\Cargo;
+use App\Models\AuditoriaOnboarding;
 
 class User extends Authenticatable
 {
@@ -83,6 +84,14 @@ class User extends Authenticatable
     public function subordinados()
     {
         return $this->hasMany(User::class, 'jefe_directo_id');
+    }
+
+    /**
+     * Registros de auditoría generados por este usuario
+     */
+    public function auditorias()
+    {
+        return $this->hasMany(AuditoriaOnboarding::class, 'usuario_id');
     }
 
     /* =========================

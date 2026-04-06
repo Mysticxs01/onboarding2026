@@ -53,6 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/solicitudes/{id}/guardar-formacion', [SolicitudController::class, 'guardarFormacion'])->name('solicitudes.guardar-formacion');
     Route::post('/solicitudes/{id}/guardar-bienes', [SolicitudController::class, 'guardarBienes'])->name('solicitudes.guardar-bienes');
     
+    // API para plano interactivo de puestos
+    Route::get('/api/puestos-trabajo/plano', [SolicitudController::class, 'obtenerPuestosPlano'])->name('api.puestos.plano');
+    Route::post('/api/puestos-trabajo/{id}/reservar', [SolicitudController::class, 'reservarPuesto'])->name('api.puestos.reservar');
+    
     // Cambiar estado de solicitudes
     Route::post('/solicitudes/{id}/cambiar-estado', [SolicitudController::class, 'cambiarEstado'])->name('solicitudes.cambiar-estado');
     

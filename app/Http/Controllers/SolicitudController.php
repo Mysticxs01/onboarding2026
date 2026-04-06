@@ -187,15 +187,54 @@ class SolicitudController extends Controller
             'puesto_trabajo_id' => 'required|exists:puestos_trabajo,id',
         ]);
 
+        $puestoAnterior = $solicitud->puestoTrabajo;
+        $puesto = \App\Models\PuestoTrabajo::find($request->puesto_trabajo_id);
+
+        // Verificar que el puesto esté disponible
+        if ($puesto && $puesto->estado !== 'Disponible' && $puesto->estado !== 'Asignado') {
+            return redirect()->route('solicitudes.show', $solicitud->id)
+                           ->with('error', "El puesto no está disponible. Estado actual: {$puesto->estado}");
+        }
+
+        // Liberar puesto anterior si existe
+        if ($puestoAnterior && $puestoAnterior->estado === 'Asignado') {
+            $puestoAnterior->estado = 'Disponible';
+            $puestoAnterior->save();
+        }
+
+        // Asignar nuevo puesto
         $solicitud->puesto_trabajo_id = $request->puesto_trabajo_id;
         $solicitud->save();
 
         // Marcar el puesto como asignado
-        $puesto = \App\Models\PuestoTrabajo::find($request->puesto_trabajo_id);
         if ($puesto) {
             $puesto->estado = 'Asignado';
             $puesto->save();
         }
+
+        // Registrar en auditoría
+        \App\Models\AuditoriaOnboarding::create([
+            'usuario_id' => auth()->id(),
+            'proceso_ingreso_id' => $solicitud->proceso_ingreso_id,
+            'accion' => 'Asignación de Puesto de Trabajo',
+            'descripcion' => $puestoAnterior 
+                ? "Cambio de puesto de {$puestoAnterior->numero_puesto} a {$puesto->numero_puesto}"
+                : "Asignación de nuevo puesto {$puesto->numero_puesto}",
+            'tabla_afectada' => 'solicitudes',
+            'registro_id' => $solicitud->id,
+            'datos_anteriores' => [
+                'puesto_trabajo_id' => $puestoAnterior?->id,
+                'puesto_numero' => $puestoAnterior?->numero_puesto,
+            ],
+            'datos_nuevos' => [
+                'puesto_trabajo_id' => $puesto->id,
+                'puesto_numero' => $puesto->numero_puesto,
+                'piso' => $puesto->piso,
+                'seccion' => $puesto->seccion,
+                'fecha_asignacion' => now(),
+            ],
+            'ip_usuario' => $request->ip(),
+        ]);
 
         return redirect()->route('solicitudes.show', $solicitud->id)
                        ->with('success', 'Puesto de trabajo asignado correctamente');
@@ -720,6 +759,139 @@ class SolicitudController extends Controller
 
         // Si no tiene permiso, lanzar excepción
         abort(403, 'No tienes permiso para ver esta solicitud.');
+    }
+
+    /**
+     * Obtener todos los puestos de trabajo con su estado para el plano interactivo
+     */
+    public function obtenerPuestosPlano()
+    {
+        $puestos = \App\Models\PuestoTrabajo::with([
+            'solicitudes' => function ($query) {
+                $query->where('estado', '!=', 'Cancelado');
+            }
+        ])->get()->map(function ($puesto) {
+            return [
+                'id' => $puesto->id,
+                'numero_puesto' => $puesto->numero_puesto,
+                'piso' => $puesto->piso,
+                'seccion' => $puesto->seccion,
+                'estado' => $this->determinarEstadoPuesto($puesto),
+                'ubicacion_x' => $puesto->ubicacion_x ?? 0,
+                'ubicacion_y' => $puesto->ubicacion_y ?? 0,
+                'descripcion' => $puesto->descripcion,
+                'equipamiento' => $puesto->equipamiento,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'puestos' => $puestos,
+            'estados' => [
+                'Disponible' => '#28A745',
+                'Reservado' => '#FFC107',
+                'Asignado' => '#E74C3C',
+                'En Mantenimiento' => '#95A5A6',
+                'Bloqueado' => '#34495E',
+            ]
+        ]);
+    }
+
+    /**
+     * Determinar el estado visual de un puesto
+     */
+    private function determinarEstadoPuesto($puesto)
+    {
+        // Si el puesto está marcado como bloqueado en el modelo
+        if ($puesto->estado === 'En Mantenimiento' || $puesto->estado === 'Bloqueado') {
+            return $puesto->estado;
+        }
+
+        // Revisar si tiene solicitudes activas
+        $solicitudActiva = $puesto->solicitudes()
+            ->where('estado', '!=', 'Cancelado')
+            ->first();
+
+        if ($solicitudActiva) {
+            return 'Asignado';
+        }
+
+        return 'Disponible';
+    }
+
+    /**
+     * Reservar un puesto para una solicitud
+     */
+    public function reservarPuesto(Request $request, $puestoId)
+    {
+        $request->validate([
+            'solicitud_id' => 'required|exists:solicitudes,id',
+        ]);
+
+        $puesto = \App\Models\PuestoTrabajo::findOrFail($puestoId);
+        $solicitud = Solicitud::findOrFail($request->solicitud_id);
+
+        // Verificar que sea una solicitud de Servicios Generales
+        if ($solicitud->tipo !== 'Servicios Generales') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta solicitud no es de tipo Servicios Generales'
+            ], 400);
+        }
+
+        // Verificar que el puesto esté disponible
+        $estadoPuesto = $this->determinarEstadoPuesto($puesto);
+        if ($estadoPuesto !== 'Disponible') {
+            return response()->json([
+                'success' => false,
+                'message' => "El puesto no está disponible. Estado actual: {$estadoPuesto}"
+            ], 400);
+        }
+
+        // Desasignar puesto anterior si existe
+        if ($solicitud->puesto_trabajo_id) {
+            $puestoAnterior = \App\Models\PuestoTrabajo::find($solicitud->puesto_trabajo_id);
+            if ($puestoAnterior && $puestoAnterior->estado === 'Asignado') {
+                $puestoAnterior->estado = 'Disponible';
+                $puestoAnterior->save();
+            }
+        }
+
+        // Asignar nuevo puesto
+        $solicitud->puesto_trabajo_id = $puesto->id;
+        $solicitud->save();
+
+        // Marcar puesto como asignado
+        $puesto->estado = 'Asignado';
+        $puesto->save();
+
+        // Registrar en auditoría
+        \App\Models\AuditoriaOnboarding::create([
+            'usuario_id' => auth()->id(),
+            'proceso_ingreso_id' => $solicitud->proceso_ingreso_id,
+            'accion' => 'Reserva de Puesto de Trabajo',
+            'descripcion' => "Puesto {$puesto->numero_puesto} (Piso {$puesto->piso}, Sección {$puesto->seccion}) asignado a solicitud {$solicitud->id}",
+            'tabla_afectada' => 'solicitudes',
+            'registro_id' => $solicitud->id,
+            'datos_anteriores' => null,
+            'datos_nuevos' => [
+                'puesto_trabajo_id' => $puesto->id,
+                'puesto_numero' => $puesto->numero_puesto,
+                'fecha_asignacion' => now(),
+            ],
+            'ip_usuario' => $request->ip(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Puesto {$puesto->numero_puesto} reservado correctamente",
+            'puesto' => [
+                'id' => $puesto->id,
+                'numero_puesto' => $puesto->numero_puesto,
+                'piso' => $puesto->piso,
+                'seccion' => $puesto->seccion,
+            ]
+        ]);
     }
 }
 

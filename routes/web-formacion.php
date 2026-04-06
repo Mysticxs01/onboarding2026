@@ -6,6 +6,7 @@ use App\Http\Controllers\AsignacionCursoController;
 use App\Http\Controllers\RutaFormacionController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\CheckInAccesoController;
 
 // MÓDULO DE FORMACIÓN Y CURSOS
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -92,16 +93,63 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [AuditoriaController::class, 'index'])
             ->name('index');
         
+        Route::get('/dashboard', [AuditoriaController::class, 'dashboard'])
+            ->name('dashboard');
+
         Route::get('/{auditoria}', [AuditoriaController::class, 'show'])
             ->name('show');
         
         Route::get('/proceso/{proceso}', [AuditoriaController::class, 'porProceso'])
             ->name('por-proceso');
         
+        Route::get('/actividad/usuario', [AuditoriaController::class, 'actividadPorUsuario'])
+            ->name('actividad-usuario');
+
+        Route::get('/actividad/entidad', [AuditoriaController::class, 'actividadPorEntidad'])
+            ->name('actividad-entidad');
+
+        Route::get('/timeline', [AuditoriaController::class, 'timelineAuditoria'])
+            ->name('timeline');
+        
         Route::get('/reporte/por-area', [AuditoriaController::class, 'reportePorArea'])
             ->name('reporte-por-area');
         
         Route::post('/exportar', [AuditoriaController::class, 'exportar'])
             ->name('exportar');
+    });
+
+    // MÓDULO DE CHECK-IN DE ACCESOS (HU11) - ACCESO SEGURO AL SISTEMA
+    Route::prefix('checkin-acceso')->name('checkin-acceso.')->group(function () {
+        
+        // Pantalla de Bienvenida (Mostrar al usuario)
+        Route::get('/bienvenida', [CheckInAccesoController::class, 'mostrarBienvenida'])
+            ->name('mostrar-bienvenida');
+        
+        // Procesar el check-in del usuario
+        Route::post('/procesar', [CheckInAccesoController::class, 'procesarCheckIn'])
+            ->name('procesar');
+        
+        // Ver historial de accesos del usuario
+        Route::get('/historial', [CheckInAccesoController::class, 'verHistorialAccesos'])
+            ->name('historial');
+        
+        // Panel de administración (Solo Admin/Root)
+        Route::get('/admin', [CheckInAccesoController::class, 'panelAdministracion'])
+            ->middleware('can:viewCheckInAdmin')
+            ->name('panel-admin');
+        
+        // Estadísticas por área (Solo Admin/Root)
+        Route::get('/area/{areaId}/estadisticas', [CheckInAccesoController::class, 'estadisticasArea'])
+            ->middleware('can:viewCheckInAdmin')
+            ->name('estadisticas-area');
+        
+        // Exportar datos (Solo Admin/Root)
+        Route::post('/exportar', [CheckInAccesoController::class, 'exportarAccesos'])
+            ->middleware('can:exportCheckIn')
+            ->name('exportar');
+        
+        // API: Obtener datos de check-in (AJAX)
+        Route::get('/datos', [CheckInAccesoController::class, 'obtenerDatosCheckIn'])
+            ->name('datos');
     });
 });

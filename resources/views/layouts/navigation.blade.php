@@ -24,6 +24,14 @@
                     <x-nav-link :href="route('solicitudes.index')" :active="request()->routeIs('solicitudes.*')" style="color: rgba(255,255,255,0.9);">
                         {{ __('Solicitudes') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('checkin-acceso.mostrar-bienvenida')" :active="request()->routeIs('checkin-acceso.*')" style="color: rgba(255,255,255,0.9);">
+                        {{ __('📍 Check-in') }}
+                    </x-nav-link>
+                    @if(auth()->user()->hasAnyRole(['Admin', 'Root']))
+                    <x-nav-link :href="route('auditoria.dashboard')" :active="request()->routeIs('auditoria.*')" style="color: rgba(255,255,255,0.9);">
+                        {{ __('🔒 Auditoría') }}
+                    </x-nav-link>
+                    @endif
                     @endif
                 </div>
             </div>
@@ -87,6 +95,14 @@
             <x-responsive-nav-link :href="route('solicitudes.index')" :active="request()->routeIs('solicitudes.*')" style="color: rgba(255,255,255,0.9);">
                 {{ __('Solicitudes') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('checkin-acceso.mostrar-bienvenida')" :active="request()->routeIs('checkin-acceso.*')" style="color: rgba(255,255,255,0.9);">
+                {{ __('📍 Check-in') }}
+            </x-responsive-nav-link>
+            @if(auth()->user()->hasAnyRole(['Admin', 'Root']))
+            <x-responsive-nav-link :href="route('auditoria.dashboard')" :active="request()->routeIs('auditoria.*')" style="color: rgba(255,255,255,0.9);">
+                {{ __('🔒 Auditoría') }}
+            </x-responsive-nav-link>
+            @endif
             @endif
         </div>
 

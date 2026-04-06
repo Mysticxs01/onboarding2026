@@ -373,3 +373,29 @@ Incluye ejemplo de entrada y salida para solicitud (perfil + tallas + cargo).
 Incluye ejemplo de entrada y salida para cursos (disponibles y no disponibles con alternativa).
 Define una propuesta MVP de laboratorio que pueda implementarse rápido.
 Resultado esperado: Decisión de enfoque para continuar con una implementación mínima en el proyecto.
+
+Historia de Usuario
+
+Número: 21 Nombre: Políticas de Seguridad y Protección de Datos
+Prioridad en Negocios: Alta Responsable: TI/Seguridad
+Rol: Usuario Root / Administrador del Sistema Iteración Asignada: 3
+Descripción: Como Usuario Root / Administrador del Sistema
+Quiero garantizar que el sistema cumpla con políticas de seguridad robustas
+Para proteger la confidencialidad e integridad de los datos corporativos.
+Observaciones: Debe cumplir con estándares de seguridad corporativos e internacionales.
+El sistema debe registrar todos los intentos de acceso y cambios de configuración de seguridad.
+Criterio de Aceptación: Las contraseñas deben cumplir: mínimo 8 caracteres, mayúscula, minúscula, número, carácter especial.
+Las contraseñas se almacenan de forma segura usando bcrypt con salting.
+Expiración de contraseña cada 90 días con notificación preventiva.
+Histórico de contraseñas: el sistema evita reutilizar las últimas 5 contraseñas.
+Bloqueo de cuenta después de 5 intentos fallidos de acceso (requiere desbloqueador por Root).
+Auditoría de Seguridad: registro de todos los intentos de acceso (exitosos y fallidos) con usuario, hora, IP y resultado.
+Cierre de sesión automático después de 30 minutos de inactividad.
+Alertas de seguridad: notificación de accesos desde nuevas ubicaciones o dispositivos.
+Protección contra ataques: implementación de defensa contra XSS, CSRF, SQL Injection.
+Encriptación de datos sensibles en base de datos usando AES-256.
+Toda comunicación entre cliente-servidor debe usar HTTPS con TLS 1.2+.
+Panel de configuración de políticas de seguridad accesible solo para usuarios Root.
+Reporte de eventos de seguridad disponible para auditoría interna.
+Mockup: Panel "Políticas de Seguridad" con secciones:
+Configuración de Contraseñas | Gestión de Sesiones | Auditoría de Accesos | Alertas | Cifrado

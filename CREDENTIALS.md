@@ -3,48 +3,42 @@
 ## Usuarios Disponibles
 
 ### 👑 Root Admin (Acceso Total)
-- **Email:** root@test.com
-- **Contraseña:** 12345678
+- **Email:** root@sinergia.com
+- **Contraseña:** root123456
 - **Rol:** Root (acceso a TODO)
 - **Área:** Recursos Humanos
 
-### 🔒 Administrador
-- **Email:** admin@test.com
-- **Contraseña:** 12345678
-- **Rol:** Admin
-- **Área:** Recursos Humanos
-
-### 👔 Jefe Inmediato
-- **Email:** jefe.tecnologia@example.com
-- **Contraseña:** password
+### 🔒 Jefe RRHH (Gestiona Onboarding)
+- **Email:** jefe.rrhh@sinergia.com
+- **Contraseña:** rrhh123456
 - **Rol:** Jefe
-- **Área:** Tecnología
-
-### 👨‍💼 Operadores por Área
-
-#### Operador de Tecnología
-- **Email:** operador.ti@test.com
-- **Contraseña:** 12345678
-- **Área:** Tecnología
-
-#### Operador de Dotación
-- **Email:** operador.dotacion@test.com
-- **Contraseña:** 12345678
 - **Área:** Recursos Humanos
 
-#### Operador de Servicios Generales
-- **Email:** operador.servicios@test.com
-- **Contraseña:** 12345678
+### 👔 Jefes por Área
+
+#### Jefe Tecnología
+- **Email:** jefe.tecnologia@sinergia.com
+- **Contraseña:** tech123456
+- **Área:** Tecnología
+
+#### Jefe Dotación
+- **Email:** jefe.dotacion@sinergia.com
+- **Contraseña:** dotacion123456
+- **Área:** Recursos Humanos
+
+#### Jefe Servicios Generales
+- **Email:** jefe.servicios@sinergia.com
+- **Contraseña:** servicios123456
 - **Área:** Servicios Generales
 
-#### Operador de Formación
-- **Email:** operador.formacion@test.com
-- **Contraseña:** 12345678
+#### Jefe Formación
+- **Email:** jefe.formacion@sinergia.com
+- **Contraseña:** formacion123456
 - **Área:** Formación y Capacitación
 
-#### Operador de Bienes y Servicios
-- **Email:** operador.bienes@test.com
-- **Contraseña:** 12345678
+#### Jefe Bienes y Servicios
+- **Email:** jefe.bienes@sinergia.com
+- **Contraseña:** bienes123456
 - **Área:** Bienes y Servicios
 
 ## 📋 Áreas Disponibles

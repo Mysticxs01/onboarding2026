@@ -102,74 +102,86 @@
                             <p class="text-gray-600 mb-6">No se ha asignado puesto físico. Selecciona uno a continuación:</p>
                         @endif
 
-                        <!-- Formulario -->
-                        <div id="formulario-puesto" style="display: {{ $solicitude->puestoTrabajo ? 'none' : 'block' }};">
+                        <!-- Plano Interactivo -->
+                        <div id="plano-interactivo">
+                            <label class="block text-sm font-bold mb-4" style="color: #1B365D;">
+                                🗺️ Plano Interactivo de Puestos
+                            </label>
+
+                            <!-- Controles de Filtrado -->
+                            <div class="mb-4 flex gap-2">
+                                <select id="filtro-piso" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">Todos los Pisos</option>
+                                </select>
+                                <select id="filtro-seccion" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">Todas las Secciones</option>
+                                </select>
+                            </div>
+
+                            <!-- Leyenda de Estados -->
+                            <div class="mb-4 p-3 bg-gray-50 rounded flex flex-wrap gap-4 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 rounded" style="background-color: #28A745;"></span>
+                                    <span>Disponible</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 rounded" style="background-color: #FFC107;"></span>
+                                    <span>Reservado</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 rounded" style="background-color: #E74C3C;"></span>
+                                    <span>Asignado</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 rounded" style="background-color: #95A5A6;"></span>
+                                    <span>Mantenimiento</span>
+                                </div>
+                            </div>
+
+                            <!-- Canvas del Plano -->
+                            <div class="border rounded-lg p-6 bg-gray-50 overflow-auto" style="min-height: 400px;">
+                                <canvas id="canvas-plano" width="800" height="400"></canvas>
+                            </div>
+
+                            <!-- Input Oculto para Puesto Seleccionado -->
+                            <input type="hidden" id="puesto-seleccionado" name="puesto_trabajo_id">
+
+                            <!-- Información del Puesto Seleccionado -->
+                            <div id="info-puesto-seleccionado" class="mt-4 p-4 bg-blue-50 rounded border-l-4 border-blue-500" style="display: none;">
+                                <h4 class="font-bold text-blue-900 mb-2">✅ Puesto Seleccionado</h4>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <p class="text-gray-600 uppercase text-xs">Número</p>
+                                        <p class="font-semibold" id="info-numero-puesto"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 uppercase text-xs">Piso</p>
+                                        <p class="font-semibold" id="info-piso-puesto"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 uppercase text-xs">Sección</p>
+                                        <p class="font-semibold" id="info-seccion-puesto"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="flex gap-4 pt-4 border-t">
+                                <button type="button" id="btn-confirmar-puesto" class="btn-primary" style="display: none;">
+                                    ✅ Confirmar Selección
+                                </button>
+                                <button type="button" id="btn-limpiar-seleccion" class="btn-outline-primary" style="display: none;">
+                                    🔄 Deshacer Selección
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Formulario Oculto (backup) -->
+                        <div id="formulario-puesto-backup" style="display: none;">
                             <form action="{{ route('solicitudes.guardar-servicios-generales', $solicitude->id) }}" method="POST" class="space-y-6">
                                 @csrf
-
-                                <div>
-                                    <label class="block text-sm font-bold mb-3" style="color: #1B365D;">
-                                        🏢 Selecciona Puesto de Trabajo Disponible
-                                    </label>
-
-                                    @php
-                                        $puestosDisponibles = \App\Models\PuestoTrabajo::where('estado', 'Disponible')
-                                            ->orderBy('piso', 'ASC')
-                                            ->orderBy('numero_puesto', 'ASC')
-                                            ->get();
-                                    @endphp
-
-                                    @if($puestosDisponibles->count() > 0)
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            @foreach($puestosDisponibles as $puesto)
-                                                <label class="block border rounded-lg p-4 cursor-pointer hover:border-blue-500 transition
-                                                    {{ $solicitude->puestoTrabajo?->id === $puesto->id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 bg-white' }}">
-                                                    <input type="radio" name="puesto_trabajo_id" value="{{ $puesto->id }}" class="sr-only"
-                                                           {{ $solicitude->puestoTrabajo?->id === $puesto->id ? 'checked' : '' }}
-                                                           {{ $loop->first ? 'required' : '' }}>
-                                                    <div class="flex items-start justify-between">
-                                                        <div>
-                                                            <p class="text-xs text-gray-600 uppercase">Puesto</p>
-                                                            <p class="text-lg font-bold" style="color: #1B365D;">{{ $puesto->numero_puesto }}</p>
-                                                            <p class="text-xs text-gray-600 mt-1">Sección: {{ $puesto->seccion ?? 'General' }}</p>
-                                                            <p class="text-xs text-gray-600">Piso: {{ $puesto->piso }}</p>
-                                                        </div>
-                                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded"
-                                                              style="background-color: #E8F5E9; color: #28A745;">
-                                                            Disponible
-                                                        </span>
-                                                    </div>
-                                                </label>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <div class="p-4 bg-red-50 border border-red-200 rounded">
-                                            <p class="text-red-700">
-                                                ⚠️ No hay puestos disponibles en este momento. 
-                                                Por favor contacta a recursos humanos.
-                                            </p>
-                                        </div>
-                                    @endif
-
-                                    <p class="text-xs text-gray-600 mt-3">
-                                        ℹ️ Solo puedes seleccionar de los puestos que están disponibles.
-                                        La asignación final se realiza aquí sin necesidad de un módulo separado.
-                                    </p>
-                                </div>
-
-                                @if($puestosDisponibles->count() > 0)
-                                    <!-- Botones -->
-                                    <div class="flex gap-4 pt-4 border-t">
-                                        <button type="submit" class="btn-primary">
-                                            ✅ Asignar Puesto
-                                        </button>
-                                        @if($solicitude->puestoTrabajo)
-                                            <button type="button" onclick="document.getElementById('formulario-puesto').style.display = 'none'" class="btn-outline-primary">
-                                                ❌ Cancelar
-                                            </button>
-                                        @endif
-                                    </div>
-                                @endif
+                                <input type="hidden" id="puesto_trabajo_id_backup" name="puesto_trabajo_id">
+                                <button type="submit" class="btn-primary">✅ Asignar Puesto</button>
                             </form>
                         </div>
                     </div>
@@ -205,3 +217,211 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('canvas-plano');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let puestosData = [];
+    let puestoSeleccionado = null;
+    const solicitudId = {{ $solicitude->id }};
+    const puestoActualId = {{ $solicitude->puesto_trabajo_id ?? 'null' }};
+
+    // Cargar datos de puestos
+    async function cargarPuestos() {
+        try {
+            const response = await fetch('{{ route("api.puestos.plano") }}');
+            const data = await response.json();
+            puestosData = data.puestos;
+            
+            // Llenar selectores de filtro
+            const pisos = [...new Set(puestosData.map(p => p.piso))].sort((a, b) => a - b);
+            const secciones = [...new Set(puestosData.map(p => p.seccion).filter(Boolean))].sort();
+            
+            const filtroPiso = document.getElementById('filtro-piso');
+            const filtroSeccion = document.getElementById('filtro-seccion');
+            
+            pisos.forEach(piso => {
+                const option = document.createElement('option');
+                option.value = `piso-${piso}`;
+                option.textContent = `Piso ${piso}`;
+                filtroPiso.appendChild(option);
+            });
+            
+            secciones.forEach(seccion => {
+                const option = document.createElement('option');
+                option.value = seccion;
+                option.textContent = `Sección ${seccion}`;
+                filtroSeccion.appendChild(option);
+            });
+            
+            dibujarPlano();
+        } catch (error) {
+            console.error('Error cargando puestos:', error);
+            ctx.fillStyle = '#E74C3C';
+            ctx.font = '16px Arial';
+            ctx.fillText('Error cargando el plano', 50, 50);
+        }
+    }
+
+    // Dibujar plano
+    function dibujarPlano() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Fondo
+        ctx.fillStyle = '#F5F5F5';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const padding = 30;
+        const puestoAncho = 60;
+        const puestoAlto = 50;
+        const espacioX = 20;
+        const espacioY = 20;
+        
+        let filtroActivoPiso = null;
+        let filtroActivoSeccion = null;
+        
+        const filtroPiso = document.getElementById('filtro-piso').value;
+        const filtroSeccion = document.getElementById('filtro-seccion').value;
+        
+        if (filtroPiso) filtroActivoPiso = parseInt(filtroPiso.split('-')[1]);
+        if (filtroSeccion) filtroActivoSeccion = filtroSeccion;
+        
+        let posX = padding;
+        let posY = padding;
+        let maxHeight = 0;
+
+        puestosData.forEach((puesto, index) => {
+            // Aplicar filtros
+            if (filtroActivoPiso && puesto.piso !== filtroActivoPiso) return;
+            if (filtroActivoSeccion && puesto.seccion !== filtroActivoSeccion) return;
+
+            // Salto de línea
+            if (posX + puestoAncho + espacioX > canvas.width - padding) {
+                posX = padding;
+                posY += puestoAlto + espacioY;
+            }
+
+            // Determinar color según estado
+            let color = '#28A745'; // Disponible
+            if (puesto.estado === 'Asignado') color = '#E74C3C';
+            else if (puesto.estado === 'En Mantenimiento') color = '#95A5A6';
+            else if (puesto.estado === 'Bloqueado') color = '#34495E';
+            else if (puesto.estado === 'Reservado') color = '#FFC107';
+
+            // Dibujar puesto
+            ctx.fillStyle = puestoSeleccionado && puestoSeleccionado.id === puesto.id ? '#3498DB' : color;
+            ctx.fillRect(posX, posY, puestoAncho, puestoAlto);
+
+            // Borde
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(posX, posY, puestoAncho, puestoAlto);
+
+            // Texto
+            ctx.fillStyle = '#FFF';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(puesto.numero_puesto, posX + puestoAncho / 2, posY + puestoAlto / 2);
+
+            // Guardar posición para click
+            puesto.canvasX = posX;
+            puesto.canvasY = posY;
+            puesto.canvasAncho = puestoAncho;
+            puesto.canvasAlto = puestoAlto;
+
+            posX += puestoAncho + espacioX;
+            maxHeight = Math.max(maxHeight, posY + puestoAlto);
+        });
+
+        // Configurar evento de click
+        canvas.addEventListener('click', handleCanvasClick);
+    }
+
+    function handleCanvasClick(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        puestosData.forEach(puesto => {
+            if (puesto.canvasX && 
+                x >= puesto.canvasX && 
+                x <= puesto.canvasX + puesto.canvasAncho &&
+                y >= puesto.canvasY && 
+                y <= puesto.canvasY + puesto.canvasAlto) {
+                
+                // Solo permitir seleccionar disponibles
+                if (puesto.estado === 'Disponible') {
+                    puestoSeleccionado = puesto;
+                    document.getElementById('puesto-seleccionado').value = puesto.id;
+                    
+                    // Mostrar información
+                    document.getElementById('info-numero-puesto').textContent = puesto.numero_puesto;
+                    document.getElementById('info-piso-puesto').textContent = `Piso ${puesto.piso}`;
+                    document.getElementById('info-seccion-puesto').textContent = puesto.seccion || 'General';
+                    document.getElementById('info-puesto-seleccionado').style.display = 'block';
+                    
+                    // Mostrar botones
+                    document.getElementById('btn-confirmar-puesto').style.display = 'inline-block';
+                    document.getElementById('btn-limpiar-seleccion').style.display = 'inline-block';
+                    
+                    dibujarPlano();
+                }
+            }
+        });
+    }
+
+    // Botones
+    document.getElementById('btn-confirmar-puesto').addEventListener('click', async function() {
+        if (!puestoSeleccionado) {
+            alert('Por favor selecciona un puesto');
+            return;
+        }
+
+        try {
+            const response = await fetch(`{{ route('api.puestos.reservar', ['id' => 'ID']) }}`.replace('ID', puestoSeleccionado.id), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    solicitud_id: solicitudId
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Mostrar éxito y recargar
+                alert('✅ ' + data.message);
+                window.location.reload();
+            } else {
+                alert('❌ ' + data.message);
+                dibujarPlano();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al guardar la selección');
+        }
+    });
+
+    document.getElementById('btn-limpiar-seleccion').addEventListener('click', function() {
+        puestoSeleccionado = null;
+        document.getElementById('puesto-seleccionado').value = '';
+        document.getElementById('info-puesto-seleccionado').style.display = 'none';
+        document.getElementById('btn-confirmar-puesto').style.display = 'none';
+        document.getElementById('btn-limpiar-seleccion').style.display = 'none';
+        dibujarPlano();
+    });
+
+    document.getElementById('filtro-piso').addEventListener('change', dibujarPlano);
+    document.getElementById('filtro-seccion').addEventListener('change', dibujarPlano);
+
+    // Cargar puestos al iniciar
+    cargarPuestos();
+});
+</script>
