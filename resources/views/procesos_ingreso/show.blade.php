@@ -26,6 +26,9 @@
             </div>
         @endif
 
+        {{-- Panel de Notificaciones (HU15) --}}
+        @include('components.notificaciones-estado')
+
         {{-- Información del proceso --}}
         <div class="grid grid-cols-2 gap-6 mb-8">
             <div class="bg-white p-6 rounded shadow">

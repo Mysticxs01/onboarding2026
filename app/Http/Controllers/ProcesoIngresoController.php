@@ -11,6 +11,8 @@ use App\Models\PlantillaSolicitud;
 use App\Models\Solicitud;
 use App\Models\DetalleTecnologia;
 use App\Models\DetalleUniforme;
+use App\Models\AuditoriaOnboarding;
+use App\Jobs\EnviarNotificacionesProcesoJob;
 use Carbon\Carbon;
 
 class ProcesoIngresoController extends Controller
@@ -35,11 +37,11 @@ class ProcesoIngresoController extends Controller
         $gerencias = Gerencia::where('activo', true)
             ->with([
                 'areas' => function ($query) {
-                    // Cargar TODAS las áreas para debug
-                    $query->with(['cargos' => function ($cargoQuery) {
-                        $cargoQuery->where('activo', true)
-                                   ->with('jefeInmediato');
-                    }]);
+                    $query->where('activo', true)
+                          ->with(['cargos' => function ($cargoQuery) {
+                              $cargoQuery->where('activo', true)
+                                         ->with('jefeInmediato');
+                          }]);
                 },
             ])
             ->get();
@@ -96,6 +98,9 @@ public function store(Request $request)
             'estado' => 'Pendiente',
         ]);
 
+        // 📋 Registrar auditoría de creación del proceso
+        AuditoriaOnboarding::registrarCreacion('ProcesoIngreso', $proceso->id, $proceso->toArray());
+
         // Disparar solicitudes automáticas si existen plantillas
         $plantillas = PlantillaSolicitud::where('cargo_id', $cargo->id)->get();
 
@@ -134,9 +139,12 @@ public function store(Request $request)
             }
         }
 
+        // 📧 Disparar Job de notificaciones automáticas (HU15)
+        EnviarNotificacionesProcesoJob::dispatch($proceso);
+
         return redirect()
             ->route('procesos-ingreso.index')
-            ->with('success', 'Proceso de ingreso creado correctamente con especificaciones de dotación y tecnología');
+            ->with('success', 'Proceso de ingreso creado correctamente con especificaciones de dotación y tecnología. Se enviarán notificaciones a los responsables de cada área.');
 
     } catch (\Exception $e) {
         // Capturar error y regresar al formulario con mensaje
@@ -216,6 +224,8 @@ public function store(Request $request)
             $jefeCargoId = $cargo->jefe_inmediato_cargo_id;
             $jefeUsuario = $jefeCargoId ? User::where('cargo_id', $jefeCargoId)->first() : null;
 
+            $valoresAnteriores = $proceso->toArray();
+
             $proceso->update([
                 'nombre_completo' => $request->nombre_completo,
                 'tipo_documento' => $request->tipo_documento,
@@ -224,6 +234,9 @@ public function store(Request $request)
                 'jefe_id' => $jefeUsuario?->id,
                 'jefe_cargo_id' => $jefeCargoId,
             ]);
+
+            // 📋 Registrar auditoría de actualización
+            AuditoriaOnboarding::registrarActualizacion('ProcesoIngreso', $id, $valoresAnteriores, $proceso->refresh()->toArray());
 
             return redirect()->route('procesos-ingreso.show', $id)
                 ->with('success', 'Proceso actualizado correctamente.');
@@ -262,7 +275,11 @@ public function store(Request $request)
         ]);
 
         try {
+            $valoresAnteriores = $proceso->toArray();
             $proceso->cambiarFechaIngreso($request->nueva_fecha);
+
+            // 📋 Registrar auditoría de cambio de fecha
+            AuditoriaOnboarding::registrarActualizacion('ProcesoIngreso', $id, $valoresAnteriores, $proceso->refresh()->toArray());
 
             return redirect()->route('procesos-ingreso.show', $id)
                 ->with('success', 'Fecha de ingreso actualizada y solicitudes ajustadas.');
@@ -299,6 +316,9 @@ public function store(Request $request)
         try {
             $proceso->cancelar($request->motivo ?? null);
 
+            // 📋 Registrar auditoría de cancelación
+            AuditoriaOnboarding::registrar('delete', 'ProcesoIngreso', $id, 'Proceso cancelado: ' . ($request->motivo ?? 'Sin motivo especificado'));
+
             return redirect()->route('procesos-ingreso.index')
                 ->with('success', 'Proceso cancelado correctamente.');
 
@@ -324,6 +344,60 @@ public function store(Request $request)
             ->get();
 
         return view('procesos_ingreso.historico', compact('ingresosFinal', 'procesoCancelados'));
+    }
+
+    /**
+     * Reintentar envío de notificaciones (HU15)
+     * Solo lo pueden hacer Root o Jefe RRHH
+     */
+    public function reintentarNotificaciones(Request $request, $id)
+    {
+        // Validar permisos
+        if (!auth()->user()->hasRole(['Root', 'Jefe RRHH'])) {
+            abort(403, 'No tienes permiso para reintentar notificaciones.');
+        }
+
+        $proceso = ProcesoIngreso::findOrFail($id);
+
+        try {
+            // Disparar Job de notificaciones nuevamente
+            EnviarNotificacionesProcesoJob::dispatch($proceso);
+
+            // Registrar reintento en auditoría
+            AuditoriaOnboarding::registrar(
+                'notificacion_reintentada',
+                'ProcesoIngreso',
+                $proceso->id,
+                'Reintento manual de notificaciones',
+                null,
+                [
+                    'usuario' => auth()->user()->name,
+                    'motivo' => $request->motivo ?? 'No especificado',
+                    'timestamp' => now()->toIso8601String(),
+                ]
+            );
+
+            return redirect()->route('procesos-ingreso.show', $id)
+                ->with('success', 'Se ha reiniciado el envío de notificaciones. Por favor espera mientras se envían los correos.');
+
+        } catch (\Exception $e) {
+            // Registrar error de reintento
+            AuditoriaOnboarding::registrar(
+                'notificacion_fallida',
+                'ProcesoIngreso',
+                $proceso->id,
+                'Error en reintento de notificación',
+                null,
+                [
+                    'usuario' => auth()->user()->name,
+                    'error' => $e->getMessage(),
+                    'timestamp' => now()->toIso8601String(),
+                ]
+            );
+
+            return back()
+                ->withErrors(['error' => 'Error al reintentar: ' . $e->getMessage()]);
+        }
     }
 }
 

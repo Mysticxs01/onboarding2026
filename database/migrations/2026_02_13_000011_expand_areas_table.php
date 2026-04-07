@@ -16,7 +16,7 @@ return new class extends Migration
             if (!Schema::hasColumn('areas', 'gerencia_id')) {
                 $table->foreignId('gerencia_id')->nullable()
                       ->after('nombre')
-                      ->constrained('areas')->nullOnDelete();
+                      ->constrained('gerencias')->nullOnDelete();
             }
             
             if (!Schema::hasColumn('areas', 'jefe_area_cargo_id')) {

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             AreaCargoSeeder::class,                // Crea áreas, cargos y jefes (Sinergia Financiera)
             RoleSeeder::class,                     // Crea roles y permisos
             CreateDefaultUsersSeeder::class,       // Crea usuarios con roles específicos (NUEVO)
+            MapperAreasGerenciasSeeder::class,     // Mapea áreas a gerencias correctamente
             PlantillaSolicitudSeeder::class,       // Crea plantillas de solicitud
             PuestoTrabajoSeeder::class,            // Crea grid de puestos de trabajo
             ProcesoIngresoSeeder::class,           // Crea procesos de ingreso y solicitudes

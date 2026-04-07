@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/procesos-ingreso/{id}/actualizar-fecha', [ProcesoIngresoController::class, 'actualizarFecha'])->name('procesos-ingreso.actualizar-fecha');
     Route::get('/procesos-ingreso/{id}/cancelar', [ProcesoIngresoController::class, 'mostrarCancelacion'])->name('procesos-ingreso.mostrar-cancelacion');
     Route::post('/procesos-ingreso/{id}/cancelar', [ProcesoIngresoController::class, 'cancelar'])->name('procesos-ingreso.cancelar');
+    Route::post('/procesos-ingreso/{id}/reintentar-notificaciones', [ProcesoIngresoController::class, 'reintentarNotificaciones'])->name('procesos-ingreso.reintentar-notificaciones');
     
     // Histórico de ingresos
     Route::get('/procesos-ingreso-historico', [ProcesoIngresoController::class, 'historico'])->name('procesos-ingreso.historico');
